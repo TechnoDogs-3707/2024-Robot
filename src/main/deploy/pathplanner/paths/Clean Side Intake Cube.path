@@ -1,0 +1,168 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.954970493111559,
+        "y": 4.948232499872118
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.16576952251749,
+        "y": 4.871029696573654
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 5.834301806732954,
+        "y": 5.834361515524789
+      },
+      "prevControl": {
+        "x": 5.139386622997618,
+        "y": 5.145100099659838
+      },
+      "nextControl": {
+        "x": 6.4173224722639635,
+        "y": 6.412638776991965
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 7.677993760203016,
+        "y": 5.5165272240809236
+      },
+      "prevControl": {
+        "x": 7.788822348803553,
+        "y": 6.447154752992775
+      },
+      "nextControl": {
+        "x": 7.5321721447246155,
+        "y": 4.292063289385099
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 5.3682398616424845,
+        "y": 4.578827881844674
+      },
+      "prevControl": {
+        "x": 6.6491577262125885,
+        "y": 4.571370539171199
+      },
+      "nextControl": {
+        "x": 4.417015510059857,
+        "y": 4.584365790359586
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 1.954970493111559,
+        "y": 4.434317800276226
+      },
+      "prevControl": {
+        "x": 1.2233191412987283,
+        "y": 4.305307926479802
+      },
+      "nextControl": null,
+      "isLocked": false
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": -120.0
+    },
+    {
+      "waypointRelativePos": 2.3,
+      "rotationDegrees": -120.0
+    },
+    {
+      "waypointRelativePos": 2.95,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Deploy Intake",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Deploy Intake Ground"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Begin AutoScore",
+      "waypointRelativePos": 2.95,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Position Score Wait"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Set Gamepiece Cube"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Stow Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  }
+}
