@@ -110,7 +110,7 @@ public class Robot extends LoggedRobot {
                 logNoFileAlert.set(true);
             }
             Logger.addDataReceiver(new NT4Publisher());
-            if (Constants.getRobot() == RobotType.ROBOT_2023_CN2) {
+            if (Constants.getRobot() == RobotType.ROBOT_2023_HEAVYMETAL) {
                 LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
             }
             break;

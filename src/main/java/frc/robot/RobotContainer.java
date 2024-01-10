@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,6 +40,7 @@ import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.FalconSwerveIO;
 import frc.robot.subsystems.drive.GyroIO;
+import frc.robot.subsystems.drive.GyroNavXIO;
 import frc.robot.subsystems.drive.GyroPigeonIO;
 import frc.robot.subsystems.drive.SimSwerveIO;
 import frc.robot.subsystems.drive.SwerveModuleIO;
@@ -112,7 +114,7 @@ public class RobotContainer {
     public RobotContainer(Robot robot) {
         if (Constants.getMode() != Mode.REPLAY) {
             switch (Constants.getRobot()) {
-                case ROBOT_2023_CN2:
+                case ROBOT_2023_HEAVYMETAL:
                     drive = new Drive(
                             // new GyroNavXIO(SPI.Port.kMXP),
                             // new GyroPigeon5IO(9, "canivore"),
@@ -125,9 +127,9 @@ public class RobotContainer {
                     arm = new Arm(new ArmIOSimV1(), new GripperIOSim());
                     leds = new LED(new LEDIOCANdle(8, "canivore"));
                     break;
-                case ROBOT_2023_CN1:
+                case ROBOT_2023_FLAPJACK:
                     drive = new Drive(
-                            new GyroIO() {},
+                            new GyroNavXIO(Port.kMXP),
                             new FalconSwerveIO(0, "canivore"), 
                             new FalconSwerveIO(1, "canivore"), 
                             new FalconSwerveIO(2, "canivore"), 

@@ -9,9 +9,12 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.lib.LimelightHelpers;
 import frc.robot.lib.LimelightHelpers.LimelightResults;
+import frc.robot.lib.LimelightHelpers.Results;
 
 public class LocalizerIOLL3 implements LocalizerIO {
     public static final double kNetworkTablesDelaySeonds = 0.005;
@@ -36,29 +39,28 @@ public class LocalizerIOLL3 implements LocalizerIO {
         inputs.visionConnected = !(NTLatencySeconds >= kNetworkTablesLatencyThreshold);
 
         if (inputs.visionConnected) {
-            LimelightResults results = LimelightHelpers.getLatestResults("limelight");
-            inputs.position = convertPoseArrayToRadians(results.targetingResults.botpose);
+            Results results = LimelightHelpers.getLatestResults("limelight").targetingResults;
+            var botpose = results.botpose;
+
+            boolean flipToRed = DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);
+
+            inputs.position = flipToRed ? results.botpose_wpired : results.botpose_wpiblue;
             inputs.stddevs = getStdDevs(results).getData();
 
-            inputs.targetsVisible = results.targetingResults.targets_Fiducials.length;
+            inputs.targetsVisible = results.targets_Fiducials.length;
 
-            inputs.lastUpdateTimestamp = 
-                Timer.getFPGATimestamp() - 
-                results.targetingResults.latency_capture -
-                results.targetingResults.latency_pipeline -
-                kNetworkTablesDelaySeonds -
-                results.targetingResults.latency_jsonParse;
+            inputs.lastUpdateTimestamp = Timer.getFPGATimestamp() - (botpose[6]/1000.0) - results.latency_jsonParse;
 
-            inputs.poseValid = results.targetingResults.valid;
+            inputs.poseValid = results.valid;
         } else {
             inputs.poseValid = false;
         }
     }
 
-    private Matrix<N3, N1> getStdDevs(LimelightResults results) {
-        // rewritten based on the functionality of code used by photonvision
+    private Matrix<N3, N1> getStdDevs(Results results) {
+        // rewritten for LL3 based on code used by photonvision
         var estStdDevs = kSingleTagStdDevs;
-        var targets = results.targetingResults.targets_Fiducials;
+        var targets = results.targets_Fiducials;
         int numTags = 0;
         double avgDist = 0;
         for (var tgt : targets) {
@@ -78,10 +80,10 @@ public class LocalizerIOLL3 implements LocalizerIO {
         return estStdDevs;
     }
 
-    private double[] convertPoseArrayToRadians(double[] poseArray) {
-        for (int i = 3; i < 6; i++) {
-            poseArray[i] = Math.toRadians(poseArray[i]);
-        }
-        return poseArray;
-    }
+    // private double[] convertPoseArrayToRadians(double[] poseArray) {
+    //     for (int i = 3; i < 6; i++) {
+    //         poseArray[i] = Math.toRadians(poseArray[i]);
+    //     }
+    //     return poseArray;
+    // }
 }

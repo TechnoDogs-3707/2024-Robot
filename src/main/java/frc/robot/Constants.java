@@ -42,7 +42,7 @@ public final class Constants {
                     .set(true);
                     invalidRobotAlertSent = true;
                 }
-                return RobotType.ROBOT_2023_CN2;
+                return RobotType.ROBOT_2023_HEAVYMETAL;
             } else {
                 return robot;
             }
@@ -53,8 +53,8 @@ public final class Constants {
     
     public static Mode getMode() {
         switch (getRobot()) {
-            case ROBOT_2023_CN2:
-            case ROBOT_2023_CN1:
+            case ROBOT_2023_HEAVYMETAL:
+            case ROBOT_2023_FLAPJACK:
             return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
             
             case ROBOT_SIMBOT:
@@ -66,19 +66,19 @@ public final class Constants {
     }
     
     public static final Map<RobotType, String> logFolders =
-    Map.of(RobotType.ROBOT_2023_CN1, "/home/lvuser", RobotType.ROBOT_2023_CN2, "/home/lvuser"); // log to sd card
-    // Map.of(RobotType.ROBOT_2023_CN1, "/media/sda2", RobotType.ROBOT_2023_CN2, "/media/sda2/");
+    Map.of(RobotType.ROBOT_2023_FLAPJACK, "/home/lvuser", RobotType.ROBOT_2023_HEAVYMETAL, "/home/lvuser"); // log to internal storage
+    // Map.of(RobotType.ROBOT_2023_CN1, "/media/sda2", RobotType.ROBOT_2023_CN2, "/media/sda2/"); // log to sd card
     
     public static enum RobotType {
         /**
-         * Chassis Number 2 "Heavy Metal"
+         * 2023 "Heavy Metal" Chassis
          */
-        ROBOT_2023_CN2,
+        ROBOT_2023_HEAVYMETAL,
 
         /**
-         * Chassis Number 1 "A-Frame"
+         * 2023 "Flapjack" Chassis (Formerly A-Frame)
          */
-        ROBOT_2023_CN1,
+        ROBOT_2023_FLAPJACK,
 
         /**
          * Robot Simulator
@@ -113,23 +113,23 @@ public final class Constants {
     public static final double kSDS_L3_BOOSTED = 1 / ((16.0 / 50.0) * (26.0 / 16.0) * (15.0 / 45.0));
     public static final double kDriveReduction = kSDS_L2;//(14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 45.0);
     public static final double kSteerReduction = (14.0 / 50.0) * (10.0 / 60.0);
-    public static final double kDriveWheelDiameter = Units.inchesToMeters(4.0); /// meters, TODO measure
-    public static final double kDriveTrackwidthMeters = 0.61595; // DONE Measure and set trackwidth
-    public static final double kDriveWheelbaseMeters = 0.61595; // DONE Measure and set wheelbase
+    public static final double kDriveWheelDiameter = Units.inchesToMeters(4.0); // meters
+    public static final double kDriveTrackwidthMeters = 0.61595; // TODO Measure and set trackwidth
+    public static final double kDriveWheelbaseMeters = 0.61595; // TODO Measure and set wheelbase
     
     public static final double kMaxVelocityMetersPerSecond = 5.05; //Calibrated 3/12 on Comp Bot
     public static final double kMaxAccelerationMetersPerSecondSquared = 4.4;
 
     public static final boolean kDriveUseOpenLoop = false;
 
-    // switch from field-oriented commutation to trapezoidal commutation as an emulated field weakening mode
+    // switch from field-oriented commutation to trapezoidal commutation to boost top speed
     public static final boolean kUseFieldWeakening = true;
     public static final double kMinVelocityForFieldWeakening = 4.0;
     
     // Robot constants
     public static final double kMaxDriveAcceleration = 1867 * 0.8;   // m/s^2 tuned 2/18 practice bot
     public static final double kTrackScrubFactor = 1;
-    public static final double kDriveTeleopAngleBiasFactor = 0.125; // TODO: Tune This
+    public static final double kDriveTeleopAngleBiasFactor = 0.125; // compensates for velocity vector deviation while rotating
     
     
     /**
@@ -139,9 +139,6 @@ public final class Constants {
     */
     // Here we calculate the theoretical maximum angular velocity. You can also replace this with a measured amount.
     public static final double kMaxAngularVelocityRadiansPerSecond = 11.386413;
-    
-    public static final double kScaleTranslationInputs = 0.5;
-    public static final double kScaleRotationInputs = 0.2;
     
     public static final KinematicLimits kUncappedKinematicLimits = new KinematicLimits();
     static {
