@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.lib.LimelightHelpers;
-import frc.robot.lib.LimelightHelpers.LimelightResults;
 import frc.robot.lib.LimelightHelpers.Results;
 
 public class LocalizerIOLL3 implements LocalizerIO {

@@ -35,56 +35,19 @@ public class ArmMotionPlanner {
         // double extendAllowableError = (isConservative ? Extend.kConservativeAllowableError : Extend.kLiberalAllowableError);
         // double wristAllowableError = (isConservative ? Wrist.kConservativeAllowableError : Wrist.kLiberalAllowableError);
 
-        // if current extension is above MEWS and current tilt is below MTFE, we are in an invalid state.
-        // this should be corrected by tilting up to MTFE, then retracting to zero, then tilting to zero.
-        // The current state variable can then be overridden to generate the next steps
-
-        if (currentState.getExtend() > kMaxExtensionWhileStowed && currentState.getTilt() < kMinTiltForExtension) {
-            // TODO: update with stow safe positions
-            mIntermediateStateQueue.add(
-                ArmState.generateWithFailsafeParameters(kMinTiltForExtension + 0.02, currentState.extend, currentState.wrist)
-            );
-            mIntermediateStateQueue.add(
-                ArmState.generateWithFailsafeParameters(kMinTiltForExtension + 0.02, currentState.extend, 0)
-            );
-            mIntermediateStateQueue.add(
-                ArmState.generateWithFailsafeParameters(kMinTiltForExtension + 0.02, 0, 0)
-            );
-            mIntermediateStateQueue.add(
-                ArmState.generateWithFailsafeParameters(0, 0, 0)
-            );
-            currentState = new ArmState();
-        }
-
-        // if target extension is above MEWS and target tilt is below MTFE, we are targeting an invalid state.
-        // this should be handled by reverting to stowed position.
-
-        if (desiredState.extend >= kMaxExtensionWhileStowed && desiredState.tilt <= kMinTiltForExtension) {
-            desiredState = new ArmState();
-        }
-
-        // if target extension is above MEWS and current tilt is below MTFE, we need to tilt first
-        // not bothering with pre extending by like 2cm because the time gain is insignificant
-
-        if (desiredState.extend >= kMaxExtensionWhileStowed && currentState.tilt <= kMinTiltForExtension) {
-            mIntermediateStateQueue.add(new ArmState(desiredState.tilt, 0, 0));
-            mIntermediateStateQueue.add(desiredState);
-        } else
-
-        // if target tilt is below MTFE and current extension is above MEWT, 
-        // retract as much as possible, then tilt to final target and extend
-
-        if (desiredState.tilt <= kMinTiltForExtension && currentState.extend >= kMaxExtensionWhileStowed) {
-            mIntermediateStateQueue.add(new ArmState(currentState.tilt, desiredState.extend, desiredState.wrist));
-            mIntermediateStateQueue.add(desiredState);
-        } else 
-
-        // if target tilt is not equal to current tilt, we should fully retract before we can tilt
-        if (desiredState.tilt != currentState.tilt) {
-            mIntermediateStateQueue.add(new ArmState(currentState.tilt, 0, 0));
-            mIntermediateStateQueue.add(new ArmState(desiredState.tilt, 0, 0));
-            mIntermediateStateQueue.add(desiredState);
-        } else
+        /* 
+         *  First, we check for invalid end states that meet any of the following conditions.
+         *  - Any joint position exceeds its individual travel limits
+         *  - Combined position that violates frame extension or height limits
+         *  - Combined position that intersects with the bumpers or rear superstructure plate
+         * 
+         *  Once we have confirmed that the end position is valid, we must now compute a series of
+         *  intermediate positions that will safely and quickly get us between any two positions.
+         * 
+         * For positions where J1 and J2 moves through the range where the total length would exceed the
+         * height limit, we need to add an intermediate state with J1 and J2 at the closest position either side
+         * that will not exceed this limit. 
+         */
 
         // all other conditions, go straight to position
         mIntermediateStateQueue.add(desiredState);

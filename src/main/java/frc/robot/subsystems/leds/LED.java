@@ -17,7 +17,7 @@ public class LED extends SubsystemBase {
         DISPLAY_BATTERY_LOW,
         DISPLAY_GOOD_BATTERY,
         DISPLAY_NOT_HOMED,
-        DISPLAY_DELIVERY,
+        DISPLAY_ARM,
         DISPLAY_VISION,
         DISPLAY_CONFIGURE_FAULT,
         OFF
@@ -28,7 +28,7 @@ public class LED extends SubsystemBase {
         DISPLAYING_CONFIGURE_FAULT,
         DISPLAYING_GOOD_BATTERY,
         DISPLAYING_NOT_HOMED,
-        DISPLAYING_DELIVERY,
+        DISPLAYING_ARM,
         DISPLAYING_VISION,
         OFF
     }
@@ -69,7 +69,7 @@ public class LED extends SubsystemBase {
         dashboardLEDBrightnessOverride = new DashboardToggleSwitch("LedBrightnessOverride", false, "Reduced Brightness", "Full Brightness");
     }
 
-    public static void setDeliveryLEDState(TimedLEDState ledState) {
+    public static void setArmLEDState(TimedLEDState ledState) {
         mDeliveryLEDState = ledState;
     }
 
@@ -114,8 +114,8 @@ public class LED extends SubsystemBase {
             case DISPLAYING_NOT_HOMED:
                 setNotHomedCommand(timeInState);
                 break;
-            case DISPLAYING_DELIVERY:
-                setDeliveryLEDCommand(timeInState);
+            case DISPLAYING_ARM:
+                setArmLEDCommand(timeInState);
                 break;
             case DISPLAYING_VISION:
                 setDisplayingVision(timeInState);
@@ -132,7 +132,7 @@ public class LED extends SubsystemBase {
         mDesiredLEDState.writePixels(ledIO);
     }
 
-    private void setDeliveryLEDCommand(double timeInState) {
+    private void setArmLEDCommand(double timeInState) {
         mDeliveryLEDState.getCurrentLEDState(mDesiredLEDState, timeInState);
     }
 
@@ -186,8 +186,8 @@ public class LED extends SubsystemBase {
     private SystemState getStateTransition() {
         if (configure_fault) return SystemState.DISPLAYING_CONFIGURE_FAULT;
         switch (mWantedAction) {
-            case DISPLAY_DELIVERY:
-                return SystemState.DISPLAYING_DELIVERY;
+            case DISPLAY_ARM:
+                return SystemState.DISPLAYING_ARM;
             case DISPLAY_GOOD_BATTERY:
                 return SystemState.DISPLAYING_GOOD_BATTERY;
             case DISPLAY_BATTERY_LOW:

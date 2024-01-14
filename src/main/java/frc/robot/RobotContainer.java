@@ -12,7 +12,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,8 +32,6 @@ import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
-import frc.robot.subsystems.arm.GripperIO;
-import frc.robot.subsystems.arm.GripperIOSim;
 import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
@@ -68,20 +65,13 @@ public class RobotContainer {
     private final Trigger driverXMode = driver.x();
     private final Trigger driverGyroReset = driver.back().debounce(1, DebounceType.kRising); // delay gyro reset for 1 second
     private final Trigger driverAutoAlign = driver.a();
-    private final Trigger driverSnapClosestCardinal = driver.rightTrigger(0.2);
-    private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
+    // private final Trigger driverSnapClosestCardinal = driver.rightTrigger(0.2);
+    // private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
     private final Trigger driverTempDisableFieldOriented = driver.rightBumper();
 
     // OPERATOR CONTROLS
     private final CommandXboxController operator = new CommandXboxController(1);
 
-    private final Trigger operatorSwitchGamepiece = operator.a();
-    private final Trigger operatorManualStow = operator.x();
-    private final Trigger operatorScoreLow = operator.povDown();
-    private final Trigger operatorScoreMid = operator.povRight();
-    private final Trigger operatorScoreHigh = operator.povUp();
-    private final Trigger operatorIntakeGround = operator.leftTrigger(0.2);
-    private final Trigger operatorIntakeShelf = operator.leftBumper();
     private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
     private final Trigger operatorOverrideScore = operator.b();
 
@@ -124,7 +114,7 @@ public class RobotContainer {
                             new FalconSwerveIO(2, "canivore"),
                             new FalconSwerveIO(3, "canivore"));
                     // arm = new Arm(new ArmIOFalcons(), new GripperIOFalcon());
-                    arm = new Arm(new ArmIOSimV1(), new GripperIOSim());
+                    arm = new Arm(new ArmIOSimV1());
                     leds = new LED(new LEDIOCANdle(8, "canivore"));
                     break;
                 case ROBOT_2023_FLAPJACK:
@@ -145,7 +135,7 @@ public class RobotContainer {
                             new SimSwerveIO(),
                             new SimSwerveIO(),
                             new SimSwerveIO());
-                    arm = new Arm(new ArmIOSimV1(), new GripperIOSim());
+                    arm = new Arm(new ArmIOSimV1());
                     leds = new LED(new LEDIOSim(127));
                     break;
                 default:
@@ -170,9 +160,6 @@ public class RobotContainer {
         if (arm == null) {
             arm = new Arm(new ArmIO() {
 
-            }, 
-            new GripperIO() {
-                
             });
         }
 
@@ -194,16 +181,6 @@ public class RobotContainer {
 
         // Register Commands with PathPlanner
         NamedCommands.registerCommand("Drive Set X Mode", new AutonXModeCommand(drive));
-        NamedCommands.registerCommand("Set Gamepiece Cube", ArmCommandFactory.setGamepieceCube(arm));
-        NamedCommands.registerCommand("Set Gamepiece Cone", ArmCommandFactory.setGamepieceCone(arm));
-        NamedCommands.registerCommand("Deploy Intake Ground", ArmCommandFactory.groundIntakeOpen(arm));
-        NamedCommands.registerCommand("Stow Intake", ArmCommandFactory.retract(arm));
-        // NamedCommands.registerCommand("AutoScore Cube High", ArmCommandFactory.autoScore(GoalState.SCORE_WAIT, GoalState.SCORE_CUBE_HIGH, arm, drive));
-        NamedCommands.registerCommand("Position Score Wait", new ArmSetGoalTillFinished(arm, GoalState.SCORE_WAIT));
-        NamedCommands.registerCommand("Position Cube Score High", ArmCommandFactory.instantAutoScore(GoalState.SCORE_CUBE_HIGH, arm));
-        NamedCommands.registerCommand("Position Cone Score High", ArmCommandFactory.instantAutoScore(GoalState.SCORE_CONE_HIGH, arm));
-        NamedCommands.registerCommand("Retract After Score", ArmCommandFactory.waitForScoreThenRetract(arm));
-        NamedCommands.registerCommand("Partial Retract After Score", ArmCommandFactory.waitForScoreThenPartialRetract(arm));
         NamedCommands.registerCommand("Enable Align Override", ArmCommandFactory.setAlignStateOverride(true, drive));
         NamedCommands.registerCommand("Disable Align Override", ArmCommandFactory.setAlignStateOverride(false, drive));
         drive.setupPathPlanner();
@@ -234,8 +211,8 @@ public class RobotContainer {
                 this::getDriveInputs, 
                 driverSlowMode::getAsBoolean, 
                 driverNoFieldOriented::getAsBoolean, 
-                driverSnapClosestCardinal::getAsBoolean,
-                driverSnapOppositeCardinal::getAsBoolean
+                () -> false,// driverSnapClosestCardinal::getAsBoolean,
+                () -> false// driverSnapOppositeCardinal::getAsBoolean
             )
         );
     }
@@ -256,18 +233,7 @@ public class RobotContainer {
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
         //Operator button bindings
-        operatorSwitchGamepiece.onTrue(ArmCommandFactory.toggleGamepiece(arm));
-        operatorManualStow.onTrue(ArmCommandFactory.retract(arm));
-        operatorScoreLow.onTrue(ArmCommandFactory.autoScore(GoalState.SCORE_WAIT_LOW, GoalState.SCORE_CUBE_LOW, GoalState.SCORE_CONE_LOW, arm, drive));
-        operatorScoreMid.onTrue(ArmCommandFactory.autoScore(GoalState.SCORE_WAIT, GoalState.SCORE_CUBE_MID, GoalState.SCORE_CONE_MID, arm, drive));
-        operatorScoreHigh.onTrue(ArmCommandFactory.autoScore(GoalState.SCORE_WAIT, GoalState.SCORE_CUBE_HIGH, GoalState.SCORE_CONE_HIGH, arm, drive));
-        operatorIntakeGround.onTrue(
-            ArmCommandFactory.groundIntakeOpen(arm)
-            .andThen(ArmCommandFactory.waitForIntakeThenRetract(arm))
-        );
-        // operatorIntakeGround.onFalse(ArmCommandFactory.retract(arm));
-        operatorIntakeShelf.onTrue(ArmCommandFactory.autoIntakeShelf(arm, drive));
-
+        
         operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 

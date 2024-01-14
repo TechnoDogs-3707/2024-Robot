@@ -78,12 +78,14 @@ public class Robot extends LoggedRobot {
     
     @Override
     public void robotInit() {
+        System.out.println("Starting TechnoDogs 3707 Robot Code (2024, Codename Skynyrd)");
         
         // Record metadata
         Logger.recordMetadata("Robot", Constants.getRobot().toString());
         Logger.recordMetadata("TuningMode", Boolean.toString(Constants.tuningMode));
         Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
         Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+        Logger.recordMetadata("Codename", "Skynyrd");
         Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
         Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
         Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
@@ -110,8 +112,12 @@ public class Robot extends LoggedRobot {
                 logNoFileAlert.set(true);
             }
             Logger.addDataReceiver(new NT4Publisher());
-            if (Constants.getRobot() == RobotType.ROBOT_2023_HEAVYMETAL) {
-                LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
+            switch (Constants.getRobot()) {
+                case ROBOT_2023_HEAVYMETAL:
+                    LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
+                    break;
+                default:
+                    break;
             }
             break;
             
@@ -157,11 +163,6 @@ public class Robot extends LoggedRobot {
         (Command command) -> {
             logCommandFunction.accept(command, false);
         });
-        
-        // Default to blue alliance in sim (for obvious reasons)
-        if (Constants.getMode() == Mode.SIM) {
-            DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
-        }
         
         robotContainer = new RobotContainer(this);
     }

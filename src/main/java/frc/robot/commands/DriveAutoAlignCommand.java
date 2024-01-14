@@ -29,7 +29,7 @@ public class DriveAutoAlignCommand extends Command {
     @Override
     public void initialize() {
         // get target point
-        targetPoint = AutoAlignPointSelector.chooseTargetPoint(
+        targetPoint = AutoAlignPointSelector.getAlignTarget(
             drive.getPose(), 
             arm.getRequestedAlignment()
         );

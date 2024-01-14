@@ -13,8 +13,6 @@ import frc.robot.lib.dashboard.WidgetConfig;
 import frc.robot.lib.dashboard.SendableWidget;
 import frc.robot.lib.dashboard.Alert.SendableAlerts;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.GripperIOSim;
-import frc.robot.subsystems.arm.Arm.GameObjectType;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -82,13 +80,6 @@ public class Dashboard {
     
     public final SupplierWidget<Boolean> match_autoAlignFinished;
     public final SupplierWidget<Boolean> match_autoAlignStarted;
-    public final SupplierWidget<Boolean> match_coneMode;
-    public final SupplierWidget<Boolean> match_cubeMode;
-    
-    public final SupplierWidget<Boolean> match_scoreHigh;
-    public final SupplierWidget<Boolean> match_scoreMid;
-    public final SupplierWidget<Boolean> match_scoreLow;
-    public final SupplierWidget<Boolean> match_stowTransport;
 
     // Testing Tab
     public static final String testingTabName = "Testing";
@@ -99,7 +90,7 @@ public class Dashboard {
     public final SendableWidget<SendableChooser<String>> testing_enableFullBrightnessLEDS;
     public final SendableWidget<SendableChooser<String>> testing_forceBrakeMode;
 
-    public final SendableWidget<SendableChooser<String>> testing_preloadSimGripper;
+    // public final SendableWidget<SendableChooser<String>> testing_preloadSimGripper;
     
     public Dashboard(Robot robot, RobotContainer container, Drive drive, Arm arm, LED led, Localizer vision, ControllerFeedback controllerFeedback) {
         // Drive Tab
@@ -185,23 +176,8 @@ public class Dashboard {
             return drive.getControlState() == DriveControlState.AUTO_ALIGN || drive.getControlState() == DriveControlState.AUTO_ALIGN_Y_THETA;
         };
         
-        Supplier<Boolean> isConeMode = () -> {
-            return arm.getGameObject() == GameObjectType.CONE;
-        };
-        
-        Supplier<Boolean> isCubeMode = () -> {
-            return arm.getGameObject() == GameObjectType.CUBE;
-        };
-        
         match_autoAlignFinished = new SupplierWidget<Boolean>(matchTabName, "Align Finished", false, drive::autoAlignAtTarget, new WidgetConfig(6, 0, 2, 1, BuiltInWidgets.kBooleanBox));
         match_autoAlignStarted = new SupplierWidget<Boolean>(matchTabName, "Align Started", false, driveIsAligning, new WidgetConfig(6, 1, 2, 1, BuiltInWidgets.kBooleanBox));
-        match_coneMode = new SupplierWidget<Boolean>(matchTabName, "Cone Mode", false, isConeMode, new WidgetConfig(6, 2, 2, 1, BuiltInWidgets.kBooleanBox));
-        match_cubeMode = new SupplierWidget<Boolean>(matchTabName, "Cube Mode", false, isCubeMode, new WidgetConfig(6, 3, 2, 1, BuiltInWidgets.kBooleanBox));
-        
-        match_scoreHigh = new SupplierWidget<Boolean>(matchTabName, "Score High", false, () -> false, new WidgetConfig(8, 0, 2, 1, BuiltInWidgets.kBooleanBox));
-        match_scoreMid = new SupplierWidget<Boolean>(matchTabName, "Score Mid", false, () -> false, new WidgetConfig(8, 1, 2, 1, BuiltInWidgets.kBooleanBox));
-        match_scoreLow = new SupplierWidget<Boolean>(matchTabName, "Score Low", false, () -> false, new WidgetConfig(8, 2, 2, 1, BuiltInWidgets.kBooleanBox));
-        match_stowTransport = new SupplierWidget<Boolean>(matchTabName, "Stow or Transport", false, () -> false, new WidgetConfig(8, 3, 2, 1, BuiltInWidgets.kBooleanBox));
 
         //Testing Tab
         testing_alerts = new SendableWidget<Alert.SendableAlerts>(testingTabName, "Alerts", Alert.getDefaultAlertGroup(), new WidgetConfig(6, 0, 4, 4, "Alerts"));
@@ -210,7 +186,7 @@ public class Dashboard {
         testing_enableFullBrightnessLEDS = new SendableWidget<SendableChooser<String>>(testingTabName, "LED Brightness off FMS", led.dashboardLEDBrightnessOverride.getChooser(), new WidgetConfig(0, 1, 2, 1, BuiltInWidgets.kSplitButtonChooser));
         testing_forceBrakeMode = new SendableWidget<SendableChooser<String>>(testingTabName, "Off-FMS Brake Mode Setting", drive.mForceBrakeModeSwitch.getChooser(), new WidgetConfig(0, 2, 2, 1, BuiltInWidgets.kSplitButtonChooser));
     
-        testing_preloadSimGripper = new SendableWidget<SendableChooser<String>>(testingTabName, "SimGripper Preload Mode", GripperIOSim.mPreloadGripperInAuton.getChooser(), new WidgetConfig(2, 1, 2, 1, BuiltInWidgets.kSplitButtonChooser));
+        // testing_preloadSimGripper = new SendableWidget<SendableChooser<String>>(testingTabName, "SimGripper Preload Mode", GripperIOSim.mPreloadGripperInAuton.getChooser(), new WidgetConfig(2, 1, 2, 1, BuiltInWidgets.kSplitButtonChooser));
     }
     
     public void resetWidgets() {

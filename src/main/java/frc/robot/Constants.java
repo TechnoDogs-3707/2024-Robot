@@ -326,18 +326,13 @@ public final class Constants {
     }
 
     public static final class VisionSubsystem {
-        public static final String kCameraName = "cam1";
+        public static final String kCameraName = "limelight";
         // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
         public static final Transform3d kRobotToCam =
                 new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
 
         // The layout of the AprilTags on the field
-        public static final AprilTagFieldLayout kTagLayout = getAprilTagFieldLayout();
-        
-        public static AprilTagFieldLayout getAprilTagFieldLayout() {
-            return AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
-        }
-                // AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
+        public static final AprilTagFieldLayout kTagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
         // The standard deviations of our vision estimated poses, which affect correction rate
         // (Fake values. Experiment and determine estimation noise on an actual robot.)
@@ -346,7 +341,11 @@ public final class Constants {
     }
 
     public static final class ArmSubsystem {
-        public static final class Tilt {
+        public static final class J1 {
+            public static final int kMasterMotorID = 30;
+            public static final int kFollowerMotorID = 31;
+            public static final String kMotorBus = "canivore"; // Both motors must be on same bus to use follower mode
+
             public static final boolean invertMaster = false;
             public static final boolean invertFollower = false;
 
@@ -359,32 +358,17 @@ public final class Constants {
             public static final double kMagicAccel = 0.0;
             public static final double kMagicJerk = 0.0;
 
-            public static final double kLiberalAllowableError = 0.05;
-            public static final double kConservativeAllowableError = 0.02;
+            public static final double kLiberalAllowableError = 0.0;
+            public static final double kConservativeAllowableError = 0.0;
             
             public static final double kHomePosition = 0.0;
         }
 
-        public static final class Extend {
-            public static final boolean invertMaster = false;
-            public static final boolean invertFollower = false;
+        public static final class J2 {
+            public static final int kMasterMotorID = 32;
+            public static final int kFollowerMotorID = 33;
+            public static final String kMotorBus = "canivore"; // Both motors must be on same bus to use follower mode
 
-            public static final double kP = 0.0;
-            public static final double kI = 0.0;
-            public static final double kD = 0.0;
-            public static final double kV = 0.0;
-            
-            public static final double kMagicVel = 0.0;
-            public static final double kMagicAccel = 0.0;
-            public static final double kMagicJerk = 0.0;
-
-            public static final double kLiberalAllowableError = 0.06;
-            public static final double kConservativeAllowableError = 0.03;
-
-            public static final double kHomePosition = 0.0;
-        }
-
-        public static final class Wrist {
             public static final boolean invertMaster = false;
             public static final boolean invertFollower = false;
 
@@ -397,21 +381,36 @@ public final class Constants {
             public static final double kMagicAccel = 0.0;
             public static final double kMagicJerk = 0.0;
 
-            public static final double kLiberalAllowableError = 0.1;
-            public static final double kConservativeAllowableError = 0.05;
+            public static final double kLiberalAllowableError = 0.;
+            public static final double kConservativeAllowableError = 0.0;
 
             public static final double kHomePosition = 0.0;
         }
 
-        public static final class Gripper {
-            public static final boolean kInvert = false;
-
-            public static final double kAutoIntakeConeThrottle = -1.0;
-            public static final double kAutoScoreConeThrottle = 1.0;
-
-            public static final double kAutoIntakeCubeThrottle = -1.0;
-            public static final double kAutoScoreCubeThrottle = 0.6; 
+        public static final class Constraints {
+            // TODO: define arm motion constraints with utility classes to make checking them easier
         }
+    }
+
+    public static final class Indexer {
+        public static final int kMotorID = 42;
+        public static final String kMotorBus = "canivore";
+
+        public static final double kIdleThrottle = 0.0;
+        public static final double kIntakingThrottle = 1.0;
+        public static final double kOverfedThrottle = -0.1;
+        public static final double kScoringThrottle = 1.0;
+        public static final double kReversingThrottle = -0.5;
+    }
+
+    public static final class Shooter {
+        public static final int kLeftMotorID = 40;
+        public static final int kRightMotorID = 41;
+        public static final String kMotorBus = "canivore";
+
+        public static final double kMaxRPMForBrakeMode = 100;
+        public static final double kIdleRPM = 370.7;
+        public static final double kRPMTolerance = 100;
     }
 
     public static final int kMaxLEDCount = 127;

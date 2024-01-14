@@ -12,17 +12,10 @@ public interface ArmIO {
         public boolean tiltReverseHardLimit = false;
         public boolean tiltForwardSoftLimit = false;
 
-        public double extendMeters = 0.0;
-        public double extendVelocityMetersPerSec = 0.0;
-        public double extendSuppliedCurrentAmps = 0.0;
-        public double extendHottestTempCelsius = 0.0;
-        public boolean extendReverseHardLimit = false;
-        public boolean extendForwardSoftLimit = false;
-
         public double wristRotations = 0.0;
         public double wristVelocityRotPerSec = 0.0;
         public double wristSuppliedCurrentAmps = 0.0;
-        public double wristTempCelsius = 0.0;
+        public double wristHottestTempCelsius = 0.0;
         public boolean wristReverseHardLimit = false;
         public boolean wristForwardSoftLimit = false;
     }
@@ -35,13 +28,9 @@ public interface ArmIO {
 
     public default void setTiltTarget(double rotations) {}
 
-    public default void setExtendTarget(double meters) {}
-
     public default void setWristTarget(double rotations) {}
 
     public default void setTiltFeedForward(double amps) {}
-
-    public default void setExtendFeedForward(double amps) {}
 
     public default void setWristFeedForward(double amps) {}
 }
