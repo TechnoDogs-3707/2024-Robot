@@ -1,9 +1,13 @@
 package frc.robot.lib.drive;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.opencv.core.Point;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.lib.field.AutoAlignPoint;
@@ -12,6 +16,8 @@ import frc.robot.lib.field.AutoAlignPoint.Points;
 public class AutoAlignPointSelector {
 
     public enum RequestedAlignment {
+        AUTO,
+
         SPEAKER_AUTO,
         SPEAKER_CLOSE,
         SPEAKER_PODIUM,
@@ -48,25 +54,29 @@ public class AutoAlignPointSelector {
         if (to.length == 0) {
             return Optional.empty();
         }
-        try {
-            Pose2d[] poses = new Pose2d[to.length];
-            for (int i = 0; i < to.length; i++) {
-                poses[i] = to[i].point.getPose(from).orElseThrow();
+
+        ArrayList<Pose2d> poses = new ArrayList<>();
+        for (AutoAlignPoint.Points alignPoint : to) {
+            var pose = alignPoint.point.getPose(from);
+            if (pose.isPresent()) {
+                poses.add(pose.get());
             }
-            return minimizeDistance(from, poses);
-        } catch (NoSuchElementException e) {
-            return Optional.empty();
         }
+
+        return minimizeDistance(from, poses.toArray(new Pose2d[poses.size()]));
     }
 
     public static Optional<Pose2d> getAlignTarget(Pose2d currentPose, RequestedAlignment alignment) {
         var alliance = DriverStation.getAlliance();
+    
         
         if (alliance.isEmpty()) {
             return Optional.empty();
         }
 
         switch (alignment) {
+            case AUTO:
+                return minimizeDistanceUsingEnums(currentPose, Points.SOURCE_LEFT_INTAKE, Points.SOURCE_RIGHT_INTAKE, Points.AMP_SCORING, Points.SPEAKER_FRONT_CLOSE, Points.SPEAKER_FRONT_PODIUM);
             case SPEAKER_AUTO:
                 return minimizeDistanceUsingEnums(
                     currentPose, 

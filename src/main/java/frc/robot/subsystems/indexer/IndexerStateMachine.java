@@ -1,4 +1,4 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.indexer;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -63,13 +63,15 @@ public class IndexerStateMachine {
         REVERSING,
     }
 
-    private SystemState mSystemState = SystemState.IDLE_EMPTY;
     private WantedAction mWantedAction = WantedAction.IDLE;
+    private SystemState mSystemState = SystemState.IDLE_EMPTY;
     private double mStateStartTime = Timer.getFPGATimestamp();
 
     public void setWantedAction(WantedAction wantedAction) {
-        mWantedAction = wantedAction;
-        mStateStartTime = Timer.getFPGATimestamp();
+        if (wantedAction != mWantedAction) {
+            mWantedAction = wantedAction;
+            mStateStartTime = Timer.getFPGATimestamp();
+        }
     }
 
     public SystemState getSystemState() {

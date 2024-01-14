@@ -18,8 +18,8 @@ public class ArmIOSimV1 implements ArmIO {
     private TrapezoidProfile mJ2Estimator;
 
     public ArmIOSimV1() {
-        kJ1Constraints = new Constraints(0.1875, 0.75);
-        kJ2Constraints = new Constraints(1.75, 3);
+        kJ1Constraints = new Constraints(1, 2);
+        kJ2Constraints = new Constraints(1.5, 3);
 
         mJ1LastState = new State();
         mJ2LastState = new State();

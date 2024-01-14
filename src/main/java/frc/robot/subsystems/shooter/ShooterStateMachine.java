@@ -1,4 +1,4 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.lib.util.Util;
@@ -60,38 +60,42 @@ public class ShooterStateMachine {
     private double mStateStartTime = Timer.getFPGATimestamp();
 
     public void setWantedAction(WantedAction wantedAction) {
-        mWantedAction = wantedAction;
-        mStateStartTime = Timer.getFPGATimestamp();
+        if (wantedAction != mWantedAction) {
+            mWantedAction = wantedAction;
+            mStateStartTime = Timer.getFPGATimestamp();
+        }
     }
 
     public SystemState getSystemState() {
         return mSystemState;
     }
 
-    protected ShooterState update(double motorRPM, double setpointRPM) {
+    protected ShooterState update(double leftMotorRPS, double rightMotorRPS, double leftSetpointRPS, double rightSetpointRPS) {
         double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
 
         boolean shouldEnableFlywheel = false;
         boolean shouldSlowIdle = false;
         boolean shouldEnableBrakeMode = false;
 
+        double fastestMotorRPS = Math.max(leftMotorRPS, rightMotorRPS);
+
         switch (mWantedAction) {
             case OFF:
-                if (motorRPM > kMaxRPMForBrakeMode) {
+                if (fastestMotorRPS > kMaxRPSForBrakeMode) {
                     mSystemState = SystemState.SPINDOWN;
                 } else {
                     mSystemState = SystemState.OFF;
                 }
                 break;
             case IDLE:
-                if (motorRPM > kIdleRPM) {
+                if (fastestMotorRPS > kIdleRPS) {
                     mSystemState = SystemState.SPINDOWN;
                 } else {
                     mSystemState = SystemState.IDLE;
                 }
                 break;
             case SHOOT:
-                if (Util.epsilonEquals(motorRPM, setpointRPM, kRPMTolerance)) {
+                if (Util.epsilonEquals(leftMotorRPS, leftSetpointRPS, kRPSTolerance) && Util.epsilonEquals(rightMotorRPS, rightSetpointRPS, kRPSTolerance)) {
                     mSystemState = SystemState.READY;
                 } else {
                     mSystemState = SystemState.SPINUP;

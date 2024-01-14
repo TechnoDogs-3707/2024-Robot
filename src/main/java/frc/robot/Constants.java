@@ -234,7 +234,7 @@ public final class Constants {
     public static final MotionProfileConstraints kPositionMotionProfileConstraints = new MotionProfileConstraints(
             0.8 * Constants.kMaxVelocityMetersPerSecond,
             0.8 * -Constants.kMaxVelocityMetersPerSecond,
-            0.6 * Constants.kMaxAccelerationMetersPerSecondSquared);
+            0.8 * Constants.kMaxAccelerationMetersPerSecondSquared);
     public static final MotionProfileConstraints kHeadingMotionProfileConstraints = new MotionProfileConstraints(
             0.5 * Constants.kMaxAngularSpeedRadiansPerSecond,
             0.5 * -Constants.kMaxAngularSpeedRadiansPerSecond,
@@ -408,9 +408,9 @@ public final class Constants {
         public static final int kRightMotorID = 41;
         public static final String kMotorBus = "canivore";
 
-        public static final double kMaxRPMForBrakeMode = 100;
-        public static final double kIdleRPM = 370.7;
-        public static final double kRPMTolerance = 100;
+        public static final double kMaxRPSForBrakeMode = 10;
+        public static final double kIdleRPS = 5.0;
+        public static final double kRPSTolerance = 10;
     }
 
     public static final int kMaxLEDCount = 127;

@@ -28,12 +28,17 @@ import frc.robot.lib.util.TimeDelayedBoolean;
 import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.ArmState.ArmAction;
 import frc.robot.subsystems.arm.ArmState.ArmSend;
+import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.leds.LED;
+import frc.robot.subsystems.shooter.ShooterStateMachine;
 
 public class Arm extends SubsystemBase {
 
     public enum GoalState {
-        STOW(ArmState.withConservativeConstraints(0, 0, ArmAction.NEUTRAL, ArmSend.LOW));
+        STOW(ArmState.withConservativeConstraints(0, 0, ArmAction.NEUTRAL, ArmSend.LOW)),
+        INTAKE_SOURCE(ArmState.withConservativeConstraints(0.1, 0.15, ArmAction.NEUTRAL, ArmSend.LOW)),
+        SCORE_AMP(ArmState.withConservativeConstraints(0.26, 0.625, ArmAction.NEUTRAL, ArmSend.LOW)),
+        SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0.1875, 0, ArmAction.NEUTRAL, ArmSend.LOW));
         
         public ArmState state;
 
@@ -122,7 +127,7 @@ public class Arm extends SubsystemBase {
         Rotation2d wristAngle = Rotation2d.fromRotations(mArmInputs.wristRotations);
 
         mSensorMechJ1.setAngle(tiltAngle);
-        mSensorMechJ2.setAngle(wristAngle.unaryMinus().minus(Rotation2d.fromDegrees(100)));
+        mSensorMechJ2.setAngle(wristAngle.unaryMinus().minus(Rotation2d.fromDegrees(180)));
 
         mMeasuredState = new ArmState(mArmInputs.tiltRotations, mArmInputs.wristRotations, mCommandedState.action, mCommandedState.send);
 
@@ -214,7 +219,7 @@ public class Arm extends SubsystemBase {
     }
 
     public RequestedAlignment getRequestedAlignment() {
-        return RequestedAlignment.AMP; // TODO: calculate requested alignment
+        return RequestedAlignment.AUTO; // TODO: calculate requested alignment
     }
 
     private synchronized Optional<TimedLEDState> handleLEDs(double timestamp) {
@@ -234,8 +239,9 @@ public class Arm extends SubsystemBase {
     }
 
     private synchronized Optional<TimedLEDState> handleScoringAlignmentLEDs(double timestamp) {
-        LEDState pieceColor = LEDState.kAutoAlign;
-        double maxError = 0.56 / 2.0; // m (distance between low goals)
+        LEDState pieceColor = LEDState.kGamepiece;
+        // double maxError = 0.56 / 2.0; // m (distance between low goals)
+        double maxError = 2;
 
         // Pose2d fieldToVehicle = RobotState.getInstance().getFieldToVehicleAbsolute(timestamp);
         Pose2d fieldToVehicle = RobotStateTracker.getInstance().getCurrentRobotPose();

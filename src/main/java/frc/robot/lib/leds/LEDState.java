@@ -18,7 +18,7 @@ public class LEDState implements ILEDDisplayable {
 
     public static final LEDState kAutoAlign = new LEDState(0, 255, 0);
     public static final LEDState kWaitingForDelivery = new LEDState(255, 215, 0);
-    public static final LEDState kGamepiece = new LEDState(125, 0, 255); // TODO: change to orange
+    public static final LEDState kGamepiece = new LEDState(255, 165, 0);
 
     public LEDState() {
         blue = 0;

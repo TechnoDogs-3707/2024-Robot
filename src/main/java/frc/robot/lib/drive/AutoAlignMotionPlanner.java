@@ -44,7 +44,7 @@ public class AutoAlignMotionPlanner {
         var odom_to_target_point = mFieldToTargetPoint;
 
         mXController.setGoalAndConstraints(
-            new MotionProfileGoal(odom_to_target_point.getTranslation().getX(), 0, IMotionProfileGoal.CompletionBehavior.VIOLATE_MAX_ACCEL, 0.08, 0.05),
+            new MotionProfileGoal(odom_to_target_point.getTranslation().getX(), 0, IMotionProfileGoal.CompletionBehavior.VIOLATE_MAX_ACCEL, 0.02, 0.05),
             Constants.kPositionMotionProfileConstraints);
         mYController.setGoalAndConstraints(
             new MotionProfileGoal(odom_to_target_point.getTranslation().getY(), 0, IMotionProfileGoal.CompletionBehavior.VIOLATE_MAX_ACCEL, 0.02, 0.05),

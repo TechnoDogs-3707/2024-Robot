@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -41,16 +42,26 @@ import frc.robot.subsystems.drive.GyroNavXIO;
 import frc.robot.subsystems.drive.GyroPigeonIO;
 import frc.robot.subsystems.drive.SimSwerveIO;
 import frc.robot.subsystems.drive.SwerveModuleIO;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.IndexerIO;
+import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
 import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOFalcon;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterStateMachine;
 
 public class RobotContainer {
     private Drive drive;
     private Arm arm;
+    private Shooter shooter;
+    private Indexer indexer;
     private LED leds;
     private Localizer vision;
     private ControllerFeedback controllerFeedback;
@@ -64,16 +75,21 @@ public class RobotContainer {
     private final Trigger driverSlowMode = driver.leftBumper();
     private final Trigger driverXMode = driver.x();
     private final Trigger driverGyroReset = driver.back().debounce(1, DebounceType.kRising); // delay gyro reset for 1 second
-    private final Trigger driverAutoAlign = driver.a();
+    private final Trigger driverAutoAlign = driver.rightTrigger(0.1);
     // private final Trigger driverSnapClosestCardinal = driver.rightTrigger(0.2);
     // private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
     private final Trigger driverTempDisableFieldOriented = driver.rightBumper();
+    
+    private final Trigger testModeStow = driver.b();
+    private final Trigger testModeIntake = driver.leftTrigger(0.1);
+    private final Trigger testModeScore = driver.y();
+    private final Trigger testModeAmp = driver.povUp();
 
     // OPERATOR CONTROLS
     private final CommandXboxController operator = new CommandXboxController(1);
 
     private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
-    private final Trigger operatorOverrideScore = operator.b();
+    // private final Trigger operatorOverrideScore = operator.b();
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -136,6 +152,8 @@ public class RobotContainer {
                             new SimSwerveIO(),
                             new SimSwerveIO());
                     arm = new Arm(new ArmIOSimV1());
+                    // indexer = new Indexer(null)
+                    shooter = new Shooter(new ShooterIOSim());
                     leds = new LED(new LEDIOSim(127));
                     break;
                 default:
@@ -159,6 +177,18 @@ public class RobotContainer {
 
         if (arm == null) {
             arm = new Arm(new ArmIO() {
+
+            });
+        }
+
+        if (shooter == null) {
+            shooter = new Shooter(new ShooterIO() {
+                
+            });
+        }
+
+        if (indexer == null) {
+            indexer = new Indexer(new IndexerIO() {
 
             });
         }
@@ -225,6 +255,31 @@ public class RobotContainer {
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
         driverAutoAlign.whileTrue(new DriveAutoAlignCommand(drive, arm));
 
+        testModeStow.onTrue(new ParallelCommandGroup(
+            new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
+            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.IDLE), indexer),
+            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.IDLE), shooter)
+        ));
+
+        testModeIntake.onTrue(new ParallelCommandGroup(
+            new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_SOURCE), arm),
+            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.INTAKE), indexer),
+            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.OFF), shooter)
+        ));
+
+        testModeScore.onTrue(new ParallelCommandGroup(
+            new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_SPEAKER_SUBWOOFER), arm),
+            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
+            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.SHOOT), shooter)
+        ));
+
+        testModeAmp.onTrue(new ParallelCommandGroup(
+            new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_AMP), arm),
+            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
+            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.SHOOT), shooter)
+        ));
+
+
         // Driver override switches
         driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));
         driverGyroFail.onTrue(DriveUtilityCommandFactory.failGyro(drive));
@@ -237,7 +292,7 @@ public class RobotContainer {
         operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 
-        operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
+        // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
 
         // Operator override switches
         // armForceEnable
