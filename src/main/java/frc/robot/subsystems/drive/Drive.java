@@ -7,6 +7,7 @@ package frc.robot.subsystems.drive;
 import java.util.Optional;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -39,6 +40,7 @@ import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.AutoAlignMotionPlanner;
 import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
+import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
 import frc.robot.subsystems.localizer.VisionPose;
 
@@ -113,9 +115,12 @@ public class Drive extends SubsystemBase {
     public final Field2d mPosePreviewSource = new Field2d();
 
     public final DashboardToggleSwitch mPoseWidgetUsePreview = new DashboardToggleSwitch("poseWidgetPreview", false, "Current Pose", "Pose Preview");
-    public final DashboardToggleSwitch mPoseInitFromTags = new DashboardToggleSwitch("poseInitFromTags", false, "Auton Init", "AprilTags");
-    public final DashboardToggleSwitch mUseTagsDuringAuto = new DashboardToggleSwitch("useTagsDuringAuto", false, "Disabled", "Enabled");
+    public final DashboardToggleSwitch mPoseInitFromEstimator = new DashboardToggleSwitch("poseInitFromTags", false, "Auton Init", "Estimated Pose");
+    public final DashboardToggleSwitch mUseAutoAlignDuringAuto = new DashboardToggleSwitch("useTagsDuringAuto", false, "Disabled", "Enabled");
 
+    public final LoggedDashboardChooser<RequestedAlignment> mAutoAlignSourcePreference = new LoggedDashboardChooser<>("Source Align Preference");
+    public final LoggedDashboardChooser<RequestedAlignment> mAutoAlignSpeakerPreference = new LoggedDashboardChooser<>("Speaker Align Preference");
+        
     private final SwerveModule[] mModules;
     private final int kFrontLeftID = 0;
     private final int kFrontRightID = 1;
@@ -151,11 +156,6 @@ public class Drive extends SubsystemBase {
 
     private Rotation2d mAutonRotationTarget;
 
-    private boolean mAllowUpdateEncoders = false;
-
-    public SendableChooser<Boolean> mEncoderUpdateChooser = new SendableChooser<>();
-    private double[] mEncoderOffsetCache;
-
     public Drive(GyroIO gyroIO, SwerveModuleIO frontLeftIO, SwerveModuleIO frontRightIO, SwerveModuleIO rearLeftIO,
             SwerveModuleIO rearRightIO) {
         mGyroIO = gyroIO;
@@ -171,9 +171,13 @@ public class Drive extends SubsystemBase {
 
         mAutonRotationTarget = new Rotation2d();
 
-        mEncoderUpdateChooser.setDefaultOption("Disabled (Safe)", false);
-        mEncoderUpdateChooser.addOption("ENABLED (UNSAFE)", true);
-        mEncoderOffsetCache = new double[4];
+        mAutoAlignSourcePreference.addDefaultOption("Any", RequestedAlignment.SOURCE_AUTO);
+        mAutoAlignSourcePreference.addOption("Left", RequestedAlignment.SOURCE_LEFT);
+        mAutoAlignSourcePreference.addOption("Right", RequestedAlignment.SOURCE_RIGHT);
+
+        mAutoAlignSpeakerPreference.addDefaultOption("Any", RequestedAlignment.SPEAKER_AUTO);
+        mAutoAlignSpeakerPreference.addOption("Close", RequestedAlignment.SPEAKER_CLOSE);
+        mAutoAlignSpeakerPreference.addOption("Podium", RequestedAlignment.SPEAKER_PODIUM);
 
         mLastMovementTimer.reset();
     }
@@ -186,7 +190,7 @@ public class Drive extends SubsystemBase {
             this::getMeasuredSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::setPathFollowing, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kPathFollowerConfig,
-            () -> true,
+            () -> false,
             this // Reference to this subsystem to set requirements
         );
         PathPlannerLogging.setLogActivePathCallback(
@@ -393,15 +397,12 @@ public class Drive extends SubsystemBase {
             }
         }
 
-        mAllowUpdateEncoders = mEncoderUpdateChooser.getSelected();
-
         // Run alert checks
         mAlertGyroNotConnected.set(!mGyroInputs.connected);
         mAlertGyroManualFail.set(mIgnoreGyro);
         mAlertUsingDeltaIntegration.set(shouldRevertToDeltaIntegration());
         mAlertCoastModeEnabled.set(!mIsBrakeMode);
         mAlertSteerNeutralMode.set(mModules[0].getSteerNeutralMode());
-        mAlertOffsetsNotSafe.set(mAllowUpdateEncoders);
         mPathPlannerNotConfigured.set(!mHasPPBeenConfigured);
     }
 
@@ -490,67 +491,6 @@ public class Drive extends SubsystemBase {
         mPoseEstimator.addVisionMeasurement(pose.pose.toPose2d(), pose.timestampSeconds, pose.stddevs);
     }
 
-    public boolean updateEncoderOffset(int module, double newOffset) {
-        if (mAllowUpdateEncoders) {
-            mModules[module].updateEncoderOffset(newOffset);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean zeroEncoder(int module) {
-        return updateEncoderOffset(module, mModules[module].getEncoderRawPosition());
-    }
-
-    public boolean updateAllEncoderOffsets(double[] offsets) {
-        if (mAllowUpdateEncoders) {
-            for (int i = 0; i < mModules.length; i++) {
-                mModules[i].updateEncoderOffset(offsets[i]);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public boolean updateEncoderOffsetsFromPersist() {
-        if (mAllowUpdateEncoders) {
-            boolean allValuesPresent = Preferences.containsKey("drive/offsets/0")
-                && Preferences.containsKey("drive/offsets/1")
-                && Preferences.containsKey("drive/offsets/2")
-                && Preferences.containsKey("drive/offsets/3");
-            if (allValuesPresent) {
-                double[] offsets = new double[4];
-                for (int i = 0; i < mModules.length; i++) {
-                    offsets[i] = Preferences.getDouble("drive/offsets/"+i, 0);
-                }
-                updateAllEncoderOffsets(offsets);
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    public boolean saveEncoderOffsetsToPersist() {
-        if (mAllowUpdateEncoders) {
-            for (int i = 0; i < mModules.length; i++) {
-                Preferences.setDouble("drive/offsets/"+i, mModules[i].getEncoderOffset());
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public void refreshEncoderOffsets() {
-        for (int i = 0; i < mModules.length; i++) {
-            mEncoderOffsetCache[i] = mModules[i].getEncoderOffset();
-        }
-    }
-
-    public double getCachedEncoderOffsets(int module) {
-        return mEncoderOffsetCache[module];
-    }
-
     public double getLastEncoderPosition(int module) {
         return mLastSwervePositions[module].angle.getRotations();
     }
@@ -637,6 +577,10 @@ public class Drive extends SubsystemBase {
     }
 
     public Pose2d getAutonInitialPose() {
-        return new Pose2d();
+        if (mPoseInitFromEstimator.getAsBoolean()) {
+            return mLastRobotPose;
+        } else {
+            return new Pose2d(); // TODO: get initial robot pose from autonomous trajectory
+        }
     }
 }

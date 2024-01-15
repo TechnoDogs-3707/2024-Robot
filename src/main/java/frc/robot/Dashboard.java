@@ -29,21 +29,7 @@ public class Dashboard {
     public final SupplierWidget<String> drive_activeKinematicLimits;
     public final SendableWidget<SendableChooser<Boolean>> drive_enableVision;
     
-    public final SendableWidget<SendableChooser<Boolean>> drive_allowEncoderCal;
-    public final SendableWidget<SendableTriggerButton> drive_saveEncoderOffsets;
-    public final SendableWidget<SendableTriggerButton> drive_restoreEncoderOffsets;
     public final SendableWidget<SendableChooser<Boolean>> drive_steerMotorBrake;
-    public final SendableWidget<SendableTriggerButton> drive_refreshOffsets;
-    
-    public final SendableWidget<SendableTriggerButton> drive_mod0Cal;
-    public final SendableWidget<SendableTriggerButton> drive_mod1Cal;
-    public final SendableWidget<SendableTriggerButton> drive_mod2Cal;
-    public final SendableWidget<SendableTriggerButton> drive_mod3Cal;
-    
-    public final SupplierWidget<Double> drive_mod0_offset;
-    public final SupplierWidget<Double> drive_mod1_offset;
-    public final SupplierWidget<Double> drive_mod2_offset;
-    public final SupplierWidget<Double> drive_mod3_offset;
     
     public final SupplierWidget<Double> drive_mod0_position;
     public final SupplierWidget<Double> drive_mod1_position;
@@ -53,14 +39,15 @@ public class Dashboard {
     // Setup Tab
     public final String setupTabName = "Setup";
     public final SendableWidget<SendableAlerts> setup_alerts;
-    public final SupplierWidget<Boolean> setup_redAlliance;
-    public final SupplierWidget<Boolean> setup_blueAlliance;
     public final SendableWidget<SendableChooser<String>> setup_autonMode;
+
+    public final SendableWidget<SendableChooser<String>> setup_preferredSourceSide;
+    public final SendableWidget<SendableChooser<String>> setup_preferredSpeakerLocation;
 
     public final SendableWidget<Field2d> setup_initPreview;
     public final SendableWidget<SendableChooser<String>> setup_poseWidgetSource;
     public final SendableWidget<SendableChooser<String>> setup_poseInitSource;
-    public final SendableWidget<SendableChooser<String>> setup_useAprilTagsInAuto;
+    public final SendableWidget<SendableChooser<String>> setup_useAutoAlignInAuto;
 
     // TODO: link a shuffleboard widget to a smartdashboard number
     // public final SendableWidget<LoggedDashboardNumber> setup_endgameAlert1;
@@ -107,42 +94,8 @@ public class Dashboard {
         drive_enableVision = new SendableWidget<SendableChooser<Boolean>>(driveTabName, "Use AprilTags",
         vision.mVisionEnableChooser, new WidgetConfig(0, 2, 2, 1, BuiltInWidgets.kSplitButtonChooser));
         
-        drive_allowEncoderCal = new SendableWidget<SendableChooser<Boolean>>(driveTabName, "Encoder Updates",
-        drive.mEncoderUpdateChooser, new WidgetConfig(4, 0, 2, 1, BuiltInWidgets.kSplitButtonChooser));
-        
-        drive_saveEncoderOffsets = new SendableWidget<SendableTriggerButton>(driveTabName, "Save Offsets",
-        new SendableTriggerButton("Save", () -> {
-            drive.saveEncoderOffsetsToPersist();
-        }), new WidgetConfig(4, 1, 1, 1, BuiltInWidgets.kCommand));
-        
-        drive_restoreEncoderOffsets = new SendableWidget<SendableTriggerButton>(driveTabName, "Restore Offsets",
-        new SendableTriggerButton("Restore", () -> {
-            drive.updateEncoderOffsetsFromPersist();
-        }), new WidgetConfig(5, 1, 1, 1, BuiltInWidgets.kCommand));
         drive_steerMotorBrake = new SendableWidget<SendableChooser<Boolean>>(driveTabName, "Steer Motor Neutral Mode",
         SwerveModule.steerNeutralMode, new WidgetConfig(4, 2, 2, 1, BuiltInWidgets.kSplitButtonChooser));
-        
-        drive_refreshOffsets = new SendableWidget<SendableTriggerButton>(driveTabName, "Offset Cache",
-        new SendableTriggerButton("Refresh", () -> drive.refreshEncoderOffsets()),
-        new WidgetConfig(9, 3, 1, 1, BuiltInWidgets.kCommand));
-        
-        drive_mod0Cal = new SendableWidget<SendableTriggerButton>(driveTabName, "Moddule 0",
-        new SendableTriggerButton("Calibrate", () -> drive.zeroEncoder(0)),
-        new WidgetConfig(6, 0, 1, 1, BuiltInWidgets.kCommand));
-        drive_mod1Cal = new SendableWidget<SendableTriggerButton>(driveTabName, "Moddule 1",
-        new SendableTriggerButton("Calibrate", () -> drive.zeroEncoder(1)),
-        new WidgetConfig(7, 0, 1, 1, BuiltInWidgets.kCommand));
-        drive_mod2Cal = new SendableWidget<SendableTriggerButton>(driveTabName, "Moddule 2",
-        new SendableTriggerButton("Calibrate", () -> drive.zeroEncoder(2)),
-        new WidgetConfig(8, 0, 1, 1, BuiltInWidgets.kCommand));
-        drive_mod3Cal = new SendableWidget<SendableTriggerButton>(driveTabName, "Moddule 3",
-        new SendableTriggerButton("Calibrate", () -> drive.zeroEncoder(3)),
-        new WidgetConfig(9, 0, 1, 1, BuiltInWidgets.kCommand));
-        
-        drive_mod0_offset = new SupplierWidget<Double>(driveTabName, "Offset 0", 0.0, () -> drive.getCachedEncoderOffsets(0), new WidgetConfig(6, 1, 1, 1, BuiltInWidgets.kTextView));
-        drive_mod1_offset = new SupplierWidget<Double>(driveTabName, "Offset 1", 0.0, () -> drive.getCachedEncoderOffsets(1), new WidgetConfig(7, 1, 1, 1, BuiltInWidgets.kTextView));
-        drive_mod2_offset = new SupplierWidget<Double>(driveTabName, "Offset 2", 0.0, () -> drive.getCachedEncoderOffsets(2), new WidgetConfig(8, 1, 1, 1, BuiltInWidgets.kTextView));
-        drive_mod3_offset = new SupplierWidget<Double>(driveTabName, "Offset 3", 0.0, () -> drive.getCachedEncoderOffsets(3), new WidgetConfig(9, 1, 1, 1, BuiltInWidgets.kTextView));
         
         drive_mod0_position = new SupplierWidget<Double>(driveTabName, "Position 0", 0.0, () -> drive.getLastEncoderPosition(0), new WidgetConfig(6, 2, 1, 1, BuiltInWidgets.kTextView));
         drive_mod1_position = new SupplierWidget<Double>(driveTabName, "Position 1", 0.0, () -> drive.getLastEncoderPosition(1), new WidgetConfig(7, 2, 1, 1, BuiltInWidgets.kTextView));
@@ -152,15 +105,16 @@ public class Dashboard {
         // Setup Tab
         setup_alerts = new SendableWidget<Alert.SendableAlerts>(setupTabName, "Master Alerts", Alert.getDefaultAlertGroup(), new WidgetConfig(6, 0, 4, 4, "Alerts"));
         
-        setup_redAlliance = new SupplierWidget<Boolean>(setupTabName, "Red Alliance", false, () -> false, new WidgetConfig(0, 0, 1, 1, BuiltInWidgets.kBooleanBox));
-        setup_blueAlliance = new SupplierWidget<Boolean>(setupTabName, "Blue Alliance", false, () -> false, new WidgetConfig(1, 0, 1, 1, BuiltInWidgets.kBooleanBox));
-        setup_autonMode = new SendableWidget<SendableChooser<String>>(setupTabName, "Autonomous Mode", container.autoChooser.getSendableChooser(), new WidgetConfig(2, 0, 4, 1, BuiltInWidgets.kComboBoxChooser));
+        setup_autonMode = new SendableWidget<SendableChooser<String>>(setupTabName, "Autonomous Mode", container.autoChooser.getSendableChooser(), new WidgetConfig(0, 0, 4, 1, BuiltInWidgets.kComboBoxChooser));
         
+        setup_preferredSourceSide = new SendableWidget<SendableChooser<String>>(setupTabName, "Preferred Source", drive.mAutoAlignSourcePreference.getSendableChooser(), new WidgetConfig(4, 1, 2, 1, BuiltInWidgets.kComboBoxChooser));
+        setup_preferredSpeakerLocation = new SendableWidget<SendableChooser<String>>(setupTabName, "Preferred Speaker", drive.mAutoAlignSpeakerPreference.getSendableChooser(), new WidgetConfig(4, 2, 2, 1, BuiltInWidgets.kComboBoxChooser));
+
         setup_initPreview = new SendableWidget<Field2d>(setupTabName, "Initial Pose Preview", drive.mPosePreviewSource, new WidgetConfig(0, 1, 4, 2, BuiltInWidgets.kField));
         setup_poseWidgetSource = new SendableWidget<SendableChooser<String>>(setupTabName, "Pose Widget Source", drive.mPoseWidgetUsePreview.getChooser(), new WidgetConfig(0, 3, 2, 1, BuiltInWidgets.kSplitButtonChooser));
-        setup_poseInitSource = new SendableWidget<SendableChooser<String>>(setupTabName, "Pose Init Source", drive.mPoseInitFromTags.getChooser(), new WidgetConfig(2, 3, 2, 1, BuiltInWidgets.kSplitButtonChooser));
+        setup_poseInitSource = new SendableWidget<SendableChooser<String>>(setupTabName, "Pose Init Source", drive.mPoseInitFromEstimator.getChooser(), new WidgetConfig(2, 3, 2, 1, BuiltInWidgets.kSplitButtonChooser));
 
-        setup_useAprilTagsInAuto = new SendableWidget<SendableChooser<String>>(setupTabName, "Use Fiducials in Auto", drive.mUseTagsDuringAuto.getChooser(), new WidgetConfig(4, 3, 2, 1, BuiltInWidgets.kSplitButtonChooser));
+        setup_useAutoAlignInAuto = new SendableWidget<SendableChooser<String>>(setupTabName, "Use AutoAlign in Auto", drive.mUseAutoAlignDuringAuto.getChooser(), new WidgetConfig(4, 3, 2, 1, BuiltInWidgets.kSplitButtonChooser));
 
         // Match Tab
         match_alerts = new SendableWidget<Alert.SendableAlerts>(matchTabName, "Alerts", Alert.getDefaultAlertGroup(), new WidgetConfig(0, 0, 4, 4, "Alerts"));
