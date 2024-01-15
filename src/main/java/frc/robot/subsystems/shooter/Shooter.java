@@ -37,6 +37,7 @@ public class Shooter extends SubsystemBase{
         }
 
         // update state machine
+        mStateMachine.setWantedAction(mWantedAction);
         ShooterState outputState = mStateMachine.update(mInputs.leftMotorSpeedRPS, mInputs.rightMotorSpeedRPS, mSetpointSpeedLeft, mSetpointSpeedRight);
 
         double finalSetpointLeft = mSetpointSpeedLeft;
@@ -61,6 +62,7 @@ public class Shooter extends SubsystemBase{
         mIO.setSpeedSetpointLeft(finalSetpointLeft);
         mIO.setSpeedSetpointRight(finalSetpointRight);
         mIO.setBrakeMode(outputState.getBrakeModeEnabled());
+        mIO.setSpinDownMode(!outputState.getFlywheelEnabled());
     }
 
     public void setWantedAction(WantedAction wantedAction) {

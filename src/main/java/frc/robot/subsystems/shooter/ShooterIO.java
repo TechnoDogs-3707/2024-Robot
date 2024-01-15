@@ -23,4 +23,6 @@ public interface ShooterIO {
     public default void setSpeedSetpointRight(double setpointSpeedRPS) {}
 
     public default void setBrakeMode(boolean brakeMode) {}
+
+    public default void setSpinDownMode(boolean spindownMode) {}
 }

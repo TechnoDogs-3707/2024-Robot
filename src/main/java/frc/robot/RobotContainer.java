@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -255,25 +256,27 @@ public class RobotContainer {
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
         driverAutoAlign.whileTrue(new DriveAutoAlignCommand(drive, arm));
 
-        testModeStow.onTrue(new ParallelCommandGroup(
+        testModeStow.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.IDLE), indexer),
             new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.IDLE), shooter)
         ));
 
-        testModeIntake.onTrue(new ParallelCommandGroup(
+        testModeIntake.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_SOURCE), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.INTAKE), indexer),
             new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.OFF), shooter)
         ));
 
-        testModeScore.onTrue(new ParallelCommandGroup(
+        testModeScore.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_SPEAKER_SUBWOOFER), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.SHOOT), shooter)
+            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.SHOOT), shooter),
+            new InstantCommand(() -> shooter.setSetpointSpeedLeft(150), shooter),
+            new InstantCommand(() -> shooter.setSetpointSpeedRight(150), shooter)
         ));
 
-        testModeAmp.onTrue(new ParallelCommandGroup(
+        testModeAmp.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_AMP), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
             new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.SHOOT), shooter)

@@ -19,18 +19,25 @@ public class ShooterIOSim implements ShooterIO {
     private double mLeftSetpoint = 0.0;
     private double mRightSetpoint = 0.0;
 
-    public ShooterIOSim() {
-        mLeftFlywheelSim = new FlywheelSim(DCMotor.getFalcon500(1), 1, 0.5);
-        mRightFlywheelSim = new FlywheelSim(DCMotor.getFalcon500(1), 1, 0.5);
+    private boolean mSpinDownMode = false;
 
-        mShooterMotorFeedforward = new SimpleMotorFeedforward(0, 0.025);
+    public ShooterIOSim() {
+        mLeftFlywheelSim = new FlywheelSim(DCMotor.getFalcon500(1), 1, 0.0025);
+        mRightFlywheelSim = new FlywheelSim(DCMotor.getFalcon500(1), 1, 0.0025);
+
+        mShooterMotorFeedforward = new SimpleMotorFeedforward(0, 0.11);
     }
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
-        mLeftFlywheelSim.setInputVoltage(mShooterMotorFeedforward.calculate(mLeftSetpoint));
-        mRightFlywheelSim.setInputVoltage(mShooterMotorFeedforward.calculate(mRightSetpoint));
-        
+        if (mSpinDownMode) {
+            mLeftFlywheelSim.setInputVoltage(0);
+            mRightFlywheelSim.setInputVoltage(0);
+        } else {
+            mLeftFlywheelSim.setInputVoltage(mShooterMotorFeedforward.calculate(mLeftSetpoint));
+            mRightFlywheelSim.setInputVoltage(mShooterMotorFeedforward.calculate(mRightSetpoint));
+        }
+
         mLeftFlywheelSim.update(Constants.loopPeriodSecs);
         mRightFlywheelSim.update(Constants.loopPeriodSecs);
 
@@ -39,7 +46,7 @@ public class ShooterIOSim implements ShooterIO {
         inputs.leftMotorTempCelsius = 0.0;
 
         inputs.rightMotorSpeedRPS = mRightFlywheelSim.getAngularVelocityRPM() / 60.0;
-        inputs.leftMotorSuppliedCurrentAmps = Math.abs(mRightFlywheelSim.getCurrentDrawAmps());
+        inputs.rightMotorSuppliedCurrentAmps = Math.abs(mRightFlywheelSim.getCurrentDrawAmps());
         inputs.rightMotorTempCelsius = 0.0;
     }
 
@@ -51,5 +58,10 @@ public class ShooterIOSim implements ShooterIO {
     @Override
     public void setSpeedSetpointRight(double setpointSpeedRPS) {
         mRightSetpoint = setpointSpeedRPS;
+    }
+
+    @Override
+    public void setSpinDownMode(boolean spindownMode) {
+        mSpinDownMode = spindownMode;
     }
 }

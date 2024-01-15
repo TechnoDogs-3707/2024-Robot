@@ -409,6 +409,7 @@ public final class Constants {
         public static final String kMotorBus = "canivore";
 
         public static final double kMaxRPSForBrakeMode = 10;
+        public static final double kMaxRPSForIdleControl = 10;
         public static final double kIdleRPS = 5.0;
         public static final double kRPSTolerance = 10;
     }

@@ -88,7 +88,7 @@ public class ShooterStateMachine {
                 }
                 break;
             case IDLE:
-                if (fastestMotorRPS > kIdleRPS) {
+                if (fastestMotorRPS > kMaxRPSForIdleControl) {
                     mSystemState = SystemState.SPINDOWN;
                 } else {
                     mSystemState = SystemState.IDLE;
