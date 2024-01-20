@@ -28,7 +28,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    private static final RobotType robot = RobotType.ROBOT_2023_FLAPJACK;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     

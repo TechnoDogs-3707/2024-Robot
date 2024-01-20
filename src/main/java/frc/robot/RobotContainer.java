@@ -10,7 +10,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;    
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -129,7 +129,8 @@ public class RobotContainer {
                     break;
                 case ROBOT_2023_FLAPJACK:
                     drive = new Drive(
-                            new GyroNavXIO(Port.kMXP),
+                            //new GyroIO() {},
+                            new GyroPigeonIO(9, "canivore"),
                             new FalconSwerveIO(0, "canivore"), 
                             new FalconSwerveIO(1, "canivore"), 
                             new FalconSwerveIO(2, "canivore"), 
