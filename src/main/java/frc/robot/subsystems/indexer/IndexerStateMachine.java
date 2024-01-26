@@ -9,7 +9,7 @@ public class IndexerStateMachine {
         /**
          * Does not run the indexer motors under any condition.
          */
-        IDLE,
+        OFF,
 
         /**
          * Will run the indexer motors until the first banner sensor is triggered.
@@ -35,7 +35,7 @@ public class IndexerStateMachine {
         /**
          * The default state of the indexer. No motors are running.
          */
-        IDLE_EMPTY,
+        OFF_EMPTY,
 
         /**
          * Motor is running, and the first banner sensor is not triggered.
@@ -50,7 +50,7 @@ public class IndexerStateMachine {
         /**
          * Only the first banner sensor is triggered, and the motor is stopped.
          */
-        IDLE_FULL,
+        OFF_FULL,
 
         /**
          * The motor is feeding forwards.
@@ -63,8 +63,8 @@ public class IndexerStateMachine {
         REVERSING,
     }
 
-    private WantedAction mWantedAction = WantedAction.IDLE;
-    private SystemState mSystemState = SystemState.IDLE_EMPTY;
+    private WantedAction mWantedAction = WantedAction.OFF;
+    private SystemState mSystemState = SystemState.OFF_EMPTY;
     private double mStateStartTime = Timer.getFPGATimestamp();
 
     public void setWantedAction(WantedAction wantedAction) {
@@ -84,16 +84,16 @@ public class IndexerStateMachine {
         double desiredThrottle = 0;
 
         switch (mWantedAction) {
-            case IDLE:
+            case OFF:
                 if (!firstBannerTriggered && !secondBannerTriggered) {
-                    mSystemState = SystemState.IDLE_EMPTY;
+                    mSystemState = SystemState.OFF_EMPTY;
                 } else {
-                    mSystemState = SystemState.IDLE_FULL;
+                    mSystemState = SystemState.OFF_FULL;
                 }
                 break;
             case INTAKE:
                 if (firstBannerTriggered && !secondBannerTriggered) {
-                    mSystemState = SystemState.IDLE_FULL;
+                    mSystemState = SystemState.OFF_FULL;
                 } else if (firstBannerTriggered && secondBannerTriggered) {
                     mSystemState = SystemState.OVERFED;
                 } else {
@@ -104,19 +104,19 @@ public class IndexerStateMachine {
                 if (firstBannerTriggered || secondBannerTriggered) {
                     mSystemState = SystemState.SCORING;
                 } else {
-                    mSystemState = SystemState.IDLE_EMPTY;
+                    mSystemState = SystemState.OFF_EMPTY;
                 }
                 break;
             case REVERSE:
                 mSystemState = SystemState.REVERSING;
                 break;
             default:
-                mSystemState = SystemState.IDLE_EMPTY;
+                mSystemState = SystemState.OFF_EMPTY;
                 break;
         }
 
         switch (mSystemState) {
-            case IDLE_EMPTY:
+            case OFF_EMPTY:
                 desiredThrottle = kIdleThrottle;
                 break;
             case INTAKING:
@@ -125,7 +125,7 @@ public class IndexerStateMachine {
             case OVERFED:
                 desiredThrottle = kOverfedThrottle;
                 break;
-            case IDLE_FULL:
+            case OFF_FULL:
                 desiredThrottle = kIdleThrottle;
                 break;
             case SCORING:

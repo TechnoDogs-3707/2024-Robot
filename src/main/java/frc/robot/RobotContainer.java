@@ -258,7 +258,7 @@ public class RobotContainer {
 
         testModeStow.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
-            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.IDLE), indexer),
+            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.OFF), indexer),
             new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.IDLE), shooter)
         ));
 

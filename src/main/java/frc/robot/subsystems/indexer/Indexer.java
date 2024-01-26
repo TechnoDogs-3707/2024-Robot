@@ -14,7 +14,7 @@ public class Indexer extends SubsystemBase{
     private IndexerIOInputsAutoLogged mInputs;
 
     private IndexerStateMachine mStateMachine = new IndexerStateMachine();
-    private WantedAction mWantedAction = WantedAction.IDLE;
+    private WantedAction mWantedAction = WantedAction.OFF;
 
     public Indexer(IndexerIO io) {
         mIO = io;
