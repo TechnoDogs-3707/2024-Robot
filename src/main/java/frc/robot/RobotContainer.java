@@ -52,16 +52,16 @@ import frc.robot.subsystems.leds.LEDIOCANdle;
 import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO;
-import frc.robot.subsystems.shooter.ShooterIOFalcon;
-import frc.robot.subsystems.shooter.ShooterIOSim;
-import frc.robot.subsystems.shooter.ShooterStateMachine;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOFalcon;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOSim;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine;
 
 public class RobotContainer {
     private Drive drive;
     private Arm arm;
-    private Shooter shooter;
+    private ShooterFlywheels shooter;
     private Indexer indexer;
     private LED leds;
     private Localizer vision;
@@ -89,8 +89,16 @@ public class RobotContainer {
     // OPERATOR CONTROLS
     private final CommandXboxController operator = new CommandXboxController(1);
 
-    private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
+    // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
     // private final Trigger operatorOverrideScore = operator.b();
+    private final Trigger operatorIntakeGroundToIndexer = operator.leftTrigger(0.1);
+    private final Trigger operatorIntakeSourceToIndexer = operator.leftBumper();
+    private final Trigger operatorIntakeGroundToHold = operator.rightTrigger(0.1);
+    private final Trigger operatorIntakeSourceToHold = operator.rightBumper();
+    private final Trigger operatorStowArm = operator.x();
+    private final Trigger operatorOverrideScore = operator.a();
+    private final Trigger operatorSpeaker = operator.povDown();
+    private final Trigger operatorAmp = operator.povUp();
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -154,7 +162,7 @@ public class RobotContainer {
                             new SimSwerveIO());
                     arm = new Arm(new ArmIOSimV1());
                     // indexer = new Indexer(null)
-                    shooter = new Shooter(new ShooterIOSim());
+                    shooter = new ShooterFlywheels(new ShooterFlywheelsIOSim());
                     leds = new LED(new LEDIOSim(127));
                     break;
                 default:
@@ -183,7 +191,7 @@ public class RobotContainer {
         }
 
         if (shooter == null) {
-            shooter = new Shooter(new ShooterIO() {
+            shooter = new ShooterFlywheels(new ShooterFlywheelsIO() {
                 
             });
         }
@@ -259,19 +267,19 @@ public class RobotContainer {
         testModeStow.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.OFF), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.IDLE), shooter)
+            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.IDLE), shooter)
         ));
 
         testModeIntake.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_SOURCE), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.INTAKE), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.OFF), shooter)
+            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF), shooter)
         ));
 
         testModeScore.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_SPEAKER_SUBWOOFER), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.SHOOT), shooter),
+            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter),
             new InstantCommand(() -> shooter.setSetpointSpeedLeft(150), shooter),
             new InstantCommand(() -> shooter.setSetpointSpeedRight(150), shooter)
         ));
@@ -279,7 +287,7 @@ public class RobotContainer {
         testModeAmp.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_AMP), arm),
             new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterStateMachine.WantedAction.SHOOT), shooter)
+            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter)
         ));
 
 
@@ -292,8 +300,8 @@ public class RobotContainer {
 
         //Operator button bindings
         
-        operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
-        operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
+        // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
+        // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 
         // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
 

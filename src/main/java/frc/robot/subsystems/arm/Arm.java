@@ -26,19 +26,18 @@ import frc.robot.lib.leds.LEDState;
 import frc.robot.lib.leds.TimedLEDState;
 import frc.robot.lib.util.TimeDelayedBoolean;
 import frc.robot.lib.util.Util;
-import frc.robot.subsystems.arm.ArmState.ArmAction;
 import frc.robot.subsystems.arm.ArmState.ArmSend;
 import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.leds.LED;
-import frc.robot.subsystems.shooter.ShooterStateMachine;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine;
 
 public class Arm extends SubsystemBase {
 
     public enum GoalState {
-        STOW(ArmState.withConservativeConstraints(0, 0, ArmAction.NEUTRAL, ArmSend.LOW)),
-        INTAKE_SOURCE(ArmState.withConservativeConstraints(0.1, 0.15, ArmAction.NEUTRAL, ArmSend.LOW)),
-        SCORE_AMP(ArmState.withConservativeConstraints(0.26, 0.625, ArmAction.NEUTRAL, ArmSend.LOW)),
-        SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0.1875, 0, ArmAction.NEUTRAL, ArmSend.LOW));
+        STOW(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
+        INTAKE_SOURCE(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
+        SCORE_AMP(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
+        SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW));
         
         public ArmState state;
 
@@ -54,34 +53,29 @@ public class Arm extends SubsystemBase {
     private ArmState mLastCommandedState = new ArmState();
     private GoalState mGoalState = GoalState.STOW;
     private GoalState mLastGoalState = GoalState.STOW;
-    private TimeDelayedBoolean mEnsureScoringFinished = new TimeDelayedBoolean();
-    private TimeDelayedBoolean mEnsureIntakeFinished = new TimeDelayedBoolean();
     private boolean mResetMotionPlanner = false;
-    private boolean mGripperHasGamepiece = false;
 
-    private IndexerStateMachine mIndexerStateMachine = new IndexerStateMachine();
-    private ShooterStateMachine mShooterStateMachine = new ShooterStateMachine();
+    private ArmIntakeStateMachine mArmIntakeStateMachine = new ArmIntakeStateMachine();
 
     private boolean mForceFailure = false;
 
     // TODO: Update Feedforwards and constants
-    public static final double kArmBaseLength = Units.inchesToMeters(19); // distance from J1 pivot to J2 pivot
-    public static final double kArmMassOffset = 4.0; // FF Amps required to hold horizontal at minimum extension and wrist vertical
-    public static final double kArmConeBoost = 2.0; // FF Amps to add to tilt when wrist is at full extension
-    public static final double kElevatorMassFactor = 18.0; // FF Amps to hold elevator carriage in vertical position
-    public static final double kWristMassFactor = 6.5; // FF Amps to hold wrist in horizontal position
+    public static final double kJ1BaseLength = Units.inchesToMeters(19); // distance from J1 pivot to J2 pivot
+    public static final double kJ1ForceGravitySelfVolts = 0.0; // Volts required to hold J1 horizontal and J2 vertical
+    public static final double kJ1ForceGravityJ2Volts = 0.0; // Volts to add to J1 when J2 is at full extension
+    public static final double kJ2ForceGravitySelfVolts = 0.0; // Volts to hold J2 in horizontal position
 
     private final Mechanism2d mSensorMech = new Mechanism2d(1.75, 1.75);
     private final MechanismRoot2d mSensorMechRoot = mSensorMech.getRoot("Base", 0.25, 0.25);
     private final MechanismLigament2d mSensorMechJ1 = mSensorMechRoot
-            .append(new MechanismLigament2d("J1", kArmBaseLength, 0, 5, new Color8Bit(Color.kOrange)));
+            .append(new MechanismLigament2d("J1", kJ1BaseLength, 0, 5, new Color8Bit(Color.kOrange)));
     private final MechanismLigament2d mSensorMechJ2 = mSensorMechJ1
             .append(new MechanismLigament2d("J2", Units.inchesToMeters(12), 180, 5, new Color8Bit(Color.kPurple)));
 
     private final Mechanism2d mTargetMech = new Mechanism2d(1.75, 1.75);
     private final MechanismRoot2d mTargetMechRoot = mTargetMech.getRoot("Base", 0.25, 0.25);
     private final MechanismLigament2d mTargetMechJ1 = mTargetMechRoot
-            .append(new MechanismLigament2d("J1", kArmBaseLength, 0, 5, new Color8Bit(Color.kLightGray)));
+            .append(new MechanismLigament2d("J1", kJ1BaseLength, 0, 5, new Color8Bit(Color.kLightGray)));
     private final MechanismLigament2d mTargetMechJ2 = mTargetMechJ1
             .append(new MechanismLigament2d("J2", Units.inchesToMeters(12), 180, 5, new Color8Bit(Color.kLightGray)));
 
@@ -119,6 +113,7 @@ public class Arm extends SubsystemBase {
             double simCurrent = 0.0;
             simCurrent += mArmInputs.tiltSuppliedCurrentAmps;
             simCurrent += mArmInputs.wristSuppliedCurrentAmps;
+            simCurrent += mArmInputs.intakeSuppliedCurrentAmps;
 
             Robot.updateSimCurrentDraw(this.getClass().getName(), simCurrent);
         }
@@ -129,16 +124,14 @@ public class Arm extends SubsystemBase {
         mSensorMechJ1.setAngle(tiltAngle);
         mSensorMechJ2.setAngle(wristAngle.unaryMinus().minus(Rotation2d.fromDegrees(180)));
 
-        mMeasuredState = new ArmState(mArmInputs.tiltRotations, mArmInputs.wristRotations, mCommandedState.action, mCommandedState.send);
+        mMeasuredState = new ArmState(mArmInputs.tiltRotations, mArmInputs.wristRotations, mCommandedState.send);
 
         ArmState nextArmState = mMotionPlanner.update(mMeasuredState);
         mLastCommandedState = mCommandedState;
         mCommandedState = nextArmState;
 
         Logger.recordOutput("Arm/GoalState/Name", mGoalState.name());
-        Logger.recordOutput("Arm/CommandedState/Action", mCommandedState.action.name());
         Logger.recordOutput("Arm/RequestedAlignment", getRequestedAlignment().name());
-        Logger.recordOutput("Arm/GoalState/Action", mGoalState.state.action.name());
         Logger.recordOutput("Arm/GoalState/Send", mGoalState.state.send.name());
         Logger.recordOutput("Arm/CommandedState/Tolerance/J1", mCommandedState.j1Tolerance);
         Logger.recordOutput("Arm/CommandedState/Tolerance/J2", mCommandedState.j2Tolerance);
@@ -157,6 +150,14 @@ public class Arm extends SubsystemBase {
         if (mResetMotionPlanner) {
             mMotionPlanner.reset();
         }
+
+        boolean intakeBeamBreakTriggered = mArmInputs.intakeBeamBreakTriggered;
+        double intakeThrottle = mArmIntakeStateMachine.update(intakeBeamBreakTriggered);
+        Logger.recordOutput("Arm/Intake/BeamBreakTriggered", intakeBeamBreakTriggered);
+        Logger.recordOutput("Arm/Intake/StateMachine/WantedAction", mArmIntakeStateMachine.getWantedAction());
+        Logger.recordOutput("Arm/Intake/StateMachine/SystemState", mArmIntakeStateMachine.getSystemState());
+        Logger.recordOutput("Arm/Intake/StateMachine/Throttle", intakeThrottle);
+        mArmIO.setIntakeThrottle(intakeThrottle);
 
         if (mCommandedState.j1 != mLastCommandedState.j1) {
             mArmIO.setTiltTarget(mCommandedState.j1);

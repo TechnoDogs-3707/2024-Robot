@@ -18,6 +18,11 @@ public interface ArmIO {
         public double wristHottestTempCelsius = 0.0;
         public boolean wristReverseHardLimit = false;
         public boolean wristForwardSoftLimit = false;
+
+        public double intakeVelocityRotPerSec = 0.0;
+        public double intakeSuppliedCurrentAmps = 0.0;
+        public double intakeHottestTempCelsius = 0.0;
+        public boolean intakeBeamBreakTriggered = false;
     }
 
     public default void updateInputs(ArmIOInputs inputs) {}
@@ -33,4 +38,6 @@ public interface ArmIO {
     public default void setTiltFeedForward(double amps) {}
 
     public default void setWristFeedForward(double amps) {}
+
+    public default void setIntakeThrottle(double throttle) {}
 }

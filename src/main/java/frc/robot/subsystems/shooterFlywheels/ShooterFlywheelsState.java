@@ -1,11 +1,11 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooterFlywheels;
 
-public class ShooterState {
+public class ShooterFlywheelsState {
     private boolean mFlywheelEnabled;
     private boolean mSlowIdle;
     private boolean mBrakeModeEnabled;
 
-    public ShooterState(boolean flywheelEnabled, boolean slowIdle, boolean brakeModeEnabled) {
+    public ShooterFlywheelsState(boolean flywheelEnabled, boolean slowIdle, boolean brakeModeEnabled) {
         mFlywheelEnabled = flywheelEnabled;
         mSlowIdle = slowIdle;
         mBrakeModeEnabled = brakeModeEnabled;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooterFlywheels;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.StatusSignal;
@@ -16,7 +16,7 @@ import static frc.robot.Constants.Shooter.*;
 
 import java.util.ArrayList;
 
-public class ShooterIOFalcon implements ShooterIO {
+public class ShooterFlywheelsIOFalcon implements ShooterFlywheelsIO {
     private final TalonFX mLeftMotor;
     private final TalonFX mRightMotor;
 
@@ -42,7 +42,7 @@ public class ShooterIOFalcon implements ShooterIO {
 
     private boolean mSpinDownMode = false;
 
-    public ShooterIOFalcon() {
+    public ShooterFlywheelsIOFalcon() {
         mLeftMotor = new TalonFX(kLeftMotorID, kMotorBus);
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 

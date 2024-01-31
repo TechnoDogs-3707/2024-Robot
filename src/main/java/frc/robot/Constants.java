@@ -362,16 +362,19 @@ public final class Constants {
             public static final double kConservativeAllowableError = 0.0;
             
             public static final double kHomePosition = 0.0;
+            public static final double kMinTargetPosition = 0.0;
+            public static final double kMaxTargetPosition = 0.0;
+
+            public static final double kAbsoluteMaxPosition = 0.0;
+            public static final double kAbsoluteMinPosition = 0.0;
         }
 
         public static final class J2 {
             public static final int kMasterMotorID = 32;
-            public static final int kFollowerMotorID = 33;
             public static final String kMotorBus = "canivore"; // Both motors must be on same bus to use follower mode
 
             public static final boolean invertMaster = false;
-            public static final boolean invertFollower = false;
-
+            
             public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
@@ -385,10 +388,18 @@ public final class Constants {
             public static final double kConservativeAllowableError = 0.0;
 
             public static final double kHomePosition = 0.0;
+            public static final double kMinTargetPosition = 0.0;
+            public static final double kMaxTargetPosition = 0.0;
+
+            public static final double kAbsoluteMaxPosition = 0.0;
+            public static final double kAbsoluteMinPosition = 0.0;
         }
 
-        public static final class Constraints {
-            // TODO: define arm motion constraints with utility classes to make checking them easier
+        public static final class Intake {
+            public static final int kMasterMotorID = 33;
+            public static final String kMotorBus = "canivore";
+
+            public static final boolean invertMaster = false;
         }
     }
 

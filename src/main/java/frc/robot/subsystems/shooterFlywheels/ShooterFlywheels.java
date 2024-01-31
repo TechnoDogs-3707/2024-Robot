@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooterFlywheels;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -6,18 +6,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.subsystems.shooter.ShooterStateMachine.WantedAction;
+import frc.robot.subsystems.shooter.ShooterIOInputsAutoLogged;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.WantedAction;
 
-public class Shooter extends SubsystemBase{
-    private ShooterIO mIO;
+public class ShooterFlywheels extends SubsystemBase{
+    private ShooterFlywheelsIO mIO;
     private ShooterIOInputsAutoLogged mInputs;
 
     private double mSetpointSpeedLeft = 0.0;
     private double mSetpointSpeedRight = 0.0;
-    private ShooterStateMachine mStateMachine = new ShooterStateMachine();
+    private ShooterFlywheelsStateMachine mStateMachine = new ShooterFlywheelsStateMachine();
     private WantedAction mWantedAction = WantedAction.OFF;
 
-    public Shooter(ShooterIO io) {
+    public ShooterFlywheels(ShooterFlywheelsIO io) {
         mIO = io;
         mInputs = new ShooterIOInputsAutoLogged();
     }
@@ -38,7 +39,7 @@ public class Shooter extends SubsystemBase{
 
         // update state machine
         mStateMachine.setWantedAction(mWantedAction);
-        ShooterState outputState = mStateMachine.update(mInputs.leftMotorSpeedRPS, mInputs.rightMotorSpeedRPS, mSetpointSpeedLeft, mSetpointSpeedRight);
+        ShooterFlywheelsState outputState = mStateMachine.update(mInputs.leftMotorSpeedRPS, mInputs.rightMotorSpeedRPS, mSetpointSpeedLeft, mSetpointSpeedRight);
 
         double finalSetpointLeft = mSetpointSpeedLeft;
         double finalSetpointRight = mSetpointSpeedRight;

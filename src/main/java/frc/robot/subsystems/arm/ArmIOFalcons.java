@@ -7,12 +7,16 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import frc.robot.Constants;
+import static frc.robot.Constants.ArmSubsystem.*;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonConfigHelper;
+
+// TODO: account for the virtual four-bar created by the fact that the J2 drive chain is coaxial to the J1 axis.
 
 public class ArmIOFalcons implements ArmIO {
     ////////// TILT MOTORS \\\\\\\\\\
@@ -26,12 +30,17 @@ public class ArmIOFalcons implements ArmIO {
 
     ////////// WRIST MOTORS \\\\\\\\\\
     private final TalonFX mWristMotorMaster;
-    private final TalonFX mWristMotorFollower;
 
     private final TalonFXConfiguration mWristConfig;
 
     private final MotionMagicTorqueCurrentFOC mWristControlMaster;
-    private final StrictFollower mWristControlFollower;
+
+    ////////// INTAKE MOTORS \\\\\\\\\\
+    private final TalonFX mIntakeMotorMaster;
+
+    private final TalonFXConfiguration mIntakeConfig;
+
+    private final VoltageOut mIntakeControlMaster;
 
     ///////// STATUS SIGNALS \\\\\\\\\\
     private StatusSignal<Double> tiltMasterPosition;
@@ -55,20 +64,17 @@ public class ArmIOFalcons implements ArmIO {
     private StatusSignal<ReverseLimitValue> wristMasterReverseHardLimit;
     private StatusSignal<Boolean> wristMasterForwardSoftLimit;
 
-    private StatusSignal<Double> wristFollowerPosition;
-    private StatusSignal<Double> wristFollowerVelocity;
-    private StatusSignal<Double> wristFollowerSuppliedCurrent;
-    private StatusSignal<Double> wristFollowerTempCelsius;
-    private StatusSignal<ReverseLimitValue> wristFollowerReverseHardLimit;
-    private StatusSignal<Boolean> wristFollowerForwardSoftLimit;
+    private StatusSignal<Double> intakeMasterVelocity;
+    private StatusSignal<Double> intakeMasterSuppliedCurrent;
+    private StatusSignal<Double> intakeMasterTempCelsius;
 
     private Collection<StatusSignal<?>> m_signals = new ArrayList<StatusSignal<?>>();
 
     public ArmIOFalcons() {
         ////////// TILT MOTORS \\\\\\\\\\
         // TODO: get motor IDs from constants
-        mTiltMotorMaster = new TalonFX(30, "canivore");
-        mTiltMotorFollower = new TalonFX(31, "canivore");
+        mTiltMotorMaster = new TalonFX(J1.kMasterMotorID, J1.kMotorBus);
+        mTiltMotorFollower = new TalonFX(J1.kFollowerMotorID, J1.kMotorBus);
         mTiltConfig = TalonConfigHelper.getBaseConfig();
         
         mTiltConfig.Slot0.kP = Constants.ArmSubsystem.J1.kP;
@@ -86,8 +92,7 @@ public class ArmIOFalcons implements ArmIO {
         mTiltControlFollower = new StrictFollower(mTiltMotorMaster.getDeviceID());
 
         ////////// WRIST MOTOR \\\\\\\\\\
-        mWristMotorMaster = new TalonFX(32, "canivore");
-        mWristMotorFollower = new TalonFX(33, "canivore");
+        mWristMotorMaster = new TalonFX(J2.kMasterMotorID, J2.kMotorBus);
         
         mWristConfig = TalonConfigHelper.getBaseConfig();
         
@@ -101,7 +106,13 @@ public class ArmIOFalcons implements ArmIO {
         mWristConfig.MotionMagic.MotionMagicJerk = Constants.ArmSubsystem.J2.kMagicJerk;
 
         mWristControlMaster = new MotionMagicTorqueCurrentFOC(0, 0, 0, false, false, false);
-        mWristControlFollower = new StrictFollower(mWristMotorMaster.getDeviceID());
+
+        ////////// INTAKE MOTORS \\\\\\\\\\
+        mIntakeMotorMaster = new TalonFX(Intake.kMasterMotorID, Intake.kMotorBus);
+
+        mIntakeConfig = TalonConfigHelper.getBaseConfig(); //TODO: set up intake config
+
+        mIntakeControlMaster = new VoltageOut(0, false, false, false, false);
 
         ////////// ALL MOTORS \\\\\\\\\\
         configMotors();
@@ -129,12 +140,8 @@ public class ArmIOFalcons implements ArmIO {
         wristMasterForwardSoftLimit = mWristMotorMaster.getFault_ForwardSoftLimit();
         wristMasterReverseHardLimit = mWristMotorMaster.getReverseLimit();
 
-        wristFollowerPosition = mWristMotorMaster.getPosition();
-        wristFollowerVelocity = mWristMotorMaster.getVelocity();
-        wristFollowerSuppliedCurrent = mWristMotorMaster.getSupplyCurrent();
-        wristFollowerTempCelsius = mWristMotorMaster.getDeviceTemp();
-        wristFollowerForwardSoftLimit = mWristMotorMaster.getFault_ForwardSoftLimit();
-        wristFollowerReverseHardLimit = mWristMotorMaster.getReverseLimit();
+        intakeMasterVelocity = mIntakeMotorMaster.getVelocity();
+        
 
         m_signals.add(tiltMasterPosition);
         m_signals.add(tiltMasterVelocity);
@@ -156,13 +163,6 @@ public class ArmIOFalcons implements ArmIO {
         m_signals.add(wristMasterTempCelsius);
         m_signals.add(wristMasterForwardSoftLimit);
         m_signals.add(wristMasterReverseHardLimit);
-
-        m_signals.add(wristFollowerPosition);
-        m_signals.add(wristFollowerVelocity);
-        m_signals.add(wristFollowerSuppliedCurrent);
-        m_signals.add(wristFollowerTempCelsius);
-        m_signals.add(wristFollowerForwardSoftLimit);
-        m_signals.add(wristFollowerReverseHardLimit);
     }
 
     private void configMotors() {
@@ -189,8 +189,7 @@ public class ArmIOFalcons implements ArmIO {
         inputs.wristVelocityRotPerSec = wristMasterVelocity.getValue();
         inputs.wristSuppliedCurrentAmps = 0;
         inputs.wristSuppliedCurrentAmps += wristMasterSuppliedCurrent.getValue();
-        inputs.wristSuppliedCurrentAmps += wristFollowerSuppliedCurrent.getValue();
-        inputs.wristHottestTempCelsius = Math.max(wristMasterTempCelsius.getValue(), wristFollowerTempCelsius.getValue());
+        inputs.wristHottestTempCelsius = wristMasterTempCelsius.getValue();
         inputs.wristReverseHardLimit = wristMasterReverseHardLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.wristForwardSoftLimit = wristMasterForwardSoftLimit.getValue();
     }
@@ -224,6 +223,5 @@ public class ArmIOFalcons implements ArmIO {
     @Override
     public void refreshFollowers() {
         mTiltMotorFollower.setControl(mTiltControlFollower);
-        mWristMotorFollower.setControl(mWristControlFollower);
     }
 }

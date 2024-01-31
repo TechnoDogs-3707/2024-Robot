@@ -1,8 +1,8 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooterFlywheels;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ShooterIO {
+public interface ShooterFlywheelsIO {
     @AutoLog
     public static class ShooterIOInputs {
         public double leftMotorSpeedRPS = 0.0;
