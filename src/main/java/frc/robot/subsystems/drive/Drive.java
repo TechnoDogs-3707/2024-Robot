@@ -186,7 +186,7 @@ public class Drive extends SubsystemBase {
             this::getMeasuredSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::setPathFollowing, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kPathFollowerConfig,
-            () -> true,
+            () -> false, // use false for it to work
             this // Reference to this subsystem to set requirements
         );
         PathPlannerLogging.setLogActivePathCallback(
