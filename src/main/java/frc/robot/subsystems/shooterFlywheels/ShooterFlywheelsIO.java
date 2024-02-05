@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterFlywheelsIO {
     @AutoLog
-    public static class ShooterIOInputs {
+    public static class ShooterFlywheelsIOInputs {
         public double leftMotorSpeedRPS = 0.0;
         public double leftMotorSuppliedCurrentAmps = 0.0;
         public double leftMotorTempCelsius = 0.0;
@@ -14,7 +14,7 @@ public interface ShooterFlywheelsIO {
         public double rightMotorTempCelsius = 0.0;
     }
 
-    public default void updateInputs(ShooterIOInputs inputs) {}
+    public default void updateInputs(ShooterFlywheelsIOInputs inputs) {}
 
     public default void updateOutputs() {}
 

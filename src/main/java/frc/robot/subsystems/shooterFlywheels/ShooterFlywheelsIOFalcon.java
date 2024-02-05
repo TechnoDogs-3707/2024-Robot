@@ -72,7 +72,7 @@ public class ShooterFlywheelsIOFalcon implements ShooterFlywheelsIO {
     }
 
     @Override
-    public void updateInputs(ShooterIOInputs inputs) {
+    public void updateInputs(ShooterFlywheelsIOInputs inputs) {
         StatusSignal.refreshAll((StatusSignal<?>[])mStatusSignals.toArray());
 
         inputs.leftMotorSpeedRPS = mLeftMotorSpeed.getValue();

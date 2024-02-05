@@ -2,6 +2,8 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.wpilibj.Timer;
 
+import static frc.robot.Constants.ArmSubsystem.Intake.*;
+
 public class ArmIntakeStateMachine {
     public enum WantedAction {
         OFF,
@@ -77,28 +79,28 @@ public class ArmIntakeStateMachine {
         // TODO: move these values to constants
         switch (mSystemState) {
             case OFF:
-                desiredThrottle = 0.0;
+                desiredThrottle = kIdleThrottle;
                 break;
             case INTAKE_PARTIAL_EMPTY:
-                desiredThrottle = 1.0;
+                desiredThrottle = kPartialIntakeThrottle;
                 break;
             case INTAKE_PARTIAL_FULL:
-                desiredThrottle = 0.0;
+                desiredThrottle = kIdleThrottle;
                 break;
             case INTAKE_HANDOFF_FULL:
-                desiredThrottle = 1.0;
+                desiredThrottle = kHandoffThrottle;
                 break;
             case INTAKE_HANDOFF_EMPTY:
-                desiredThrottle = 0.0;
+                desiredThrottle = kIdleThrottle;
                 break;
             case INTAKE_CONSTANT:
-                desiredThrottle = 1.0;
+                desiredThrottle = kConstantThrottle;
                 break;
             case INTAKE_REVERSE:
-                desiredThrottle = -1.0;
+                desiredThrottle = kReverseThrottle;
                 break;
             default:
-                desiredThrottle = 0.0;
+                desiredThrottle = kIdleThrottle;
                 break;
         }
 

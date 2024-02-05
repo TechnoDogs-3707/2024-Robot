@@ -29,7 +29,7 @@ public class ShooterFlywheelsIOSim implements ShooterFlywheelsIO {
     }
 
     @Override
-    public void updateInputs(ShooterIOInputs inputs) {
+    public void updateInputs(ShooterFlywheelsIOInputs inputs) {
         if (mSpinDownMode) {
             mLeftFlywheelSim.setInputVoltage(0);
             mRightFlywheelSim.setInputVoltage(0);

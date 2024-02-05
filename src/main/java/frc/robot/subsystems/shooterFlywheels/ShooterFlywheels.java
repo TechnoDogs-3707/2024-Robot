@@ -6,12 +6,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.subsystems.shooter.ShooterIOInputsAutoLogged;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.WantedAction;
 
 public class ShooterFlywheels extends SubsystemBase{
     private ShooterFlywheelsIO mIO;
-    private ShooterIOInputsAutoLogged mInputs;
+    private ShooterFlywheelsIOInputsAutoLogged mInputs;
 
     private double mSetpointSpeedLeft = 0.0;
     private double mSetpointSpeedRight = 0.0;
@@ -20,7 +19,7 @@ public class ShooterFlywheels extends SubsystemBase{
 
     public ShooterFlywheels(ShooterFlywheelsIO io) {
         mIO = io;
-        mInputs = new ShooterIOInputsAutoLogged();
+        mInputs = new ShooterFlywheelsIOInputsAutoLogged();
     }
 
     @Override
