@@ -43,8 +43,8 @@ public class ShooterFlywheels extends SubsystemBase{
         double finalSetpointLeft = mSetpointSpeedLeft;
         double finalSetpointRight = mSetpointSpeedRight;
         if (outputState.getSlowIdle()) {
-            finalSetpointLeft = Constants.Shooter.kIdleRPS;
-            finalSetpointRight = Constants.Shooter.kIdleRPS;
+            finalSetpointLeft = Constants.ShooterFlywheels.kIdleRPS;
+            finalSetpointRight = Constants.ShooterFlywheels.kIdleRPS;
         }
 
         // send realoutputs

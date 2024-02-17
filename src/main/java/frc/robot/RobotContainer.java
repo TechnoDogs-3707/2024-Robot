@@ -37,7 +37,7 @@ import frc.robot.subsystems.arm.ArmIOSimV1;
 import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.FalconSwerveIO;
+import frc.robot.subsystems.drive.SwerveIOTalonFX;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroNavXIO;
 import frc.robot.subsystems.drive.GyroPigeonIO;
@@ -54,7 +54,7 @@ import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOFalcon;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOTalonFX;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOSim;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine;
 
@@ -134,10 +134,10 @@ public class RobotContainer {
                             // new GyroNavXIO(SPI.Port.kMXP),
                             // new GyroPigeon5IO(9, "canivore"),
                             new GyroPigeonIO(9, "canivore"),
-                            new FalconSwerveIO(0, "canivore"),
-                            new FalconSwerveIO(1, "canivore"),
-                            new FalconSwerveIO(2, "canivore"),
-                            new FalconSwerveIO(3, "canivore"));
+                            new SwerveIOTalonFX(0, "canivore"),
+                            new SwerveIOTalonFX(1, "canivore"),
+                            new SwerveIOTalonFX(2, "canivore"),
+                            new SwerveIOTalonFX(3, "canivore"));
                     // arm = new Arm(new ArmIOFalcons(), new GripperIOFalcon());
                     arm = new Arm(new ArmIOSimV1());
                     leds = new LED(new LEDIOCANdle(8, "canivore"));
@@ -145,10 +145,10 @@ public class RobotContainer {
                 case ROBOT_2023_FLAPJACK:
                     drive = new Drive(
                             new GyroNavXIO(Port.kMXP),
-                            new FalconSwerveIO(0, "canivore"), 
-                            new FalconSwerveIO(1, "canivore"), 
-                            new FalconSwerveIO(2, "canivore"), 
-                            new FalconSwerveIO(3, "canivore"));
+                            new SwerveIOTalonFX(0, "canivore"), 
+                            new SwerveIOTalonFX(1, "canivore"), 
+                            new SwerveIOTalonFX(2, "canivore"), 
+                            new SwerveIOTalonFX(3, "canivore"));
                     // arm = new Arm(new ArmIOSimV1(), new GripperMiniNeoSimIO()); // simulate arm on chassis bot
                     // leds =
                     // vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);

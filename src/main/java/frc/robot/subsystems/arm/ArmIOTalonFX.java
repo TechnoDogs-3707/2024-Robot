@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import static frc.robot.Constants.ArmSubsystem.*;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
@@ -18,7 +19,7 @@ import frc.robot.lib.phoenixpro.TalonConfigHelper;
 
 // TODO: account for the virtual four-bar created by the fact that the J2 drive chain is coaxial to the J1 axis.
 
-public class ArmIOFalcons implements ArmIO {
+public class ArmIOTalonFX implements ArmIO {
     ////////// TILT MOTORS \\\\\\\\\\
     private final TalonFX mTiltMotorMaster;
     private final TalonFX mTiltMotorFollower;
@@ -70,7 +71,9 @@ public class ArmIOFalcons implements ArmIO {
 
     private Collection<StatusSignal<?>> m_signals = new ArrayList<StatusSignal<?>>();
 
-    public ArmIOFalcons() {
+    private final DigitalInput mIntakeSensor;
+
+    public ArmIOTalonFX() {
         ////////// TILT MOTORS \\\\\\\\\\
         // TODO: get motor IDs from constants
         mTiltMotorMaster = new TalonFX(J1.kMasterMotorID, J1.kMotorBus);
@@ -118,6 +121,8 @@ public class ArmIOFalcons implements ArmIO {
         configMotors();
         refreshFollowers();
 
+        mIntakeSensor = new DigitalInput(0);
+
         ////////// STATUS SIGNALS \\\\\\\\\\
         tiltMasterPosition = mTiltMotorMaster.getPosition();
         tiltMasterVelocity = mTiltMotorMaster.getVelocity();
@@ -141,6 +146,8 @@ public class ArmIOFalcons implements ArmIO {
         wristMasterReverseHardLimit = mWristMotorMaster.getReverseLimit();
 
         intakeMasterVelocity = mIntakeMotorMaster.getVelocity();
+        intakeMasterSuppliedCurrent = mIntakeMotorMaster.getSupplyCurrent();
+        intakeMasterTempCelsius = mIntakeMotorMaster.getDeviceTemp();
         
 
         m_signals.add(tiltMasterPosition);
@@ -163,6 +170,10 @@ public class ArmIOFalcons implements ArmIO {
         m_signals.add(wristMasterTempCelsius);
         m_signals.add(wristMasterForwardSoftLimit);
         m_signals.add(wristMasterReverseHardLimit);
+
+        m_signals.add(intakeMasterVelocity);
+        m_signals.add(intakeMasterSuppliedCurrent);
+        m_signals.add(intakeMasterTempCelsius);
     }
 
     private void configMotors() {
@@ -192,6 +203,12 @@ public class ArmIOFalcons implements ArmIO {
         inputs.wristHottestTempCelsius = wristMasterTempCelsius.getValue();
         inputs.wristReverseHardLimit = wristMasterReverseHardLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.wristForwardSoftLimit = wristMasterForwardSoftLimit.getValue();
+
+        inputs.intakeVelocityRotPerSec = intakeMasterVelocity.getValue();
+        inputs.intakeSuppliedCurrentAmps = intakeMasterSuppliedCurrent.getValue();
+        inputs.intakeHottestTempCelsius = intakeMasterSuppliedCurrent.getValue();
+
+        inputs.intakeBeamBreakTriggered = mIntakeSensor.get();
     }
 
     @Override

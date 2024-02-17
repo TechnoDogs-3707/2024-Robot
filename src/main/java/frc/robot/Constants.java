@@ -410,7 +410,7 @@ public final class Constants {
     }
 
     public static final class Indexer {
-        public static final int kMotorID = 42;
+        public static final int kMotorID = 40;
         public static final String kMotorBus = "canivore";
 
         public static final double kIdleThrottle = 0.0;
@@ -420,15 +420,41 @@ public final class Constants {
         public static final double kReversingThrottle = -0.5;
     }
 
-    public static final class Shooter {
-        public static final int kLeftMotorID = 40;
-        public static final int kRightMotorID = 41;
+    public static final class ShooterFlywheels {
+        public static final int kLeftMotorID = 42;
+        public static final int kRightMotorID = 43;
         public static final String kMotorBus = "canivore";
 
         public static final double kMaxRPSForBrakeMode = 10;
         public static final double kMaxRPSForIdleControl = 10;
         public static final double kIdleRPS = 5.0;
         public static final double kRPSTolerance = 10;
+    }
+
+    public static final class ShooterTilt {
+        public static final int kMotorID = 41;
+        public static final String kMotorBus = "canivore";
+
+        public static final boolean invertMaster = false;
+            
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kV = 0.0;
+
+        public static final double kMagicVel = 0.0;
+        public static final double kMagicAccel = 0.0;
+        public static final double kMagicJerk = 0.0;
+
+        public static final double kLiberalAllowableError = 0.;
+        public static final double kConservativeAllowableError = 0.0;
+
+        public static final double kHomePosition = 0.0;
+        public static final double kMinTargetPosition = 0.0;
+        public static final double kMaxTargetPosition = 0.0;
+
+        public static final double kAbsoluteMaxPosition = 0.0;
+        public static final double kAbsoluteMinPosition = 0.0;
     }
 
     public static final int kMaxLEDCount = 127;

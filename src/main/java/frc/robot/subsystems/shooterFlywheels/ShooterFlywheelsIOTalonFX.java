@@ -12,11 +12,11 @@ import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
-import static frc.robot.Constants.Shooter.*;
+import static frc.robot.Constants.ShooterFlywheels.*;
 
 import java.util.ArrayList;
 
-public class ShooterFlywheelsIOFalcon implements ShooterFlywheelsIO {
+public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
     private final TalonFX mLeftMotor;
     private final TalonFX mRightMotor;
 
@@ -42,7 +42,7 @@ public class ShooterFlywheelsIOFalcon implements ShooterFlywheelsIO {
 
     private boolean mSpinDownMode = false;
 
-    public ShooterFlywheelsIOFalcon() {
+    public ShooterFlywheelsIOTalonFX() {
         mLeftMotor = new TalonFX(kLeftMotorID, kMotorBus);
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 

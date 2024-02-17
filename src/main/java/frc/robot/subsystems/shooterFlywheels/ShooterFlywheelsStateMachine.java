@@ -3,7 +3,7 @@ package frc.robot.subsystems.shooterFlywheels;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.lib.util.Util;
 
-import static frc.robot.Constants.Shooter.*;
+import static frc.robot.Constants.ShooterFlywheels.*;
 
 public class ShooterFlywheelsStateMachine {
     public enum WantedAction {

@@ -31,13 +31,13 @@ public interface ArmIO {
 
     public default void refreshFollowers() {}
 
-    public default void setTiltTarget(double rotations) {}
+    public default void setTiltTarget(double tiltTargetRotations) {}
 
-    public default void setWristTarget(double rotations) {}
+    public default void setWristTarget(double wristTargetRotations) {}
 
-    public default void setTiltFeedForward(double amps) {}
+    public default void setTiltFeedForward(double tiltFeedForwardsVolts) {}
 
-    public default void setWristFeedForward(double amps) {}
+    public default void setWristFeedForward(double wristFeedForwardVolts) {}
 
     public default void setIntakeThrottle(double throttle) {}
 }

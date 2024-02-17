@@ -26,7 +26,7 @@ import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
 /** Add your docs here. */
-public class FalconSwerveIO implements SwerveModuleIO {
+public class SwerveIOTalonFX implements SwerveModuleIO {
     private final TalonFX mDriveMotor;
     private final TalonFX mSteerMotor;
 
@@ -57,7 +57,7 @@ public class FalconSwerveIO implements SwerveModuleIO {
     private StatusSignal<Double> mSteerSuppliedCurrent;
     private StatusSignal<Double> mSteerTempCelsius;
 
-    public FalconSwerveIO(int moduleID, String canbus) {
+    public SwerveIOTalonFX(int moduleID, String canbus) {
         mDriveMotor = new TalonFX(10 + moduleID, canbus);
         mSteerMotor = new TalonFX(20 + moduleID, canbus);
         mEncoder = new CANcoder(20 + moduleID, canbus);

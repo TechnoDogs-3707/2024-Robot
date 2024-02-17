@@ -16,7 +16,7 @@ import frc.robot.lib.phoenixpro.TalonConfigHelper;
 import static frc.robot.Constants.Indexer.*;
 
 /** Add your docs here. */
-public class IndexerIOFalcon implements IndexerIO {
+public class IndexerIOTalonFX implements IndexerIO {
     private final TalonFX mMotor;
     private final TalonFXConfiguration mConfig;
 
@@ -29,7 +29,7 @@ public class IndexerIOFalcon implements IndexerIO {
     private final StatusSignal<Double> indexerCurrent;
     private final StatusSignal<Double> indexerTemp;
 
-    public IndexerIOFalcon() {
+    public IndexerIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
         mConfig = TalonConfigHelper.getBaseConfig();
 
