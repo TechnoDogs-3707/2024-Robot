@@ -1,29 +1,30 @@
 package frc.robot.subsystems.controllerFeedback;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.RobotStateTracker;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
-import frc.robot.lib.feedback.XboxControllerFeedbackHelper;
-import frc.robot.lib.feedback.XboxControllerFeedbackHelper.ConstantFeedback;
-import frc.robot.lib.feedback.XboxControllerFeedbackHelper.FeedbackPattern;
-import frc.robot.lib.feedback.XboxControllerFeedbackHelper.SinglePulseFeedback;
-import frc.robot.lib.feedback.XboxControllerFeedbackHelper.TimedFeedback;
+import frc.robot.lib.feedback.PS5ControllerFeedbackHelper;
+import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.ConstantFeedback;
+import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.FeedbackPattern;
+import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.SinglePulseFeedback;
+import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.TimedFeedback;
 import frc.robot.lib.util.TimeDelayedBoolean;
 import frc.robot.lib.util.VirtualSubsystem;
 
 public class ControllerFeedback extends VirtualSubsystem {
-    private final XboxControllerFeedbackHelper mDriver;
-    private final XboxControllerFeedbackHelper mOperator;
+    private final PS5ControllerFeedbackHelper mDriver;
+    private final PS5ControllerFeedbackHelper mOperator;
 
     public final DashboardToggleSwitch mEnableVibrationOffFMS;
 
     private final TimeDelayedBoolean mEndgame1Timer;
     private final TimeDelayedBoolean mEndgame2Timer;
 
-    public ControllerFeedback(XboxController driver, XboxController operator) {
-        mDriver = new XboxControllerFeedbackHelper(driver);
-        mOperator = new XboxControllerFeedbackHelper(operator);
+    public ControllerFeedback(PS5Controller driver, PS5Controller operator) {
+        mDriver = new PS5ControllerFeedbackHelper(driver);
+        mOperator = new PS5ControllerFeedbackHelper(operator);
 
         mEnableVibrationOffFMS = new DashboardToggleSwitch("enableVibrationOffFMS", false, "No Vibration", "Use Vibration");
 

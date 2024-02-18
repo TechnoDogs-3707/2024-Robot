@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -71,32 +72,33 @@ public class RobotContainer {
     public final LoggedDashboardChooser<Command> autoChooser;
 
     // DRIVER CONTROLS
-    private final CommandXboxController driver = new CommandXboxController(0);
+    private final CommandPS5Controller driver = new CommandPS5Controller(0);
 
-    private final Trigger driverSlowMode = driver.leftBumper();
-    private final Trigger driverXMode = driver.x();
-    private final Trigger driverGyroReset = driver.back().debounce(1, DebounceType.kRising); // delay gyro reset for 1 second
-    private final Trigger driverAutoAlign = driver.rightTrigger(0.1);
-    // private final Trigger driverSnapClosestCardinal = driver.rightTrigger(0.2);
+    private final Trigger driverSlowMode = driver.L1();
+    private final Trigger driverXMode = driver.cross();
+    private final Trigger driverGyroReset = driver.create().debounce(1, DebounceType.kRising); // delay gyro reset for 1 second
+    private final Trigger driverAutoAlignPreferred = driver.R2();
+    private final Trigger driverAutoAlignClosest = driver.R2();
+    private final Trigger driverSnapAutoAlignAngle = driver.square();
     // private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
-    private final Trigger driverTempDisableFieldOriented = driver.rightBumper();
+    private final Trigger driverTempDisableFieldOriented = driver.R1();
     
-    private final Trigger testModeStow = driver.b();
-    private final Trigger testModeIntake = driver.leftTrigger(0.1);
-    private final Trigger testModeScore = driver.y();
+    private final Trigger testModeStow = driver.circle();
+    private final Trigger testModeIntake = driver.L2();
+    private final Trigger testModeScore = driver.triangle();
     private final Trigger testModeAmp = driver.povUp();
 
     // OPERATOR CONTROLS
-    private final CommandXboxController operator = new CommandXboxController(1);
+    private final CommandPS5Controller operator = new CommandPS5Controller(1);
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
     // private final Trigger operatorOverrideScore = operator.b();
-    private final Trigger operatorIntakeGroundToIndexer = operator.leftTrigger(0.1);
-    private final Trigger operatorIntakeSourceToIndexer = operator.leftBumper();
-    private final Trigger operatorIntakeGroundToHold = operator.rightTrigger(0.1);
-    private final Trigger operatorIntakeSourceToHold = operator.rightBumper();
-    private final Trigger operatorStowArm = operator.x();
-    private final Trigger operatorOverrideScore = operator.a();
+    private final Trigger operatorIntakeGroundToIndexer = operator.L2();
+    private final Trigger operatorIntakeSourceToIndexer = operator.L1();
+    private final Trigger operatorIntakeGroundToHold = operator.R2();
+    private final Trigger operatorIntakeSourceToHold = operator.R1();
+    private final Trigger operatorStowArm = operator.square();
+    private final Trigger operatorOverrideScore = operator.cross();
     private final Trigger operatorSpeaker = operator.povDown();
     private final Trigger operatorAmp = operator.povUp();
 
@@ -250,8 +252,7 @@ public class RobotContainer {
                 this::getDriveInputs, 
                 driverSlowMode::getAsBoolean, 
                 driverNoFieldOriented::getAsBoolean, 
-                () -> false,// driverSnapClosestCardinal::getAsBoolean,
-                () -> false// driverSnapOppositeCardinal::getAsBoolean
+                driverSnapAutoAlignAngle::getAsBoolean
             )
         );
     }
@@ -262,7 +263,7 @@ public class RobotContainer {
         // Drive button bindings
         driverXMode.whileTrue(new XModeDriveCommand(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
-        driverAutoAlign.whileTrue(new DriveAutoAlignCommand(drive, arm));
+        driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, arm));
 
         testModeStow.onTrue(new SequentialCommandGroup(
             new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
@@ -317,7 +318,7 @@ public class RobotContainer {
     }
 
     private ControllerDriveInputs getDriveInputs() {
-        return new ControllerDriveInputs(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX()).applyDeadZone(0.05, 0.05, 0.05, 0.08).cubeInputs();
+        return new ControllerDriveInputs(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX()).applyDeadZone(0.03, 0.03, 0.03, 0.05).squareInputs();
     }
 
     protected void onTeleopInit() {

@@ -13,8 +13,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.lib.Utility;
 import frc.robot.lib.dashboard.LoggedTunableBoolean;
+import frc.robot.lib.drive.AutoAlignPointSelector;
 import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.lib.drive.SwerveHeadingController;
+import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.drive.SwerveHeadingController.HeadingControllerState;
 import frc.robot.lib.util.TimeDelayedBoolean;
 import frc.robot.lib.util.Util;
@@ -27,8 +29,7 @@ public class DriveWithController extends Command {
     private final Supplier<ControllerDriveInputs> driveInputSupplier;
     private final Supplier<Boolean> slowModeSupplier;
     private final Supplier<Boolean> disableFieldOrient;
-    private final Supplier<Boolean> snapClosestCardinal;
-    private final Supplier<Boolean> snapOppositeCardinal;
+    private final Supplier<Boolean> snapAutoAlignAngle;
 
     private boolean mUseOpenLoop = false;
 
@@ -60,8 +61,7 @@ public class DriveWithController extends Command {
             Supplier<ControllerDriveInputs> driveInputSupplier,
             Supplier<Boolean> slowModeSupplier,
             Supplier<Boolean> disableFieldOrient,
-            Supplier<Boolean> snapClosestCardinal,
-            Supplier<Boolean> snapOppositeCardinal
+            Supplier<Boolean> snapClosestCardinal
         ) {
         addRequirements(drive);
 
@@ -69,8 +69,7 @@ public class DriveWithController extends Command {
         this.driveInputSupplier = driveInputSupplier;
         this.slowModeSupplier = slowModeSupplier;
         this.disableFieldOrient = disableFieldOrient;
-        this.snapClosestCardinal = snapClosestCardinal;
-        this.snapOppositeCardinal = snapOppositeCardinal;
+        this.snapAutoAlignAngle = snapClosestCardinal;
     }
 
     // Called when the command is initially scheduled.
@@ -100,32 +99,18 @@ public class DriveWithController extends Command {
         boolean drive_turning = !Util.epsilonEquals(controllerInputs.getRotation(), 0);
         boolean drive_translating = Utility.getSpeedAsScalar(drive.getMeasuredSpeeds()) >= 0.1;
 
-        boolean shouldSnapClosestCardinal = snapClosestCardinal.get();
-        boolean shouldSnapOppositeCardinal = snapOppositeCardinal.get();
-        boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapClosestCardinal && !shouldSnapOppositeCardinal, 0.2);
+        boolean shouldSnapAutoAlignAngle = snapAutoAlignAngle.get();
+        boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapAutoAlignAngle, 0.2);
 
         double robotAngleDegrees = drive.getPose().getRotation().getDegrees();
 
-        if (shouldSnapOppositeCardinal) {
-            if (snapOppositeFirstRun) {
-                snapOppositeReferenceAngle = robotAngleDegrees;
-                snapOppositeFirstRun = false;
-            }
-            double closestCardinal = getClosestCardinal(snapOppositeReferenceAngle);
-            double oppositeCardinal = (closestCardinal == 0.0 ? -180.0 : 0.0);
-            mHeadingGoal = Optional.of(oppositeCardinal);
-        } else {
-            snapOppositeFirstRun = true;
-        }
-
-        if (shouldSnapClosestCardinal && !shouldSnapOppositeCardinal) {
-            double closestCardinal = getClosestCardinal(drive.getPose().getRotation().getDegrees());
-            mHeadingGoal = Optional.of(closestCardinal);
-        } else if (!autoMaintain && !shouldSnapOppositeCardinal) {
+        if (shouldSnapAutoAlignAngle) {
+            mHeadingGoal = Optional.of(AutoAlignPointSelector.getAlignTarget(drive.getPose(), RequestedAlignment.AUTO).get().getRotation().getDegrees()); //TODO: make this use our RequestedAlignment Planner
+        } else if (!autoMaintain) {
             mHeadingGoal = Optional.of(drive.getPose().getRotation().getDegrees());
         }
 
-        if (autoMaintain || shouldSnapClosestCardinal || shouldSnapOppositeCardinal) {
+        if (autoMaintain || shouldSnapAutoAlignAngle) {
             mHeadingGoal.ifPresent(mSwerveHeadingController::setGoal);
             if (mSwerveHeadingController.getAbsError() <= Constants.kSwerveHeadingControllerMaintainThreshold) {
                 mSwerveHeadingController.setHeadingControllerState(HeadingControllerState.MAINTAIN);

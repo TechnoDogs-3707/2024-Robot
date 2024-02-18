@@ -25,6 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -190,7 +191,7 @@ public class Drive extends SubsystemBase {
             this::getMeasuredSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::setPathFollowing, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kPathFollowerConfig,
-            () -> false,
+            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Flip paths if alliance is red TODO: make sure this works
             this // Reference to this subsystem to set requirements
         );
         PathPlannerLogging.setLogActivePathCallback(
