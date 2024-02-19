@@ -35,6 +35,7 @@ public class Arm extends SubsystemBase {
 
     public enum GoalState {
         STOW(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
+        INTAKE_GROUND(ArmState.withConservativeConstraints(0, 0.4, ArmSend.LOW)),
         INTAKE_SOURCE(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
         SCORE_AMP(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
         SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW));
@@ -70,14 +71,14 @@ public class Arm extends SubsystemBase {
     private final MechanismLigament2d mSensorMechJ1 = mSensorMechRoot
             .append(new MechanismLigament2d("J1", kJ1BaseLength, 0, 5, new Color8Bit(Color.kOrange)));
     private final MechanismLigament2d mSensorMechJ2 = mSensorMechJ1
-            .append(new MechanismLigament2d("J2", Units.inchesToMeters(12), 180, 5, new Color8Bit(Color.kPurple)));
+            .append(new MechanismLigament2d("J2", Units.inchesToMeters(12), 235, 5, new Color8Bit(Color.kPurple)));
 
     private final Mechanism2d mTargetMech = new Mechanism2d(1.75, 1.75);
     private final MechanismRoot2d mTargetMechRoot = mTargetMech.getRoot("Base", 0.25, 0.25);
     private final MechanismLigament2d mTargetMechJ1 = mTargetMechRoot
             .append(new MechanismLigament2d("J1", kJ1BaseLength, 0, 5, new Color8Bit(Color.kLightGray)));
     private final MechanismLigament2d mTargetMechJ2 = mTargetMechJ1
-            .append(new MechanismLigament2d("J2", Units.inchesToMeters(12), 180, 5, new Color8Bit(Color.kLightGray)));
+            .append(new MechanismLigament2d("J2", Units.inchesToMeters(12), 235, 5, new Color8Bit(Color.kLightGray)));
 
     private ArmIO mArmIO;
     private ArmIOInputsAutoLogged mArmInputs;
@@ -122,7 +123,7 @@ public class Arm extends SubsystemBase {
         Rotation2d wristAngle = Rotation2d.fromRotations(mArmInputs.wristRotations);
 
         mSensorMechJ1.setAngle(tiltAngle);
-        mSensorMechJ2.setAngle(wristAngle.unaryMinus().minus(Rotation2d.fromDegrees(180)));
+        mSensorMechJ2.setAngle(wristAngle.unaryMinus().minus(Rotation2d.fromDegrees(235)));
 
         mMeasuredState = new ArmState(mArmInputs.tiltRotations, mArmInputs.wristRotations, mCommandedState.send);
 
@@ -137,7 +138,7 @@ public class Arm extends SubsystemBase {
         Logger.recordOutput("Arm/CommandedState/Tolerance/J2", mCommandedState.j2Tolerance);
 
         mTargetMechJ1.setAngle(Rotation2d.fromRotations(mCommandedState.j1));
-        mTargetMechJ2.setAngle(Rotation2d.fromRotations(mCommandedState.j2).unaryMinus().minus(Rotation2d.fromDegrees(180)));
+        mTargetMechJ2.setAngle(Rotation2d.fromRotations(mCommandedState.j2).unaryMinus().minus(Rotation2d.fromDegrees(235)));
 
         Logger.recordOutput("Arm/MeasuredPositions", mSensorMech);
         Logger.recordOutput("Arm/TargetPositions", mTargetMech);
@@ -174,6 +175,10 @@ public class Arm extends SubsystemBase {
         mArmIO.setWristFeedForward(j2FeedForward);
 
         mArmIO.updateOutputs();
+    }
+
+    public ArmState getMeasuredState() {
+        return mMeasuredState;
     }
 
     public boolean getResetMotionPlanner() {
@@ -217,6 +222,14 @@ public class Arm extends SubsystemBase {
 
     private double calcJ2FeedForward() {
         return 0; // TODO: J2 feedforward
+    }
+
+    public void setWantedAction(ArmIntakeStateMachine.WantedAction wantedAction) {
+        mArmIntakeStateMachine.setWantedAction(wantedAction);
+    }
+
+    public ArmIntakeStateMachine.SystemState getIntakeSystemState() {
+        return mArmIntakeStateMachine.getSystemState();
     }
 
     public RequestedAlignment getRequestedAlignment() {

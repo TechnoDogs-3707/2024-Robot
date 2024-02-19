@@ -44,45 +44,45 @@ public class ArmMotionPlanner {
          *  Once we have confirmed that the end position is valid, we must now compute a series of
          *  intermediate positions that will safely and quickly get us between any two positions.
          */
-        boolean j1TargetOutsideLimits = !Util.inRange(desiredState.j1, J1.kMinTargetPosition, J1.kMaxTargetPosition);
-        boolean j2TargetOutsideLimits = !Util.inRange(desiredState.j2, J2.kMinTargetPosition, J2.kMaxTargetPosition);
-        if (j1TargetOutsideLimits || j2TargetOutsideLimits) {
-            mDesiredState = Optional.of(GoalState.STOW.state); // override desired state to STOW.
-        }
+        // boolean j1TargetOutsideLimits = !Util.inRange(desiredState.j1, J1.kMinTargetPosition, J1.kMaxTargetPosition);
+        // boolean j2TargetOutsideLimits = !Util.inRange(desiredState.j2, J2.kMinTargetPosition, J2.kMaxTargetPosition);
+        // if (j1TargetOutsideLimits || j2TargetOutsideLimits) {
+        //     mDesiredState = Optional.of(GoalState.STOW.state); // override desired state to STOW.
+        // }
 
         /*
          * Second, if the desired state has J1 above the highest allowable height for full J2 travel,
          * and the current state has J1 below the highest allowable height for full J2 travel, we need 
          * to tilt J2 to the minimum tilt for full J1 motion range, then continue.
          */
-        if (desiredState.j1 > kMaxJ1ForFullJ2Travel && currentState.j1 < kMaxJ1ForFullJ2Travel) {
-            mIntermediateStateQueue.add(new ArmState(kMaxJ1ForFullJ2Travel, kMinJ2ForFullJ1Travel));
-        }
+        // if (desiredState.j1 > kMaxJ1ForFullJ2Travel && currentState.j1 < kMaxJ1ForFullJ2Travel) {
+        //     mIntermediateStateQueue.add(new ArmState(kMaxJ1ForFullJ2Travel, kMinJ2ForFullJ1Travel));
+        // }
 
         /*
          * Third, if the desired, but not current J1 is above the maximum safe J1, we should rotate to 
          * the maximum safe J1 and target J2 position.
          */
-        if (desiredState.j1 > kMaxSafeJ1Position && currentState.j1 <= kMaxSafeJ1Position) {
-            mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, desiredState.j2));
-        }
+        // if (desiredState.j1 > kMaxSafeJ1Position && currentState.j1 <= kMaxSafeJ1Position) {
+        //     mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, desiredState.j2));
+        // }
 
         /*
          * Fourth, if the current, but not desired J1 is above the maximum safe J1, we should rotate to 
          * the maximum safe J1.
          */
-        if (currentState.j1 > kMaxSafeJ1Position && desiredState.j1 <= kMaxSafeJ1Position) {
-            mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, getLastIntermediateStateOrElse(currentState).j2));
-        }
+        // if (currentState.j1 > kMaxSafeJ1Position && desiredState.j1 <= kMaxSafeJ1Position) {
+        //     mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, getLastIntermediateStateOrElse(currentState).j2));
+        // }
 
         /*
          * Fifth, if the current and desired J1 is above the safe limit, then rotate to max safe J1, then rotate to
          * target J2.
          */
-        if (currentState.j1 > kMaxSafeJ1Position && desiredState.j1 > kMaxSafeJ1Position) {
-            mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, getLastIntermediateStateOrElse(currentState).j2));
-            mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, desiredState.j2));
-        }
+        // if (currentState.j1 > kMaxSafeJ1Position && desiredState.j1 > kMaxSafeJ1Position) {
+        //     mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, getLastIntermediateStateOrElse(currentState).j2));
+        //     mIntermediateStateQueue.add(new ArmState(kMaxSafeJ1Position, desiredState.j2));
+        // }
 
         // all other conditions, go straight to position
         mIntermediateStateQueue.add(desiredState);

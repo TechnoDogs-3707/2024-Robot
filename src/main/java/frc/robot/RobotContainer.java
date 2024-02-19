@@ -27,6 +27,8 @@ import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveAutoAlignCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
+import frc.robot.commands.ScoringCommands;
+import frc.robot.commands.ShooterTesting;
 import frc.robot.commands.XModeDriveCommand;
 import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
@@ -46,6 +48,8 @@ import frc.robot.subsystems.drive.SimSwerveIO;
 import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIO;
+import frc.robot.subsystems.indexer.IndexerIOSim;
+import frc.robot.subsystems.indexer.IndexerIOTalonFX;
 import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
@@ -58,11 +62,15 @@ import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOTalonFX;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOSim;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine;
+import frc.robot.subsystems.shooterTilt.ShooterTilt;
+import frc.robot.subsystems.shooterTilt.ShooterTiltIO;
+import frc.robot.subsystems.shooterTilt.ShooterTiltIOTalonFX;
 
 public class RobotContainer {
     private Drive drive;
     private Arm arm;
-    private ShooterFlywheels shooter;
+    private ShooterFlywheels shooterFlywheels;
+    private ShooterTilt shooterTilt;
     private Indexer indexer;
     private LED leds;
     private Localizer vision;
@@ -78,7 +86,7 @@ public class RobotContainer {
     private final Trigger driverXMode = driver.cross();
     private final Trigger driverGyroReset = driver.create().debounce(1, DebounceType.kRising); // delay gyro reset for 1 second
     private final Trigger driverAutoAlignPreferred = driver.R2();
-    private final Trigger driverAutoAlignClosest = driver.R2();
+    private final Trigger driverAutoAlignClosest = driver.L2();
     private final Trigger driverSnapAutoAlignAngle = driver.square();
     // private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
     private final Trigger driverTempDisableFieldOriented = driver.R1();
@@ -92,15 +100,14 @@ public class RobotContainer {
     private final CommandPS5Controller operator = new CommandPS5Controller(1);
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
-    // private final Trigger operatorOverrideScore = operator.b();
-    private final Trigger operatorIntakeGroundToIndexer = operator.L2();
-    private final Trigger operatorIntakeSourceToIndexer = operator.L1();
-    private final Trigger operatorIntakeGroundToHold = operator.R2();
-    private final Trigger operatorIntakeSourceToHold = operator.R1();
-    private final Trigger operatorStowArm = operator.square();
-    private final Trigger operatorOverrideScore = operator.cross();
-    private final Trigger operatorSpeaker = operator.povDown();
+    private final Trigger operatorIntakeGroundToIndexer = operator.R2();
+    private final Trigger operatorIntakeGroundToHold = operator.L2();
+    private final Trigger operatorIntakeSourceToHold = operator.cross();
+    private final Trigger operatorStowArm = operator.R1();
+    private final Trigger operatorOverrideScore = operator.circle();
+    private final Trigger operatorSpeaker = operator.povRight();
     private final Trigger operatorAmp = operator.povUp();
+    private final Trigger operatorJamClear = operator.povDown();
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -131,6 +138,20 @@ public class RobotContainer {
     public RobotContainer(Robot robot) {
         if (Constants.getMode() != Mode.REPLAY) {
             switch (Constants.getRobot()) {
+                case ROBOT_2024_HARD_ROCK:
+                    drive = new Drive(
+                        new GyroPigeonIO(9, "canivore"), 
+                        new SwerveIOTalonFX(0, "canivore"), 
+                        new SwerveIOTalonFX(1, "canivore"), 
+                        new SwerveIOTalonFX(2, "canivore"), 
+                        new SwerveIOTalonFX(3, "canivore")
+                    );
+                    arm = new Arm(new ArmIOSimV1());
+                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
+                    shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
+                    indexer = new Indexer(new IndexerIOTalonFX());
+                    leds = new LED(new LEDIOSim(127));
+                    //vision
                 case ROBOT_2023_HEAVYMETAL:
                     drive = new Drive(
                             // new GyroNavXIO(SPI.Port.kMXP),
@@ -163,8 +184,8 @@ public class RobotContainer {
                             new SimSwerveIO(),
                             new SimSwerveIO());
                     arm = new Arm(new ArmIOSimV1());
-                    // indexer = new Indexer(null)
-                    shooter = new ShooterFlywheels(new ShooterFlywheelsIOSim());
+                    indexer = new Indexer(new IndexerIOSim());
+                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
                     leds = new LED(new LEDIOSim(127));
                     break;
                 default:
@@ -192,8 +213,14 @@ public class RobotContainer {
             });
         }
 
-        if (shooter == null) {
-            shooter = new ShooterFlywheels(new ShooterFlywheelsIO() {
+        if (shooterFlywheels == null) {
+            shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIO() {
+                
+            });
+        }
+
+        if (shooterTilt == null) {
+            shooterTilt = new ShooterTilt(new ShooterTiltIO() {
                 
             });
         }
@@ -265,31 +292,31 @@ public class RobotContainer {
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
         driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, arm));
 
-        testModeStow.onTrue(new SequentialCommandGroup(
-            new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
-            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.OFF), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.IDLE), shooter)
-        ));
+        // testModeStow.onTrue(new SequentialCommandGroup(
+        //     new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
+        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.OFF), indexer),
+        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.IDLE), shooter)
+        // ));
 
-        testModeIntake.onTrue(new SequentialCommandGroup(
-            new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_SOURCE), arm),
-            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.INTAKE), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF), shooter)
-        ));
+        // testModeIntake.onTrue(new SequentialCommandGroup(
+        //     new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_SOURCE), arm),
+        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.INTAKE), indexer),
+        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF), shooter)
+        // ));
 
-        testModeScore.onTrue(new SequentialCommandGroup(
-            new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_SPEAKER_SUBWOOFER), arm),
-            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter),
-            new InstantCommand(() -> shooter.setSetpointSpeedLeft(150), shooter),
-            new InstantCommand(() -> shooter.setSetpointSpeedRight(150), shooter)
-        ));
+        // testModeScore.onTrue(new SequentialCommandGroup(
+        //     new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_SPEAKER_SUBWOOFER), arm),
+        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
+        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter),
+        //     new InstantCommand(() -> shooter.setSetpointSpeedLeft(150), shooter),
+        //     new InstantCommand(() -> shooter.setSetpointSpeedRight(150), shooter)
+        // ));
 
-        testModeAmp.onTrue(new SequentialCommandGroup(
-            new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_AMP), arm),
-            new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
-            new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter)
-        ));
+        // testModeAmp.onTrue(new SequentialCommandGroup(
+        //     new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_AMP), arm),
+        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
+        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter)
+        // ));
 
 
         // Driver override switches
@@ -300,6 +327,14 @@ public class RobotContainer {
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
         //Operator button bindings
+        // operatorIntakeGroundToIndexer.toggleOnTrue(new ShooterTesting.IndexerLoadGamepiece(indexer));
+        operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer, shooterTilt, shooterFlywheels));
+        operatorSpeaker.toggleOnTrue(new ShooterTesting.ShooterTurnOn(shooterFlywheels, shooterTilt));
+        operatorOverrideScore.toggleOnTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
+        operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer, shooterFlywheels, shooterTilt));
+        operatorStowArm.onTrue(new ShooterTesting.StowEverything(indexer, shooterFlywheels, shooterTilt));
+        operator.options().onTrue(new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm));
+        operator.create().onTrue(new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_GROUND), arm));
         
         // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));

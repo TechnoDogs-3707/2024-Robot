@@ -70,6 +70,7 @@ public final class Constants {
     // Map.of(RobotType.ROBOT_2023_CN1, "/media/sda2", RobotType.ROBOT_2023_CN2, "/media/sda2/"); // log to sd card
     
     public static enum RobotType {
+        ROBOT_2024_HARD_ROCK,
         /**
          * 2023 "Heavy Metal" Chassis
          */

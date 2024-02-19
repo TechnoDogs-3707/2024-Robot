@@ -78,4 +78,8 @@ public class ShooterFlywheels extends SubsystemBase{
     public void setSetpointSpeedRight(double setpointRPS) {
         mSetpointSpeedRight = setpointRPS;
     }
+
+    public ShooterFlywheelsStateMachine.SystemState getSystemState() {
+        return mStateMachine.getSystemState();
+    }
 }

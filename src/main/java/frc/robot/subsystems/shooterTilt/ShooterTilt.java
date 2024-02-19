@@ -14,8 +14,8 @@ import static frc.robot.Constants.ShooterTilt.*;
 public class ShooterTilt extends SubsystemBase {
     public enum ShooterTiltGoalState {
         STOW(new ShooterTiltState()),
-        CLOSE(new ShooterTiltState(0.25, false, true)),
-        PODIUM(new ShooterTiltState(0.25, false, true)),
+        CLOSE(new ShooterTiltState(0.15, false, true)),
+        PODIUM(new ShooterTiltState(0.1, false, true)),
         AUTO_AIM(new ShooterTiltState(0, true, true));
 
         public ShooterTiltState state;
@@ -28,7 +28,7 @@ public class ShooterTilt extends SubsystemBase {
     private ShooterTiltIO mIO;
     private ShooterTiltIOInputsAutoLogged mInputs;
 
-    public ShooterTiltGoalState mGoalState = ShooterTiltGoalState.STOW;
+    private ShooterTiltGoalState mGoalState = ShooterTiltGoalState.STOW;
     private boolean mWithinTolerance = false;
 
     public ShooterTilt(ShooterTiltIO io) {
@@ -92,5 +92,9 @@ public class ShooterTilt extends SubsystemBase {
 
     public boolean withinTolerance() {
         return mWithinTolerance;
+    }
+
+    public ShooterTiltGoalState getGoalState() {
+        return mGoalState;
     }
 }

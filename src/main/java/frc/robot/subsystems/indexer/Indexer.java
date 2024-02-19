@@ -55,4 +55,8 @@ public class Indexer extends SubsystemBase{
     public SystemState getSystemState() {
         return mStateMachine.getSystemState();
     }
+
+    public boolean temporaryHasGamepiece() {
+        return mInputs.firstBannerTriggered;
+    }
 }
