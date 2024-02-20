@@ -89,7 +89,7 @@ public class ArmIOTalonFX implements ArmIO {
         mTiltConfig.MotionMagic.MotionMagicAcceleration = Constants.ArmSubsystem.J1.kMagicAccel;
         mTiltConfig.MotionMagic.MotionMagicJerk = Constants.ArmSubsystem.J1.kMagicJerk;
 
-        
+        mTiltConfig.Feedback.SensorToMechanismRatio = 110.73;
 
         mTiltControlMaster = new MotionMagicTorqueCurrentFOC(0, 0, 0, false, false, false);
         mTiltControlFollower = new StrictFollower(mTiltMotorMaster.getDeviceID());
@@ -107,6 +107,8 @@ public class ArmIOTalonFX implements ArmIO {
         mWristConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.ArmSubsystem.J2.kMagicVel;
         mWristConfig.MotionMagic.MotionMagicAcceleration = Constants.ArmSubsystem.J2.kMagicAccel;
         mWristConfig.MotionMagic.MotionMagicJerk = Constants.ArmSubsystem.J2.kMagicJerk;
+
+        mWristConfig.Feedback.SensorToMechanismRatio = 48.0;
 
         mWristControlMaster = new MotionMagicTorqueCurrentFOC(0, 0, 0, false, false, false);
 
@@ -180,7 +182,12 @@ public class ArmIOTalonFX implements ArmIO {
         PhoenixProUtil.checkErrorAndRetry(() -> mTiltMotorMaster.getConfigurator().apply(mTiltConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mTiltMotorFollower.getConfigurator().apply(mTiltConfig));
 
+        PhoenixProUtil.checkErrorAndRetry(() -> mTiltMotorMaster.setPosition(J1.kHomePosition));
+        PhoenixProUtil.checkErrorAndRetry(() -> mTiltMotorFollower.setPosition(J1.kHomePosition));
+
         PhoenixProUtil.checkErrorAndRetry(() -> mWristMotorMaster.getConfigurator().apply(mWristConfig));
+
+        PhoenixProUtil.checkErrorAndRetry(() -> mWristMotorMaster.setPosition(J2.kHomePosition));
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonConfigHelper;
@@ -34,7 +35,16 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
         mConfig = TalonConfigHelper.getBaseConfig();
+        mConfig.Slot0.kP = 0.0;
+        mConfig.Slot0.kI = 0.0;
+        mConfig.Slot0.kD = 0.0;
+        mConfig.Slot0.kV = 0.0;
+        mConfig.Slot0.kA = 0.0;
+
+        mConfig.Feedback.SensorToMechanismRatio = 50.67;
+
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
+        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
         
         mControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
 

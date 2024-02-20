@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.WantedAction;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
 
 public class ShooterFlywheels extends SubsystemBase{
     private ShooterFlywheelsIO mIO;
@@ -15,7 +15,7 @@ public class ShooterFlywheels extends SubsystemBase{
     private double mSetpointSpeedLeft = 0.0;
     private double mSetpointSpeedRight = 0.0;
     private ShooterFlywheelsStateMachine mStateMachine = new ShooterFlywheelsStateMachine();
-    private WantedAction mWantedAction = WantedAction.OFF;
+    private FlywheelsWantedAction mWantedAction = FlywheelsWantedAction.OFF;
 
     public ShooterFlywheels(ShooterFlywheelsIO io) {
         mIO = io;
@@ -65,7 +65,7 @@ public class ShooterFlywheels extends SubsystemBase{
         mIO.setSpinDownMode(!outputState.getFlywheelEnabled());
     }
 
-    public void setWantedAction(WantedAction wantedAction) {
+    public void setWantedAction(FlywheelsWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
         }
@@ -79,7 +79,7 @@ public class ShooterFlywheels extends SubsystemBase{
         mSetpointSpeedRight = setpointRPS;
     }
 
-    public ShooterFlywheelsStateMachine.SystemState getSystemState() {
+    public ShooterFlywheelsStateMachine.FlywheelsSystemState getSystemState() {
         return mStateMachine.getSystemState();
     }
 }

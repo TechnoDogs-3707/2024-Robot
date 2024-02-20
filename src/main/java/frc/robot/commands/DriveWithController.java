@@ -89,8 +89,8 @@ public class DriveWithController extends Command {
         var linearSpeedFactor = linearSpeedLimitChooser.getSelected();
         var angularSpeedFactor = angularSpeedLimitChooser.getSelected();
         if (slowModeSupplier.get()) {
-            linearSpeedFactor *= 0.375;
-            angularSpeedFactor *= 0.375;
+            linearSpeedFactor *= 0.5;
+            angularSpeedFactor *= 0.5;
         }
 
         var controllerInputs = driveInputSupplier.get()

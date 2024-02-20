@@ -3,6 +3,7 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.*;
 import frc.robot.Constants;
+import frc.robot.lib.dashboard.DashboardToggleSwitch;
 
 public class ArmIOSimV1 implements ArmIO {
     private final TrapezoidProfile.Constraints kJ1Constraints;
@@ -17,6 +18,8 @@ public class ArmIOSimV1 implements ArmIO {
     private TrapezoidProfile mJ1Estimator;
     private TrapezoidProfile mJ2Estimator;
 
+    private final DashboardToggleSwitch mContrastSensor;
+
     public ArmIOSimV1() {
         kJ1Constraints = new Constraints(1, 2);
         kJ2Constraints = new Constraints(1.5, 3);
@@ -29,6 +32,8 @@ public class ArmIOSimV1 implements ArmIO {
 
         mJ1Estimator = new TrapezoidProfile(kJ1Constraints);
         mJ2Estimator = new TrapezoidProfile(kJ2Constraints);
+
+        mContrastSensor = new DashboardToggleSwitch("IntakeContrastSensor", false);
     }
 
     @Override
@@ -38,6 +43,8 @@ public class ArmIOSimV1 implements ArmIO {
         
         inputs.wristRotations = mJ2LastState.position;
         inputs.wristVelocityRotPerSec = mJ2LastState.velocity;
+
+        inputs.intakeBeamBreakTriggered = mContrastSensor.getAsBoolean();
     }
 
     @Override

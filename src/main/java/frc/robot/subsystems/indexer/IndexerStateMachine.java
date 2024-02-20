@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import static frc.robot.Constants.Indexer.*;
 
 public class IndexerStateMachine {
-    public enum WantedAction {
+    public enum IndexerWantedAction {
         /**
          * Does not run the indexer motors under any condition.
          */
@@ -31,7 +31,7 @@ public class IndexerStateMachine {
         REVERSE
     }
 
-    public enum SystemState {
+    public enum IndexerSystemState {
         /**
          * The default state of the indexer. No motors are running.
          */
@@ -63,18 +63,18 @@ public class IndexerStateMachine {
         REVERSING,
     }
 
-    private WantedAction mWantedAction = WantedAction.OFF;
-    private SystemState mSystemState = SystemState.OFF_EMPTY;
+    private IndexerWantedAction mWantedAction = IndexerWantedAction.OFF;
+    private IndexerSystemState mSystemState = IndexerSystemState.OFF_EMPTY;
     private double mStateStartTime = Timer.getFPGATimestamp();
 
-    public void setWantedAction(WantedAction wantedAction) {
+    public void setWantedAction(IndexerWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
             mStateStartTime = Timer.getFPGATimestamp();
         }
     }
 
-    public SystemState getSystemState() {
+    public IndexerSystemState getSystemState() {
         return mSystemState;
     }
 
@@ -86,32 +86,32 @@ public class IndexerStateMachine {
         switch (mWantedAction) {
             case OFF:
                 if (!firstBannerTriggered && !secondBannerTriggered) {
-                    mSystemState = SystemState.OFF_EMPTY;
+                    mSystemState = IndexerSystemState.OFF_EMPTY;
                 } else {
-                    mSystemState = SystemState.OFF_FULL;
+                    mSystemState = IndexerSystemState.OFF_FULL;
                 }
                 break;
             case INTAKE:
                 if (firstBannerTriggered && !secondBannerTriggered) {
-                    mSystemState = SystemState.OFF_FULL;
+                    mSystemState = IndexerSystemState.OFF_FULL;
                 } else if (firstBannerTriggered && secondBannerTriggered) {
-                    mSystemState = SystemState.OVERFED;
+                    mSystemState = IndexerSystemState.OVERFED;
                 } else {
-                    mSystemState = SystemState.INTAKING;
+                    mSystemState = IndexerSystemState.INTAKING;
                 }
                 break;
             case SCORE:
                 if (firstBannerTriggered || secondBannerTriggered) {
-                    mSystemState = SystemState.SCORING;
+                    mSystemState = IndexerSystemState.SCORING;
                 } else {
-                    mSystemState = SystemState.OFF_EMPTY;
+                    mSystemState = IndexerSystemState.OFF_EMPTY;
                 }
                 break;
             case REVERSE:
-                mSystemState = SystemState.REVERSING;
+                mSystemState = IndexerSystemState.REVERSING;
                 break;
             default:
-                mSystemState = SystemState.OFF_EMPTY;
+                mSystemState = IndexerSystemState.OFF_EMPTY;
                 break;
         }
 

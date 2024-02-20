@@ -90,11 +90,6 @@ public class RobotContainer {
     private final Trigger driverSnapAutoAlignAngle = driver.square();
     // private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
     private final Trigger driverTempDisableFieldOriented = driver.R1();
-    
-    private final Trigger testModeStow = driver.circle();
-    private final Trigger testModeIntake = driver.L2();
-    private final Trigger testModeScore = driver.triangle();
-    private final Trigger testModeAmp = driver.povUp();
 
     // OPERATOR CONTROLS
     private final CommandPS5Controller operator = new CommandPS5Controller(1);
@@ -104,10 +99,12 @@ public class RobotContainer {
     private final Trigger operatorIntakeGroundToHold = operator.L2();
     private final Trigger operatorIntakeSourceToHold = operator.cross();
     private final Trigger operatorStowArm = operator.R1();
+    private final Trigger operatorResetIndexer = operator.L1();
     private final Trigger operatorOverrideScore = operator.circle();
     private final Trigger operatorSpeaker = operator.povRight();
     private final Trigger operatorAmp = operator.povUp();
     private final Trigger operatorJamClear = operator.povDown();
+    private final Trigger operatorResetArmAndIndexer = operator.create();
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -327,14 +324,21 @@ public class RobotContainer {
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
         //Operator button bindings
-        // operatorIntakeGroundToIndexer.toggleOnTrue(new ShooterTesting.IndexerLoadGamepiece(indexer));
         operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer, shooterTilt, shooterFlywheels));
-        operatorSpeaker.toggleOnTrue(new ShooterTesting.ShooterTurnOn(shooterFlywheels, shooterTilt));
+        operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
         operatorOverrideScore.toggleOnTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
         operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer, shooterFlywheels, shooterTilt));
-        operatorStowArm.onTrue(new ShooterTesting.StowEverything(indexer, shooterFlywheels, shooterTilt));
-        operator.options().onTrue(new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm));
-        operator.create().onTrue(new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_GROUND), arm));
+        operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
+        operatorResetIndexer.onTrue(ScoringCommands.resetIndexer(indexer, shooterTilt, shooterFlywheels));
+        operatorResetArmAndIndexer.onTrue(
+            new SequentialCommandGroup(
+                new ShooterTesting.StowEverything(indexer, shooterFlywheels, shooterTilt), 
+                ScoringCommands.stowArm(arm)
+            )
+        );
+        operatorIntakeGroundToHold.onTrue(ScoringCommands.sensorIntakeGroundToHold(arm, indexer, shooterTilt, shooterFlywheels));
+        operatorAmp.onTrue(ScoringCommands.armSetAmp(arm));
+        operator.touchpad().onTrue(ScoringCommands.runAmpScorer(arm));
         
         // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));

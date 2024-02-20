@@ -224,12 +224,16 @@ public class Arm extends SubsystemBase {
         return 0; // TODO: J2 feedforward
     }
 
-    public void setWantedAction(ArmIntakeStateMachine.WantedAction wantedAction) {
+    public void setWantedAction(ArmIntakeStateMachine.ArmIntakeWantedAction wantedAction) {
         mArmIntakeStateMachine.setWantedAction(wantedAction);
     }
 
-    public ArmIntakeStateMachine.SystemState getIntakeSystemState() {
+    public ArmIntakeStateMachine.ArmIntakeSystemState getIntakeSystemState() {
         return mArmIntakeStateMachine.getSystemState();
+    }
+
+    public boolean intakeHasGamepiece() {
+        return mArmInputs.intakeBeamBreakTriggered;
     }
 
     public RequestedAlignment getRequestedAlignment() {

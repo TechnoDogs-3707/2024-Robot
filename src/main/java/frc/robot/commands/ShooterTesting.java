@@ -28,13 +28,13 @@ public class ShooterTesting {
             mTilt.setGoalState(ShooterTiltGoalState.PODIUM);
             mFlywheels.setSetpointSpeedLeft(20);
             mFlywheels.setSetpointSpeedRight(40);
-            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT);
+            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.SHOOT);
         }
 
         @Override
         public void end(boolean interrupted) {
             mTilt.setGoalState(ShooterTiltGoalState.STOW);
-            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF);
+            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
         }
     }
 
@@ -48,12 +48,12 @@ public class ShooterTesting {
 
         @Override
         public void initialize() {
-            mIndexer.setWantedAction(IndexerStateMachine.WantedAction.INTAKE);
+            mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.INTAKE);
         }
 
         @Override
         public void end(boolean interrupted) {
-            mIndexer.setWantedAction(IndexerStateMachine.WantedAction.OFF);
+            mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.OFF);
         }
     }
 
@@ -67,12 +67,12 @@ public class ShooterTesting {
 
         @Override
         public void initialize() {
-            mIndexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE);
+            mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.SCORE);
         }
 
         @Override
         public void end(boolean interrupted) {
-            mIndexer.setWantedAction(IndexerStateMachine.WantedAction.OFF);
+            mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.OFF);
         }
     }
 
@@ -90,16 +90,16 @@ public class ShooterTesting {
 
         @Override
         public void initialize() {
-            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF);
+            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
             mTilt.setGoalState(ShooterTiltGoalState.STOW);
-            mIndexer.setWantedAction(IndexerStateMachine.WantedAction.REVERSE);
+            mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.REVERSE);
         }
 
         @Override
         public void end(boolean interrupted) {
-            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF);
+            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
             mTilt.setGoalState(ShooterTiltGoalState.STOW);
-            mIndexer.setWantedAction(IndexerStateMachine.WantedAction.OFF);
+            mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.OFF);
         }
     }
 
@@ -117,9 +117,9 @@ public class ShooterTesting {
 
         @Override
         public void initialize() {
-            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF);
+            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
             mTilt.setGoalState(ShooterTiltGoalState.STOW);
-            mIndexer.setWantedAction(IndexerStateMachine.WantedAction.OFF);
+            mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.OFF);
         }
     }
 }

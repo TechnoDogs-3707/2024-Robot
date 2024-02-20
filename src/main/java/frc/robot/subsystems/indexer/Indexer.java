@@ -6,15 +6,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.subsystems.indexer.IndexerStateMachine.SystemState;
-import frc.robot.subsystems.indexer.IndexerStateMachine.WantedAction;
+import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerSystemState;
+import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 
 public class Indexer extends SubsystemBase{
     private IndexerIO mIO;
     private IndexerIOInputsAutoLogged mInputs;
 
     private IndexerStateMachine mStateMachine = new IndexerStateMachine();
-    private WantedAction mWantedAction = WantedAction.OFF;
+    private IndexerWantedAction mWantedAction = IndexerWantedAction.OFF;
 
     public Indexer(IndexerIO io) {
         mIO = io;
@@ -46,13 +46,13 @@ public class Indexer extends SubsystemBase{
         mIO.updateOutputs();
     }
 
-    public void setWantedAction(WantedAction wantedAction) {
+    public void setWantedAction(IndexerWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
         }
     }
 
-    public SystemState getSystemState() {
+    public IndexerSystemState getSystemState() {
         return mStateMachine.getSystemState();
     }
 

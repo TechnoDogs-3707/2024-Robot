@@ -47,6 +47,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
         mMotorConfig = TalonConfigHelper.getBaseConfig();
+
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mMotorConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mMotorConfig));
         

@@ -6,7 +6,7 @@ import frc.robot.lib.util.Util;
 import static frc.robot.Constants.ShooterFlywheels.*;
 
 public class ShooterFlywheelsStateMachine {
-    public enum WantedAction {
+    public enum FlywheelsWantedAction {
         /**
          * Shooting motors are off, and in brake mode to prevent the indexer
          * from pushing a ring through it.
@@ -27,7 +27,7 @@ public class ShooterFlywheelsStateMachine {
         SHOOT
     }
 
-    public enum SystemState {
+    public enum FlywheelsSystemState {
         /**
          * The shooter motors are disabled and in brake mode.
          */
@@ -55,18 +55,18 @@ public class ShooterFlywheelsStateMachine {
         SPINDOWN
     }
 
-    private SystemState mSystemState = SystemState.OFF;
-    private WantedAction mWantedAction = WantedAction.OFF;
+    private FlywheelsSystemState mSystemState = FlywheelsSystemState.OFF;
+    private FlywheelsWantedAction mWantedAction = FlywheelsWantedAction.OFF;
     private double mStateStartTime = Timer.getFPGATimestamp();
 
-    public void setWantedAction(WantedAction wantedAction) {
+    public void setWantedAction(FlywheelsWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
             mStateStartTime = Timer.getFPGATimestamp();
         }
     }
 
-    public SystemState getSystemState() {
+    public FlywheelsSystemState getSystemState() {
         return mSystemState;
     }
 
@@ -82,27 +82,27 @@ public class ShooterFlywheelsStateMachine {
         switch (mWantedAction) {
             case OFF:
                 if (fastestMotorRPS > kMaxRPSForBrakeMode) {
-                    mSystemState = SystemState.SPINDOWN;
+                    mSystemState = FlywheelsSystemState.SPINDOWN;
                 } else {
-                    mSystemState = SystemState.OFF;
+                    mSystemState = FlywheelsSystemState.OFF;
                 }
                 break;
             case IDLE:
                 if (fastestMotorRPS > kMaxRPSForIdleControl) {
-                    mSystemState = SystemState.SPINDOWN;
+                    mSystemState = FlywheelsSystemState.SPINDOWN;
                 } else {
-                    mSystemState = SystemState.IDLE;
+                    mSystemState = FlywheelsSystemState.IDLE;
                 }
                 break;
             case SHOOT:
                 if (Util.epsilonEquals(leftMotorRPS, leftSetpointRPS, kRPSTolerance) && Util.epsilonEquals(rightMotorRPS, rightSetpointRPS, kRPSTolerance)) {
-                    mSystemState = SystemState.READY;
+                    mSystemState = FlywheelsSystemState.READY;
                 } else {
-                    mSystemState = SystemState.SPINUP;
+                    mSystemState = FlywheelsSystemState.SPINUP;
                 }
                 break;
             default:
-                mSystemState = SystemState.OFF;
+                mSystemState = FlywheelsSystemState.OFF;
                 break;
         }
 
