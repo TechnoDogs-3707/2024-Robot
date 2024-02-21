@@ -55,8 +55,8 @@ public class IndexerIOTalonFX implements IndexerIO {
         inputs.motorSuppliedCurrentAmps = indexerCurrent.getValue();
         inputs.motorTempCelsius = indexerTemp.getValue();
 
-        inputs.firstBannerTriggered = mFirstBanner.get();
-        inputs.secondBannerTriggered = mSecondBanner.get();
+        inputs.firstBannerTriggered = !mFirstBanner.get();
+        inputs.secondBannerTriggered = !mSecondBanner.get();
     }
 
     @Override

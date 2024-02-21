@@ -65,7 +65,7 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
 
     @Override
     public void updateInputs(ShooterTiltIOInputs inputs) {
-        StatusSignal.refreshAll((StatusSignal<?>[])mStatusSignals.toArray());
+        mStatusSignals.forEach((s) -> s.refresh());
 
         inputs.tiltForwardSoftLimit = mMotorForwardSoftLimit.getValue();
         inputs.tiltRotations = mMotorPosition.getValue();

@@ -90,7 +90,7 @@ public class ShooterTesting {
 
         @Override
         public void initialize() {
-            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
+            // mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
             mTilt.setGoalState(ShooterTiltGoalState.STOW);
             mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.REVERSE);
         }

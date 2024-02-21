@@ -90,7 +90,7 @@ public class ScoringCommands {
             new ConditionalCommand(
                 new SequentialCommandGroup(
                     setIndexerAction(indexer, IndexerWantedAction.REVERSE),
-                    new WaitCommand(0.25),
+                    new WaitCommand(0.15),
                     setIndexerAction(indexer, IndexerWantedAction.INTAKE),
                     setShooterWheelsAction(flywheels, FlywheelsWantedAction.IDLE)
                 ), 
@@ -155,6 +155,8 @@ public class ScoringCommands {
             new ConditionalCommand(
                 new SequentialCommandGroup(
                     setIndexerAction(indexer, IndexerWantedAction.INTAKE),
+                    new InstantCommand(() -> flywheels.setSetpointSpeedLeft(30), flywheels),
+                    new InstantCommand(() -> flywheels.setSetpointSpeedRight(100), flywheels),
                     setShooterWheelsAction(flywheels, FlywheelsWantedAction.SHOOT),
                     setShooterTiltGoalState(tilt, ShooterTiltGoalState.CLOSE)
                 ), 

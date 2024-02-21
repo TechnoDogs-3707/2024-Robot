@@ -63,6 +63,8 @@ public class ShooterFlywheels extends SubsystemBase{
         mIO.setSpeedSetpointRight(finalSetpointRight);
         mIO.setBrakeMode(outputState.getBrakeModeEnabled());
         mIO.setSpinDownMode(!outputState.getFlywheelEnabled());
+
+        mIO.updateOutputs();
     }
 
     public void setWantedAction(FlywheelsWantedAction wantedAction) {

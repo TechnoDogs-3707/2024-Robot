@@ -28,7 +28,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    private static final RobotType robot = RobotType.ROBOT_2024_HARD_ROCK;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -428,8 +428,8 @@ public final class Constants {
 
         public static final double kMaxRPSForBrakeMode = 10;
         public static final double kMaxRPSForIdleControl = 10;
-        public static final double kIdleRPS = 5.0;
-        public static final double kRPSTolerance = 10;
+        public static final double kIdleRPS = 15.0;
+        public static final double kRPSTolerance = 5;
     }
 
     public static final class ShooterTilt {
@@ -447,7 +447,7 @@ public final class Constants {
         public static final double kMagicAccel = 0.0;
         public static final double kMagicJerk = 0.0;
 
-        public static final double kLiberalAllowableError = 0.;
+        public static final double kLiberalAllowableError = 0.0;
         public static final double kConservativeAllowableError = 0.0;
 
         public static final double kHomePosition = 0.0;

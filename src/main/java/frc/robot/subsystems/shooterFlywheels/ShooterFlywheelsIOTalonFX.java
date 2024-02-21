@@ -13,6 +13,7 @@ import frc.robot.lib.phoenixpro.TalonConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
 import static frc.robot.Constants.ShooterFlywheels.*;
+import static frc.robot.Constants.ShooterTilt.kP;
 
 import java.util.ArrayList;
 
@@ -47,6 +48,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
         mMotorConfig = TalonConfigHelper.getBaseConfig();
+        mMotorConfig.Slot0.kV = 0.11;
 
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mMotorConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mMotorConfig));
@@ -74,7 +76,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
 
     @Override
     public void updateInputs(ShooterFlywheelsIOInputs inputs) {
-        StatusSignal.refreshAll((StatusSignal<?>[])mStatusSignals.toArray());
+        mStatusSignals.forEach((s) -> s.refresh());
 
         inputs.leftMotorSpeedRPS = mLeftMotorSpeed.getValue();
         inputs.leftMotorSuppliedCurrentAmps = mLeftMotorCurrent.getValue();
@@ -98,7 +100,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
             mWasBrakeMode = mBrakeMode;
         }
 
-        mOutputControlLeft.Velocity = mSetpointSpeedLeft;
+        mOutputControlLeft.Velocity = -mSetpointSpeedLeft; // TODO: make this hack proper
         mOutputControlRight.Velocity = mSetpointSpeedRight;
 
         if (mSpinDownMode) {

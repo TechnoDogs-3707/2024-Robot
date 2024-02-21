@@ -149,6 +149,7 @@ public class RobotContainer {
                     indexer = new Indexer(new IndexerIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
                     //vision
+                    break;
                 case ROBOT_2023_HEAVYMETAL:
                     drive = new Drive(
                             // new GyroNavXIO(SPI.Port.kMXP),
