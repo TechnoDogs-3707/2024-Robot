@@ -24,20 +24,17 @@ import frc.robot.lib.drive.AutoAlignPointSelector;
 import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.leds.LEDState;
 import frc.robot.lib.leds.TimedLEDState;
-import frc.robot.lib.util.TimeDelayedBoolean;
 import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.ArmState.ArmSend;
-import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.leds.LED;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine;
 
 public class Arm extends SubsystemBase {
 
     public enum GoalState {
         STOW(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
         INTAKE_GROUND(ArmState.withConservativeConstraints(0, 0.4, ArmSend.LOW)),
-        INTAKE_SOURCE(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
-        SCORE_AMP(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
+        INTAKE_SOURCE(ArmState.withConservativeConstraints(0.24, 0, ArmSend.LOW)),
+        SCORE_AMP(ArmState.withConservativeConstraints(0.27, 0.25, ArmSend.LOW)),
         SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW));
         
         public ArmState state;
@@ -123,7 +120,7 @@ public class Arm extends SubsystemBase {
         Rotation2d wristAngle = Rotation2d.fromRotations(mArmInputs.wristRotations);
 
         mSensorMechJ1.setAngle(tiltAngle);
-        mSensorMechJ2.setAngle(wristAngle.unaryMinus().minus(Rotation2d.fromDegrees(235)));
+        mSensorMechJ2.setAngle(wristAngle.plus(tiltAngle).unaryMinus().minus(Rotation2d.fromDegrees(235)));
 
         mMeasuredState = new ArmState(mArmInputs.tiltRotations, mArmInputs.wristRotations, mCommandedState.send);
 
@@ -138,7 +135,7 @@ public class Arm extends SubsystemBase {
         Logger.recordOutput("Arm/CommandedState/Tolerance/J2", mCommandedState.j2Tolerance);
 
         mTargetMechJ1.setAngle(Rotation2d.fromRotations(mCommandedState.j1));
-        mTargetMechJ2.setAngle(Rotation2d.fromRotations(mCommandedState.j2).unaryMinus().minus(Rotation2d.fromDegrees(235)));
+        mTargetMechJ2.setAngle(Rotation2d.fromRotations(mCommandedState.j2).plus(Rotation2d.fromRotations(mCommandedState.j1)).unaryMinus().minus(Rotation2d.fromDegrees(235)));
 
         Logger.recordOutput("Arm/MeasuredPositions", mSensorMech);
         Logger.recordOutput("Arm/TargetPositions", mTargetMech);

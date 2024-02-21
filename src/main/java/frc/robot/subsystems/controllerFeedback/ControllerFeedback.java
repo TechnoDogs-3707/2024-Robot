@@ -2,7 +2,6 @@ package frc.robot.subsystems.controllerFeedback;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
-import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.RobotStateTracker;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
 import frc.robot.lib.feedback.PS5ControllerFeedbackHelper;

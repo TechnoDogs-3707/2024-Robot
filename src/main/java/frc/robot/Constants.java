@@ -108,15 +108,14 @@ public final class Constants {
     public static final double kCancoderBootAllowanceSeconds = 10.0;
     
     // Drive constants
-    /** SDS Mk4 L2 Gear Ratio */
     public static final double kSDS_L2 = 1 / ((14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0));
-    public static final double kSDS_L3 = 1 / ((14.0 / 50.0) * (26.0 / 16.0) * (15.0 / 45.0));
+    public static final double kSDS_L3 = 1 / ((14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 45.0));
     public static final double kSDS_L3_BOOSTED = 1 / ((16.0 / 50.0) * (26.0 / 16.0) * (15.0 / 45.0));
-    public static final double kDriveReduction = kSDS_L2;//(14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 45.0);
+    public static final double kDriveReduction = kSDS_L3;//(14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 45.0);
     public static final double kSteerReduction = (14.0 / 50.0) * (10.0 / 60.0);
     public static final double kDriveWheelDiameter = Units.inchesToMeters(4.0); // meters
-    public static final double kDriveTrackwidthMeters = 0.61595; // TODO Measure and set trackwidth
-    public static final double kDriveWheelbaseMeters = 0.61595; // TODO Measure and set wheelbase
+    public static final double kDriveTrackwidthMeters = Units.inchesToMeters(23.25);
+    public static final double kDriveWheelbaseMeters = Units.inchesToMeters(23.25);
     
     public static final double kMaxVelocityMetersPerSecond = 5.05; //Calibrated 3/12 on Comp Bot
     public static final double kMaxAccelerationMetersPerSecondSquared = 4.4;
@@ -355,12 +354,12 @@ public final class Constants {
             public static final double kD = 0.0;
             public static final double kV = 0.0;
             
-            public static final double kMagicVel = 0.0;
-            public static final double kMagicAccel = 0.0;
+            public static final double kMagicVel = 1.0;
+            public static final double kMagicAccel = 2.0;
             public static final double kMagicJerk = 0.0;
 
-            public static final double kLiberalAllowableError = 0.0;
-            public static final double kConservativeAllowableError = 0.0;
+            public static final double kLiberalAllowableError = 0.05;
+            public static final double kConservativeAllowableError = 0.01;
             
             public static final double kHomePosition = 0.0;
             public static final double kMinTargetPosition = 0.0;
@@ -381,12 +380,12 @@ public final class Constants {
             public static final double kD = 0.0;
             public static final double kV = 0.0;
 
-            public static final double kMagicVel = 0.0;
-            public static final double kMagicAccel = 0.0;
+            public static final double kMagicVel = 1.5;
+            public static final double kMagicAccel = 3.0;
             public static final double kMagicJerk = 0.0;
 
-            public static final double kLiberalAllowableError = 0.;
-            public static final double kConservativeAllowableError = 0.0;
+            public static final double kLiberalAllowableError = 0.05;
+            public static final double kConservativeAllowableError = 0.01;
 
             public static final double kHomePosition = 0.0;
             public static final double kMinTargetPosition = 0.0;
@@ -426,8 +425,8 @@ public final class Constants {
         public static final int kRightMotorID = 43;
         public static final String kMotorBus = "canivore";
 
-        public static final double kMaxRPSForBrakeMode = 10;
-        public static final double kMaxRPSForIdleControl = 10;
+        public static final double kMaxRPSForBrakeMode = 8;
+        public static final double kMaxRPSForIdleControl = 20;
         public static final double kIdleRPS = 15.0;
         public static final double kRPSTolerance = 5;
     }

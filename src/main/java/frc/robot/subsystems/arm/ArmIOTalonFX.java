@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -41,7 +42,7 @@ public class ArmIOTalonFX implements ArmIO {
 
     private final TalonFXConfiguration mIntakeConfig;
 
-    private final VoltageOut mIntakeControlMaster;
+    private final DutyCycleOut mIntakeControlMaster;
 
     ///////// STATUS SIGNALS \\\\\\\\\\
     private StatusSignal<Double> tiltMasterPosition;
@@ -117,7 +118,7 @@ public class ArmIOTalonFX implements ArmIO {
 
         mIntakeConfig = TalonConfigHelper.getBaseConfig(); //TODO: set up intake config
 
-        mIntakeControlMaster = new VoltageOut(0, false, false, false, false);
+        mIntakeControlMaster = new DutyCycleOut(0, false, false, false, false);
 
         ////////// ALL MOTORS \\\\\\\\\\
         configMotors();
@@ -213,9 +214,9 @@ public class ArmIOTalonFX implements ArmIO {
 
         inputs.intakeVelocityRotPerSec = intakeMasterVelocity.getValue();
         inputs.intakeSuppliedCurrentAmps = intakeMasterSuppliedCurrent.getValue();
-        inputs.intakeHottestTempCelsius = intakeMasterSuppliedCurrent.getValue();
+        inputs.intakeHottestTempCelsius = intakeMasterTempCelsius.getValue();
 
-        inputs.intakeBeamBreakTriggered = mIntakeSensor.get();
+        inputs.intakeBeamBreakTriggered = !mIntakeSensor.get();
     }
 
     @Override
@@ -239,9 +240,15 @@ public class ArmIOTalonFX implements ArmIO {
     }
 
     @Override
+    public void setIntakeThrottle(double throttle) {
+        mIntakeControlMaster.Output = throttle;
+    }
+
+    @Override
     public void updateOutputs() {
         mTiltMotorMaster.setControl(mTiltControlMaster);
         mWristMotorMaster.setControl(mWristControlMaster);
+        mIntakeMotorMaster.setControl(mIntakeControlMaster);
     }
 
     @Override

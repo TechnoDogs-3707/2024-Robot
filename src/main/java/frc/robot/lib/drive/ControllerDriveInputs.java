@@ -1,9 +1,11 @@
 package frc.robot.lib.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.lib.Utility;
+import frc.robot.lib.util.Util;
 
 /**
  * A class that processes drivetrain inputs from a joystick/controller.
@@ -151,6 +153,29 @@ public class ControllerDriveInputs {
 
     public Twist2d getVelocityVector() {
         return new Twist2d(x, y, rotation);
+    }
+
+    /**
+     * Applies a power function to the control inputs without limiting max values when the stick
+     * is not aligned with a cardinal direction.
+     * @return
+     */
+    public ControllerDriveInputs powerPolar(double power) {
+        // note: we preserve the rotation value since it's not affected by this issue
+
+        // convert x and y input to polar coordinates, theta and magnitude.
+        var translation = new Translation2d(x, y);
+        var theta = translation.getAngle();
+        var magnitude = translation.getNorm();
+
+        // limit magnitude to 0..1
+        magnitude = Util.limit(magnitude, 1);
+        magnitude = Math.pow(magnitude, power);
+
+        // convert back to cartesian coords
+        var normalizedTranslation = new Translation2d(magnitude, theta);
+
+        return new ControllerDriveInputs(normalizedTranslation.getX(), normalizedTranslation.getY(), Math.copySign(Math.pow(rotation, power), rotation));
     }
 
 }

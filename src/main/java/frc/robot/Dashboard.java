@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.DriveWithController;
 import frc.robot.lib.dashboard.Alert;
-import frc.robot.lib.dashboard.SendableTriggerButton;
 import frc.robot.lib.dashboard.SupplierWidget;
 import frc.robot.lib.dashboard.WidgetConfig;
 import frc.robot.lib.dashboard.SendableWidget;

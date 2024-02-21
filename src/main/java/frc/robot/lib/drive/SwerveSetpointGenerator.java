@@ -150,7 +150,7 @@ public class SwerveSetpointGenerator {
         final Translation2d[] modules = Constants.kWheelPositions;
 
         SwerveModuleState[] desiredModuleState = overrideDesiredState.orElse(mKinematics.toSwerveModuleStates(desiredState));
-        
+
         // Make sure desiredState respects velocity limits.
         if (limits.kMaxDriveVelocity > 0.0) {
             SwerveDriveKinematics.desaturateWheelSpeeds(desiredModuleState, limits.kMaxDriveVelocity);

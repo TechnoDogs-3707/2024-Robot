@@ -3,6 +3,8 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.*;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmSubsystem.J1;
+import frc.robot.Constants.ArmSubsystem.J2;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
 
 public class ArmIOSimV1 implements ArmIO {
@@ -21,8 +23,8 @@ public class ArmIOSimV1 implements ArmIO {
     private final DashboardToggleSwitch mContrastSensor;
 
     public ArmIOSimV1() {
-        kJ1Constraints = new Constraints(1, 2);
-        kJ2Constraints = new Constraints(1.5, 3);
+        kJ1Constraints = new Constraints(J1.kMagicVel, J1.kMagicAccel);
+        kJ2Constraints = new Constraints(J2.kMagicVel, J2.kMagicAccel);
 
         mJ1LastState = new State();
         mJ2LastState = new State();

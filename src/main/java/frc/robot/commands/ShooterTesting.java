@@ -78,27 +78,27 @@ public class ShooterTesting {
 
     public static class JamClear extends Command {
         private Indexer mIndexer;
-        private ShooterFlywheels mFlywheels;
-        private ShooterTilt mTilt;
+        // private ShooterFlywheels mFlywheels;
+        // private ShooterTilt mTilt;
 
-        public JamClear(Indexer indexer, ShooterFlywheels flywheels, ShooterTilt tilt) {
+        public JamClear(Indexer indexer/*, ShooterFlywheels flywheels, ShooterTilt tilt*/) {
             mIndexer = indexer;
-            mFlywheels = flywheels;
-            mTilt = tilt;
-            addRequirements(indexer, flywheels, tilt);
+            // mFlywheels = flywheels;
+            // mTilt = tilt;
+            addRequirements(indexer/*, flywheels, tilt*/);
         }
 
         @Override
         public void initialize() {
             // mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
-            mTilt.setGoalState(ShooterTiltGoalState.STOW);
+            // mTilt.setGoalState(ShooterTiltGoalState.STOW);
             mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.REVERSE);
         }
 
         @Override
         public void end(boolean interrupted) {
-            mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
-            mTilt.setGoalState(ShooterTiltGoalState.STOW);
+            // mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
+            // mTilt.setGoalState(ShooterTiltGoalState.STOW);
             mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.OFF);
         }
     }

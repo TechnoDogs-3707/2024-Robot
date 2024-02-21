@@ -14,15 +14,11 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.ArmCommandFactory;
-import frc.robot.commands.ArmSetGoalTillFinished;
 import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveAutoAlignCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
@@ -37,7 +33,6 @@ import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
-import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveIOTalonFX;
@@ -50,7 +45,6 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOSim;
 import frc.robot.subsystems.indexer.IndexerIOTalonFX;
-import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
@@ -61,7 +55,6 @@ import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOTalonFX;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOSim;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine;
 import frc.robot.subsystems.shooterTilt.ShooterTilt;
 import frc.robot.subsystems.shooterTilt.ShooterTiltIO;
 import frc.robot.subsystems.shooterTilt.ShooterTiltIOTalonFX;
@@ -105,6 +98,7 @@ public class RobotContainer {
     private final Trigger operatorAmp = operator.povUp();
     private final Trigger operatorJamClear = operator.povDown();
     private final Trigger operatorResetArmAndIndexer = operator.create();
+    private final Trigger operatorHandoffToIndexer = operator.triangle();
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -326,9 +320,10 @@ public class RobotContainer {
 
         //Operator button bindings
         operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer, shooterTilt, shooterFlywheels));
+        operatorIntakeSourceToHold.onTrue(ScoringCommands.sensorIntakeFromSource(arm, indexer, shooterFlywheels, shooterTilt));
         operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
-        operatorOverrideScore.toggleOnTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
-        operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer, shooterFlywheels, shooterTilt));
+        operatorOverrideScore.toggleOnTrue(ScoringCommands.instantScore(arm, indexer, shooterFlywheels));
+        operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer/*, shooterFlywheels, shooterTilt*/));
         operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
         operatorResetIndexer.onTrue(ScoringCommands.resetIndexer(indexer, shooterTilt, shooterFlywheels));
         operatorResetArmAndIndexer.onTrue(
@@ -339,7 +334,7 @@ public class RobotContainer {
         );
         operatorIntakeGroundToHold.onTrue(ScoringCommands.sensorIntakeGroundToHold(arm, indexer, shooterTilt, shooterFlywheels));
         operatorAmp.onTrue(ScoringCommands.armSetAmp(arm));
-        operator.touchpad().onTrue(ScoringCommands.runAmpScorer(arm));
+        operatorHandoffToIndexer.onTrue(ScoringCommands.sensorHandoffToIndexer(arm, indexer, shooterFlywheels, shooterTilt));
         
         // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
@@ -358,7 +353,7 @@ public class RobotContainer {
     }
 
     private ControllerDriveInputs getDriveInputs() {
-        return new ControllerDriveInputs(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX()).applyDeadZone(0.03, 0.03, 0.03, 0.05).squareInputs();
+        return new ControllerDriveInputs(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX()).applyDeadZone(0.03, 0.03, 0.03, 0.05).powerPolar(2);
     }
 
     protected void onTeleopInit() {

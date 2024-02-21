@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooterFlywheels;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -13,8 +12,6 @@ import frc.robot.lib.phoenixpro.TalonConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
 import static frc.robot.Constants.ShooterFlywheels.*;
-import static frc.robot.Constants.ShooterTilt.kP;
-
 import java.util.ArrayList;
 
 public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {

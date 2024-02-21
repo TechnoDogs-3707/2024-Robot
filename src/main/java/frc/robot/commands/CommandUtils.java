@@ -25,4 +25,10 @@ public class CommandUtils{
             condition
         );
     }
+
+    public static Command emptyCommand() {
+        return new Command() {
+            
+        };
+    }
 }

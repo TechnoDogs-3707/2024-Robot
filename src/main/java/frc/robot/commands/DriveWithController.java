@@ -33,9 +33,6 @@ public class DriveWithController extends Command {
 
     private boolean mUseOpenLoop = false;
 
-    private boolean snapOppositeFirstRun = true;
-    private double snapOppositeReferenceAngle = 0.0;
-
     private final TimeDelayedBoolean mShouldMaintainHeading = new TimeDelayedBoolean();
     private final SwerveHeadingController mSwerveHeadingController = SwerveHeadingController.getInstance();
     private Optional<Double> mHeadingGoal = Optional.empty();
@@ -101,8 +98,6 @@ public class DriveWithController extends Command {
 
         boolean shouldSnapAutoAlignAngle = snapAutoAlignAngle.get();
         boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapAutoAlignAngle, 0.2);
-
-        double robotAngleDegrees = drive.getPose().getRotation().getDegrees();
 
         if (shouldSnapAutoAlignAngle) {
             mHeadingGoal = Optional.of(AutoAlignPointSelector.getAlignTarget(drive.getPose(), RequestedAlignment.AUTO).orElse(drive.getPose()).getRotation().getDegrees()); //TODO: make this use our RequestedAlignment Planner

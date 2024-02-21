@@ -11,16 +11,13 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.lib.ScoringIntentTracker;
 import frc.robot.lib.ScoringIntentTracker.ScoringIntent;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmIntakeStateMachine;
 import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.arm.ArmIntakeStateMachine.ArmIntakeSystemState;
 import frc.robot.subsystems.arm.ArmIntakeStateMachine.ArmIntakeWantedAction;
 import frc.robot.subsystems.indexer.Indexer;
-import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerSystemState;
 import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsSystemState;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
 import frc.robot.subsystems.shooterTilt.ShooterTilt;
@@ -164,6 +161,71 @@ public class ScoringCommands {
                     
                 ), 
                 indexer::temporaryHasGamepiece
+            )
+        );
+    }
+
+    public static Command instantScore(Arm arm, Indexer indexer, ShooterFlywheels flywheels) {
+        return new ConditionalCommand(
+            new SequentialCommandGroup(
+                setArmIntakeAction(arm, ArmIntakeWantedAction.INTAKE_CONSTANT),
+                new WaitUntilCommand(() -> !arm.intakeHasGamepiece()),
+                new WaitCommand(0.25),
+                setArmIntakeAction(arm, ArmIntakeWantedAction.OFF),
+                setArmGoalState(arm, GoalState.STOW)
+            ),
+            new ConditionalCommand(
+                setIndexerAction(indexer, IndexerWantedAction.SCORE), 
+                new SequentialCommandGroup(
+                    new WaitUntilCommand(() -> indexer.temporaryHasGamepiece() && flywheels.getSystemState().equals(FlywheelsSystemState.READY)),
+                    setIndexerAction(indexer, IndexerWantedAction.SCORE)
+                ), 
+                () -> indexer.temporaryHasGamepiece() && flywheels.getSystemState().equals(FlywheelsSystemState.READY)
+            ),
+            armIsAtGoalState(arm, GoalState.SCORE_AMP));
+    }
+
+    public static Command sensorIntakeFromSource(Arm arm, Indexer indexer, ShooterFlywheels flywheels, ShooterTilt tilt) {
+        return new SequentialCommandGroup(
+            new ConditionalCommand(
+                new SequentialCommandGroup(
+                    
+                ), 
+                new SequentialCommandGroup(
+                    setIndexerAction(indexer, IndexerWantedAction.OFF),
+                    setShooterWheelsAction(flywheels, FlywheelsWantedAction.OFF),
+                    setShooterTiltGoalState(tilt, ShooterTiltGoalState.STOW),
+                    setArmIntakeAction(arm, ArmIntakeWantedAction.INTAKE_PARTIAL),
+                    setArmGoalState(arm, GoalState.INTAKE_SOURCE),
+                    new WaitUntilCommand(armIsAtGoalState(arm, GoalState.INTAKE_SOURCE)),
+                    new WaitUntilCommand(intakeIsSystemState(arm, ArmIntakeSystemState.INTAKE_PARTIAL_FULL)),
+                    new WaitCommand(0.25),
+                    setArmGoalState(arm, GoalState.STOW)
+                ), 
+                () -> arm.intakeHasGamepiece() || indexer.temporaryHasGamepiece()
+            )
+        );
+    }
+
+    public static Command sensorHandoffToIndexer(Arm arm, Indexer indexer, ShooterFlywheels flywheels, ShooterTilt tilt) {
+        return new SequentialCommandGroup(
+            new ConditionalCommand(
+                new SequentialCommandGroup(
+                    setShooterWheelsAction(flywheels, FlywheelsWantedAction.OFF),
+                    setShooterTiltGoalState(tilt, ShooterTiltGoalState.STOW),
+                    setIndexerAction(indexer, IndexerWantedAction.INTAKE),
+                    setArmGoalState(arm, GoalState.INTAKE_GROUND), // TODO: maybe make a custom handoff position?
+                    new WaitUntilCommand(armIsAtGoalState(arm, GoalState.INTAKE_GROUND)),
+                    setArmIntakeAction(arm, ArmIntakeWantedAction.INTAKE_HANDOFF),
+                    new WaitUntilCommand(intakeIsSystemState(arm, ArmIntakeSystemState.INTAKE_HANDOFF_EMPTY)),
+                    setArmGoalState(arm, GoalState.STOW),
+                    new WaitUntilCommand(indexerIsSystemState(indexer, IndexerSystemState.OFF_FULL)),
+                    setShooterWheelsAction(flywheels, FlywheelsWantedAction.IDLE)
+                ), 
+                new SequentialCommandGroup(
+                    
+                ), 
+                () -> arm.intakeHasGamepiece() && !indexer.temporaryHasGamepiece()
             )
         );
     }

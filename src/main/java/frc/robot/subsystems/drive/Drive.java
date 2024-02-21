@@ -23,11 +23,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -232,8 +230,8 @@ public class Drive extends SubsystemBase {
                 module.stop();
             }
             // Make sure to clear reported swerve setpoints
-            Logger.recordOutput("Drive/SwerveStates/Setpoints", new double[] {});
-            Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", new double[] {});
+            Logger.recordOutput("Drive/SwerveStates/Setpoints", new SwerveModuleState[] {});
+            Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
         } else {
             // Generate swerve setpoint
 
@@ -279,7 +277,12 @@ public class Drive extends SubsystemBase {
                 overrideDesiredState = Optional.of(kXModeStates);
             }
 
-            SwerveSetpoint generatedSetpoint = mGenerator.generateSetpoint(mKinematicLimits, mLastSetpoint, mSetpoint, forceSteering, overrideDesiredState, Constants.loopPeriodSecs);
+            SwerveSetpoint generatedSetpoint = new SwerveSetpoint(new ChassisSpeeds(), new SwerveModuleState[4]);
+            if (mControlState == DriveControlState.X_MODE) {
+                generatedSetpoint = new SwerveSetpoint(new ChassisSpeeds(), kXModeStates);
+            } else {
+                generatedSetpoint = mGenerator.generateSetpoint(mKinematicLimits, mLastSetpoint, mSetpoint, forceSteering, overrideDesiredState, Constants.loopPeriodSecs);
+            }
             mLastSetpoint = generatedSetpoint;
             setpointStates = generatedSetpoint.mModuleStates;
 

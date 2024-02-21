@@ -1,15 +1,10 @@
 package frc.robot.lib.drive;
 
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.opencv.core.Point;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.lib.field.AutoAlignPoint;
 import frc.robot.lib.field.AutoAlignPoint.Points;
 
