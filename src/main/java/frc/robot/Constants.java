@@ -28,7 +28,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    private static final RobotType robot = RobotType.ROBOT_2024_HARD_ROCK;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -349,10 +349,12 @@ public final class Constants {
             public static final boolean invertMaster = false;
             public static final boolean invertFollower = false;
 
+            public static final double kS = 0.0;
+            public static final double kV = 0.0;
+            public static final double kA = 0.0;
             public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
-            public static final double kV = 0.0;
             
             public static final double kMagicVel = 1.0;
             public static final double kMagicAccel = 2.0;
@@ -375,10 +377,12 @@ public final class Constants {
 
             public static final boolean invertMaster = false;
             
+            public static final double kS = 0.0;
+            public static final double kV = 0.0;
+            public static final double kA = 0.0;
             public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
-            public static final double kV = 0.0;
 
             public static final double kMagicVel = 1.5;
             public static final double kMagicAccel = 3.0;
@@ -432,18 +436,21 @@ public final class Constants {
     }
 
     public static final class ShooterTilt {
-        public static final int kMotorID = 41;
+        public static final int kMotorID = 48;
         public static final String kMotorBus = "canivore";
 
         public static final boolean invertMaster = false;
             
-        public static final double kP = 0.0;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kG = 0.22;
+        public static final double kS = 0.0;
         public static final double kV = 0.0;
+        public static final double kA = 0.0;
+        public static final double kP = 25.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.1;
 
-        public static final double kMagicVel = 0.0;
-        public static final double kMagicAccel = 0.0;
+        public static final double kMagicVel = 0.025;
+        public static final double kMagicAccel = 0.05;
         public static final double kMagicJerk = 0.0;
 
         public static final double kLiberalAllowableError = 0.0;
@@ -451,9 +458,9 @@ public final class Constants {
 
         public static final double kHomePosition = 0.0;
         public static final double kMinTargetPosition = 0.0;
-        public static final double kMaxTargetPosition = 0.0;
+        public static final double kMaxTargetPosition = 0.1;
 
-        public static final double kAbsoluteMaxPosition = 0.0;
+        public static final double kAbsoluteMaxPosition = 0.1;
         public static final double kAbsoluteMinPosition = 0.0;
     }
 

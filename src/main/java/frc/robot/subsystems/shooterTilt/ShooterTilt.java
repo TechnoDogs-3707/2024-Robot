@@ -7,15 +7,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
+import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.util.Util;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
 public class ShooterTilt extends SubsystemBase {
     public enum ShooterTiltGoalState {
-        STOW(new ShooterTiltState()),
-        CLOSE(new ShooterTiltState(0.15, false, true)),
-        PODIUM(new ShooterTiltState(0.1, false, true)),
+        STOW(new ShooterTiltState(0.01, false, false)),
+        CLOSE(new ShooterTiltState(0.1, false, true)),
+        PODIUM(new ShooterTiltState(0.07, false, true)),
         AUTO_AIM(new ShooterTiltState(0, true, true));
 
         public ShooterTiltState state;
@@ -30,6 +31,9 @@ public class ShooterTilt extends SubsystemBase {
 
     private ShooterTiltGoalState mGoalState = ShooterTiltGoalState.STOW;
     private boolean mWithinTolerance = false;
+
+    private final LoggedTunableNumber kFeedforwardConstant = new LoggedTunableNumber("Tilt/Feedforward", kG);
+    private double feedforward = kG;
 
     public ShooterTilt(ShooterTiltIO io) {
         mIO = io;
@@ -48,6 +52,8 @@ public class ShooterTilt extends SubsystemBase {
 
         // calculate robot-relative angle of shooter tilt TODO: set this minimum angle
         Rotation2d tiltAngle = Rotation2d.fromRotations(mInputs.tiltRotations).minus(Rotation2d.fromDegrees(20));
+
+        kFeedforwardConstant.ifChanged(hashCode(), (kG) -> {this.feedforward = kG;});
 
         // calculate feedforward voltage for the current position
         double tiltFeedforward = getTiltFeedforward(tiltAngle);
@@ -80,7 +86,7 @@ public class ShooterTilt extends SubsystemBase {
     }
 
     public double getTiltFeedforward(Rotation2d angle) {
-        return angle.getCos() * 0; //TODO: set feedforward
+        return angle.plus(Rotation2d.fromDegrees(20.8)).getCos() * feedforward; //TODO: set feedforward
     }
 
     public void setGoalState(ShooterTiltGoalState goalState) {

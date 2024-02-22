@@ -284,33 +284,6 @@ public class RobotContainer {
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
         driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, arm));
 
-        // testModeStow.onTrue(new SequentialCommandGroup(
-        //     new InstantCommand(() -> arm.setGoalState(GoalState.STOW), arm),
-        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.OFF), indexer),
-        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.IDLE), shooter)
-        // ));
-
-        // testModeIntake.onTrue(new SequentialCommandGroup(
-        //     new InstantCommand(() -> arm.setGoalState(GoalState.INTAKE_SOURCE), arm),
-        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.INTAKE), indexer),
-        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.OFF), shooter)
-        // ));
-
-        // testModeScore.onTrue(new SequentialCommandGroup(
-        //     new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_SPEAKER_SUBWOOFER), arm),
-        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
-        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter),
-        //     new InstantCommand(() -> shooter.setSetpointSpeedLeft(150), shooter),
-        //     new InstantCommand(() -> shooter.setSetpointSpeedRight(150), shooter)
-        // ));
-
-        // testModeAmp.onTrue(new SequentialCommandGroup(
-        //     new InstantCommand(() -> arm.setGoalState(GoalState.SCORE_AMP), arm),
-        //     new InstantCommand(() -> indexer.setWantedAction(IndexerStateMachine.WantedAction.SCORE), indexer),
-        //     new InstantCommand(() -> shooter.setWantedAction(ShooterFlywheelsStateMachine.WantedAction.SHOOT), shooter)
-        // ));
-
-
         // Driver override switches
         driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));
         driverGyroFail.onTrue(DriveUtilityCommandFactory.failGyro(drive));
@@ -322,7 +295,8 @@ public class RobotContainer {
         operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer, shooterTilt, shooterFlywheels));
         operatorIntakeSourceToHold.onTrue(ScoringCommands.sensorIntakeFromSource(arm, indexer, shooterFlywheels, shooterTilt));
         operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
-        operatorOverrideScore.toggleOnTrue(ScoringCommands.instantScore(arm, indexer, shooterFlywheels));
+        // operatorOverrideScore.toggleOnTrue(ScoringCommands.instantScore(arm, indexer, shooterFlywheels));
+        operatorOverrideScore.whileTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
         operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer/*, shooterFlywheels, shooterTilt*/));
         operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
         operatorResetIndexer.onTrue(ScoringCommands.resetIndexer(indexer, shooterTilt, shooterFlywheels));

@@ -9,6 +9,8 @@ package frc.robot.lib.dashboard;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
+
 import frc.robot.Constants;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -90,5 +92,11 @@ public class LoggedTunableNumber {
         }
         
         return false;
+    }
+
+    public void ifChanged(int id, Consumer<Double> consumer) {
+        if (hasChanged(id)) {
+            consumer.accept(get());
+        }
     }
 }

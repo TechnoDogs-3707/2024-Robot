@@ -9,9 +9,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 /** Add your docs here. */
 public class TalonConfigHelper {
-    private static final TalonFXConfiguration kBaseConfig = new TalonFXConfiguration();
+    // private static final TalonFXConfiguration kBaseConfig = new TalonFXConfiguration();
 
-    static {
+    public static final TalonFXConfiguration getBaseConfig() {
+        TalonFXConfiguration kBaseConfig = new TalonFXConfiguration();
+
         kBaseConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         kBaseConfig.CurrentLimits.SupplyCurrentThreshold = 60;
         kBaseConfig.CurrentLimits.SupplyTimeThreshold = 0.2;
@@ -24,9 +26,7 @@ public class TalonConfigHelper {
 
         kBaseConfig.Voltage.PeakForwardVoltage = 12;
         kBaseConfig.Voltage.PeakReverseVoltage = -12;
-    }
-
-    public static final TalonFXConfiguration getBaseConfig() {
+        
         return kBaseConfig;
     }
 

@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+
+import frc.robot.lib.dashboard.LoggedTunableNumber;
+import frc.robot.lib.phoenixpro.FalconFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonConfigHelper;
 
@@ -16,7 +21,7 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
 
     private final TalonFXConfiguration mConfig;
 
-    private final MotionMagicVoltage mControl;
+    private final PositionVoltage mControl;
 
     private final StatusSignal<Double> mMotorPosition;
     private final StatusSignal<Double> mMotorSpeed;
@@ -29,22 +34,46 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
     private double tiltTargetRotations = 0.0;
     private double tiltFeedforwardVoltage = 0.0;
 
+    private final FalconFeedbackControlHelper mFeedbackHelper;
+
+    private final LoggedTunableNumber mTunableKS = new LoggedTunableNumber("Tilt/kS", kS);
+    private final LoggedTunableNumber mTunableKV = new LoggedTunableNumber("Tilt/kV", kV);
+    private final LoggedTunableNumber mTunableKA = new LoggedTunableNumber("Tilt/kA", kA);
+    private final LoggedTunableNumber mTunableKP = new LoggedTunableNumber("Tilt/kP", kP);
+    private final LoggedTunableNumber mTunableKI = new LoggedTunableNumber("Tilt/kI", kI);
+    private final LoggedTunableNumber mTunableKD = new LoggedTunableNumber("Tilt/kD", kD);
+    
+    private final LoggedTunableNumber mTunableMagicVel = new LoggedTunableNumber("Tilt/MagicVelocity", kMagicVel);
+    private final LoggedTunableNumber mTunableMagicAccel = new LoggedTunableNumber("Tilt/MagicAcceleration", kMagicAccel);
+    private final LoggedTunableNumber mTunableMagicJerk = new LoggedTunableNumber("Tilt/MagicVelocity", kMagicJerk);
+    
     public ShooterTiltIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
         mConfig = TalonConfigHelper.getBaseConfig();
-        mConfig.Slot0.kP = 0.0;
-        mConfig.Slot0.kI = 0.0;
-        mConfig.Slot0.kD = 0.0;
-        mConfig.Slot0.kV = 0.0;
-        mConfig.Slot0.kA = 0.0;
+        mConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.1;
+        mConfig.Slot0.kG = 0.0; // we calculate our own feedforward within the subsystem
+        mConfig.Slot0.kS = kS;
+        mConfig.Slot0.kV = kV;
+        mConfig.Slot0.kA = kA;
+        mConfig.Slot0.kP = kP;
+        mConfig.Slot0.kI = kI;
+        mConfig.Slot0.kD = kD;
 
+        mConfig.MotionMagic.MotionMagicCruiseVelocity = 0.025;
+        mConfig.MotionMagic.MotionMagicAcceleration = 0.05;
+        mConfig.MotionMagic.MotionMagicJerk = kMagicJerk;
+        
         mConfig.Feedback.SensorToMechanismRatio = 50.67;
+
+        mFeedbackHelper = new FalconFeedbackControlHelper(mMotor, mConfig.Slot0, mConfig.MotionMagic);
 
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
         
-        mControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
+        mControl = new PositionVoltage(0, 0, true, 0, 0, false, false, false);
 
         mMotorPosition = mMotor.getPosition();
         mMotorSpeed = mMotor.getVelocity();
@@ -70,6 +99,27 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
         inputs.tiltVelocityRotPerSec = mMotorPosition.getValue();
         inputs.tiltSuppliedCurrentAmps = mMotorCurrent.getValue();
         inputs.tiltTempCelsius = mMotorTemp.getValue();
+
+        mTunableKS.ifChanged(hashCode(), mFeedbackHelper::setKS);
+        mTunableKV.ifChanged(hashCode(), mFeedbackHelper::setKV);
+        mTunableKA.ifChanged(hashCode(), mFeedbackHelper::setKA);
+        mTunableKP.ifChanged(hashCode(), mFeedbackHelper::setKP);
+        mTunableKI.ifChanged(hashCode(), mFeedbackHelper::setKI);
+        mTunableKD.ifChanged(hashCode(), mFeedbackHelper::setKD);
+
+        mTunableMagicVel.ifChanged(hashCode(), mFeedbackHelper::setMagicVelocity);
+        mTunableMagicAccel.ifChanged(hashCode(), mFeedbackHelper::setMagicAcceleration);
+        mTunableMagicJerk.ifChanged(hashCode(), mFeedbackHelper::setMagicJerk);
+    }
+
+    @Override
+    public void setTiltTarget(double tiltTargetRotations) {
+        this.tiltTargetRotations = tiltTargetRotations;
+    }
+
+    @Override
+    public void setTiltFeedForward(double tiltFeedForwardVolts) {
+        this.tiltFeedforwardVoltage = tiltFeedForwardVolts;
     }
 
     @Override

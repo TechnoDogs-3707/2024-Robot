@@ -77,6 +77,24 @@ public class FalconFeedbackControlHelper {
         PhoenixProUtil.checkErrorAndRetry(() -> mConfigurator.apply(mMagicConfigs, timeout));
     }
 
+    public void setKS(double kS) {
+        refreshConfigs();
+        mPIDConfigs.kS = kS;
+        applyConfigs();
+    }
+
+    public void setKV(double kV) {
+        refreshConfigs();
+        mPIDConfigs.kV= kV;
+        applyConfigs();
+    }
+
+    public void setKA(double kA) {
+        refreshConfigs();
+        mPIDConfigs.kA= kA;
+        applyConfigs();
+    }
+
     public void setKP(double kP) {
         refreshConfigs();
         mPIDConfigs.kP = kP;
@@ -92,18 +110,6 @@ public class FalconFeedbackControlHelper {
     public void setKD(double kD) {
         refreshConfigs();
         mPIDConfigs.kD = kD;
-        applyConfigs();
-    }
-
-    public void setKV(double kV) {
-        refreshConfigs();
-        mPIDConfigs.kV= kV;
-        applyConfigs();
-    }
-
-    public void setKS(double kS) {
-        refreshConfigs();
-        mPIDConfigs.kS = kS;
         applyConfigs();
     }
 
@@ -125,6 +131,21 @@ public class FalconFeedbackControlHelper {
         applyConfigs();
     }
 
+    public double getKS() {
+        refreshConfigs();
+        return mPIDConfigs.kS;
+    }
+
+    public double getKV() {
+        refreshConfigs();
+        return mPIDConfigs.kV;
+    }
+
+    public double getKA() {
+        refreshConfigs();
+        return mPIDConfigs.kA;
+    }
+
     public double getKP() {
         refreshConfigs();
         return mPIDConfigs.kP;
@@ -138,11 +159,6 @@ public class FalconFeedbackControlHelper {
     public double getKD() {
         refreshConfigs();
         return mPIDConfigs.kD;
-    }
-
-    public double getKV() {
-        refreshConfigs();
-        return mPIDConfigs.kV;
     }
 
     public double getMagicVelocity() {
