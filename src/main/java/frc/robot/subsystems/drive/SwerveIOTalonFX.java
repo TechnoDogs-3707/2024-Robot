@@ -21,7 +21,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
 import frc.robot.lib.phoenixpro.CANcoderLiveConfigHelper;
-import frc.robot.lib.phoenixpro.FalconFeedbackControlHelper;
+import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
@@ -39,10 +39,10 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
     private boolean mUseOpenLoopSteering = false;
 
     private final TalonFXConfiguration mDriveConfig = new TalonFXConfiguration();
-    private final FalconFeedbackControlHelper mDriveFeedbackHelper;
+    private final TalonFXFeedbackControlHelper mDriveFeedbackHelper;
 
     private final TalonFXConfiguration mSteerConfig = new TalonFXConfiguration();
-    private final FalconFeedbackControlHelper mSteerFeedbackHelper;
+    private final TalonFXFeedbackControlHelper mSteerFeedbackHelper;
 
     private final CANcoder mEncoder;
     private final CANcoderConfiguration mEncoderConfig = new CANcoderConfiguration();
@@ -72,7 +72,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mDriveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -40;
         mDriveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         PhoenixProUtil.checkErrorAndRetry(() -> mDriveMotor.getConfigurator().apply(mDriveConfig));
-        mDriveFeedbackHelper = new FalconFeedbackControlHelper(mDriveMotor, mDriveConfig.Slot0);
+        mDriveFeedbackHelper = new TalonFXFeedbackControlHelper(mDriveMotor, mDriveConfig.Slot0);
         mDriveMotor.setPosition(0);
 
         mSteerControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
@@ -87,7 +87,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mSteerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         mSteerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         PhoenixProUtil.checkErrorAndRetry(() -> mSteerMotor.getConfigurator().apply(mSteerConfig));
-        mSteerFeedbackHelper = new FalconFeedbackControlHelper(mSteerMotor, Constants.DriveSubsystem.kSteerPIDConfig, Constants.DriveSubsystem.kSteerMagicConfig);
+        mSteerFeedbackHelper = new TalonFXFeedbackControlHelper(mSteerMotor, Constants.DriveSubsystem.kSteerPIDConfig, Constants.DriveSubsystem.kSteerMagicConfig);
 
         PhoenixProUtil.checkErrorAndRetry(() -> mEncoder.getConfigurator().refresh(mEncoderConfig));
         mEncoderOffsetCache = mEncoderConfig.MagnetSensor.MagnetOffset;

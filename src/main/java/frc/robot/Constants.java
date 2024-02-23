@@ -429,6 +429,13 @@ public final class Constants {
         public static final int kRightMotorID = 43;
         public static final String kMotorBus = "canivore";
 
+        public static final double kS = 0.0;
+        public static final double kV = 0.11;
+        public static final double kA = 0.0;
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
         public static final double kMaxRPSForBrakeMode = 8;
         public static final double kMaxRPSForIdleControl = 20;
         public static final double kIdleRPS = 15.0;
@@ -441,20 +448,20 @@ public final class Constants {
 
         public static final boolean invertMaster = false;
             
-        public static final double kG = 0.22;
-        public static final double kS = 0.0;
-        public static final double kV = 0.0;
-        public static final double kA = 0.0;
-        public static final double kP = 25.0;
+        public static final double kG = 0.35;
+        public static final double kS = 2.5;
+        public static final double kV = 40.0;
+        public static final double kA = 20.0;
+        public static final double kP = 64.0;
         public static final double kI = 0.0;
-        public static final double kD = 0.1;
+        public static final double kD = 0.0;
 
-        public static final double kMagicVel = 0.025;
-        public static final double kMagicAccel = 0.05;
-        public static final double kMagicJerk = 0.0;
+        public static final double kMagicVel = 0.5;
+        public static final double kMagicAccel = 5;
+        public static final double kMagicJerk = 10.0;
 
-        public static final double kLiberalAllowableError = 0.0;
-        public static final double kConservativeAllowableError = 0.0;
+        public static final double kLiberalAllowableError = 0.01;
+        public static final double kConservativeAllowableError = 0.005;
 
         public static final double kHomePosition = 0.0;
         public static final double kMinTargetPosition = 0.0;

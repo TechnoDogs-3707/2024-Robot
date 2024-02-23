@@ -11,7 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
-import frc.robot.lib.phoenixpro.TalonConfigHelper;
+import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
 import static frc.robot.Constants.Indexer.*;
 
@@ -31,11 +31,11 @@ public class IndexerIOTalonFX implements IndexerIO {
 
     public IndexerIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
-        mConfig = TalonConfigHelper.getBaseConfig();
+        mConfig = TalonFXConfigHelper.getBaseConfig();
         
 
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
-        mMotor.getConfigurator().apply(TalonConfigHelper.getBaseConfig());
+        mMotor.getConfigurator().apply(TalonFXConfigHelper.getBaseConfig());
 
         mOutputControl = new DutyCycleOut(0, false, false, false, false);
 

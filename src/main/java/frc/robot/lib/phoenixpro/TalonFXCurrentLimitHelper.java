@@ -10,7 +10,7 @@ import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 /** Add your docs here. */
-public class FalconCurrentLimitHelper {
+public class TalonFXCurrentLimitHelper {
     private static final double defaultTimeoutSeconds = 0.1;
 
     private final TalonFX mMotor;
@@ -19,7 +19,7 @@ public class FalconCurrentLimitHelper {
     private final CurrentLimitsConfigs mNormalLimitConfig;
     private final TorqueCurrentConfigs mFOCLimitConfig;
 
-    public FalconCurrentLimitHelper(TalonFX motor, double defaultLimitAmps) {
+    public TalonFXCurrentLimitHelper(TalonFX motor, double defaultLimitAmps) {
         mMotor = motor;
         mConfigurator = mMotor.getConfigurator();
 

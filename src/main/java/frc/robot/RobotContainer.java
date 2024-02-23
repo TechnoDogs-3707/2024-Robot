@@ -20,10 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.ArmCommandFactory;
 import frc.robot.commands.AutonXModeCommand;
-import frc.robot.commands.DriveAutoAlignCommand;
+import frc.robot.commands.DriveAlignClosestCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.ScoringCommands;
+import frc.robot.commands.ShooterAutomaticCommand;
+import frc.robot.commands.ShooterScorePodiumCommand;
+import frc.robot.commands.ShooterScoreSubwooferCommand;
 import frc.robot.commands.ShooterTesting;
 import frc.robot.commands.XModeDriveCommand;
 import frc.robot.lib.OverrideSwitches;
@@ -57,6 +60,7 @@ import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOTalonFX;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOSim;
 import frc.robot.subsystems.shooterTilt.ShooterTilt;
 import frc.robot.subsystems.shooterTilt.ShooterTiltIO;
+import frc.robot.subsystems.shooterTilt.ShooterTiltIOSim;
 import frc.robot.subsystems.shooterTilt.ShooterTiltIOTalonFX;
 
 public class RobotContainer {
@@ -94,7 +98,8 @@ public class RobotContainer {
     private final Trigger operatorStowArm = operator.R1();
     private final Trigger operatorResetIndexer = operator.L1();
     private final Trigger operatorOverrideScore = operator.circle();
-    private final Trigger operatorSpeaker = operator.povRight();
+    private final Trigger operatorSubwoofer = operator.povRight();
+    private final Trigger operatorPodium = operator.povLeft();
     private final Trigger operatorAmp = operator.povUp();
     private final Trigger operatorJamClear = operator.povDown();
     private final Trigger operatorResetArmAndIndexer = operator.create();
@@ -178,6 +183,7 @@ public class RobotContainer {
                     arm = new Arm(new ArmIOSimV1());
                     indexer = new Indexer(new IndexerIOSim());
                     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
+                    shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
                     leds = new LED(new LEDIOSim(127));
                     break;
                 default:
@@ -274,6 +280,8 @@ public class RobotContainer {
                 driverSnapAutoAlignAngle::getAsBoolean
             )
         );
+
+        // shooterFlywheels.setDefaultCommand(new ShooterAutomaticCommand(shooterFlywheels, indexer));
     }
 
     private void configureBindings() {
@@ -282,7 +290,8 @@ public class RobotContainer {
         // Drive button bindings
         driverXMode.whileTrue(new XModeDriveCommand(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
-        driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, arm));
+        driverAutoAlignClosest.whileTrue(new DriveAlignClosestCommand(drive, arm));
+        // driverAutoAlignPreferred.whileTrue(new DriveAutoAlignCommand(alignmentTracker, drive, arm));
 
         // Driver override switches
         driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));
@@ -294,7 +303,9 @@ public class RobotContainer {
         //Operator button bindings
         operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer, shooterTilt, shooterFlywheels));
         operatorIntakeSourceToHold.onTrue(ScoringCommands.sensorIntakeFromSource(arm, indexer, shooterFlywheels, shooterTilt));
-        operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
+        // operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
+        operatorSubwoofer.toggleOnTrue(new ShooterScoreSubwooferCommand(shooterTilt, shooterFlywheels));
+        operatorPodium.toggleOnTrue(new ShooterScorePodiumCommand(shooterTilt, shooterFlywheels));
         // operatorOverrideScore.toggleOnTrue(ScoringCommands.instantScore(arm, indexer, shooterFlywheels));
         operatorOverrideScore.whileTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
         operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer/*, shooterFlywheels, shooterTilt*/));

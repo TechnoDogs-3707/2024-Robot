@@ -10,9 +10,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 import frc.robot.lib.dashboard.LoggedTunableNumber;
-import frc.robot.lib.phoenixpro.FalconFeedbackControlHelper;
+import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
-import frc.robot.lib.phoenixpro.TalonConfigHelper;
+import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
@@ -34,7 +34,7 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
     private double tiltTargetRotations = 0.0;
     private double tiltFeedforwardVoltage = 0.0;
 
-    private final FalconFeedbackControlHelper mFeedbackHelper;
+    private final TalonFXFeedbackControlHelper mFeedbackHelper;
 
     private final LoggedTunableNumber mTunableKS = new LoggedTunableNumber("Tilt/kS", kS);
     private final LoggedTunableNumber mTunableKV = new LoggedTunableNumber("Tilt/kV", kV);
@@ -50,10 +50,12 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
     public ShooterTiltIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
-        mConfig = TalonConfigHelper.getBaseConfig();
+        mConfig = TalonFXConfigHelper.getBaseConfig();
         mConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.1;
+        mConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        mConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.0;
         mConfig.Slot0.kG = 0.0; // we calculate our own feedforward within the subsystem
         mConfig.Slot0.kS = kS;
         mConfig.Slot0.kV = kV;
@@ -62,17 +64,17 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
         mConfig.Slot0.kI = kI;
         mConfig.Slot0.kD = kD;
 
-        mConfig.MotionMagic.MotionMagicCruiseVelocity = 0.025;
-        mConfig.MotionMagic.MotionMagicAcceleration = 0.05;
+        mConfig.MotionMagic.MotionMagicCruiseVelocity = kMagicVel;
+        mConfig.MotionMagic.MotionMagicAcceleration = kMagicAccel;
         mConfig.MotionMagic.MotionMagicJerk = kMagicJerk;
         
         mConfig.Feedback.SensorToMechanismRatio = 50.67;
-
-        mFeedbackHelper = new FalconFeedbackControlHelper(mMotor, mConfig.Slot0, mConfig.MotionMagic);
-
+        
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
         
+        mFeedbackHelper = new TalonFXFeedbackControlHelper(mMotor, mConfig.Slot0, mConfig.MotionMagic);
+
         mControl = new PositionVoltage(0, 0, true, 0, 0, false, false, false);
 
         mMotorPosition = mMotor.getPosition();
@@ -96,7 +98,7 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
 
         inputs.tiltForwardSoftLimit = mMotorForwardSoftLimit.getValue();
         inputs.tiltRotations = mMotorPosition.getValue();
-        inputs.tiltVelocityRotPerSec = mMotorPosition.getValue();
+        inputs.tiltVelocityRotPerSec = mMotorSpeed.getValue();
         inputs.tiltSuppliedCurrentAmps = mMotorCurrent.getValue();
         inputs.tiltTempCelsius = mMotorTemp.getValue();
 

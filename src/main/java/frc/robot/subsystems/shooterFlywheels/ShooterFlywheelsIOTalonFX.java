@@ -5,10 +5,13 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import frc.robot.lib.dashboard.LoggedTunableNumber;
+import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
-import frc.robot.lib.phoenixpro.TalonConfigHelper;
+import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
 import static frc.robot.Constants.ShooterFlywheels.*;
@@ -18,7 +21,17 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
     private final TalonFX mLeftMotor;
     private final TalonFX mRightMotor;
 
-    private final TalonFXConfiguration mMotorConfig;
+    private final TalonFXConfiguration mRightMotorConfig;
+    private final TalonFXConfiguration mLeftMotorConfig;
+    private final TalonFXFeedbackControlHelper mLeftFeedbackHelper;
+    private final TalonFXFeedbackControlHelper mRightFeedbackHelper;
+
+    private final LoggedTunableNumber mTunableKS = new LoggedTunableNumber("Flywheels/kS", kS);
+    private final LoggedTunableNumber mTunableKV = new LoggedTunableNumber("Flywheels/kV", kV);
+    private final LoggedTunableNumber mTunableKA = new LoggedTunableNumber("Flywheels/kA", kA);
+    private final LoggedTunableNumber mTunableKP = new LoggedTunableNumber("Flywheels/kP", kP);
+    private final LoggedTunableNumber mTunableKI = new LoggedTunableNumber("Flywheels/kI", kI);
+    private final LoggedTunableNumber mTunableKD = new LoggedTunableNumber("Flywheels/kD", kD);
     
     private final VelocityVoltage mOutputControlLeft;
     private final VelocityVoltage mOutputControlRight;
@@ -44,12 +57,30 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
         mLeftMotor = new TalonFX(kLeftMotorID, kMotorBus);
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
-        mMotorConfig = TalonConfigHelper.getBaseConfig();
-        mMotorConfig.Slot0.kV = 0.11;
+        mRightMotorConfig = TalonFXConfigHelper.getBaseConfig();
+        mRightMotorConfig.Slot0.kS = kS;
+        mRightMotorConfig.Slot0.kV = kV;
+        mRightMotorConfig.Slot0.kA = kA;
+        mRightMotorConfig.Slot0.kP = kP;
+        mRightMotorConfig.Slot0.kI = kI;
+        mRightMotorConfig.Slot0.kD = kD;
+        mRightMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mMotorConfig));
-        PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mMotorConfig));
+        mLeftMotorConfig = TalonFXConfigHelper.getBaseConfig();
+        mRightMotorConfig.Slot0.kS = kS;
+        mRightMotorConfig.Slot0.kV = kV;
+        mRightMotorConfig.Slot0.kA = kA;
+        mRightMotorConfig.Slot0.kP = kP;
+        mRightMotorConfig.Slot0.kI = kI;
+        mRightMotorConfig.Slot0.kD = kD;
+        mLeftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mLeftMotorConfig));
+        PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mRightMotorConfig));
         
+        mLeftFeedbackHelper = new TalonFXFeedbackControlHelper(mLeftMotor, mLeftMotorConfig.Slot0);
+        mRightFeedbackHelper = new TalonFXFeedbackControlHelper(mRightMotor, mRightMotorConfig.Slot0);
+
         mOutputControlLeft = new VelocityVoltage(0, 0, false, 0, 0, false, false, false);
         mOutputControlRight = new VelocityVoltage(0, 0, false, 0, 0, false, false, false);
 
@@ -81,6 +112,13 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
         inputs.rightMotorSpeedRPS = mRightMotorSpeed.getValue();
         inputs.rightMotorSuppliedCurrentAmps = mRightMotorCurrent.getValue();
         inputs.rightMotorTempCelsius = mRightMotorTemp.getValue();
+
+        mTunableKS.ifChanged(hashCode(), mLeftFeedbackHelper::setKS, mRightFeedbackHelper::setKS);
+        mTunableKV.ifChanged(hashCode(), mLeftFeedbackHelper::setKV, mRightFeedbackHelper::setKV);
+        mTunableKA.ifChanged(hashCode(), mLeftFeedbackHelper::setKA, mRightFeedbackHelper::setKA);
+        mTunableKP.ifChanged(hashCode(), mLeftFeedbackHelper::setKP, mRightFeedbackHelper::setKP);
+        mTunableKI.ifChanged(hashCode(), mLeftFeedbackHelper::setKI, mRightFeedbackHelper::setKI);
+        mTunableKD.ifChanged(hashCode(), mLeftFeedbackHelper::setKD, mRightFeedbackHelper::setKD);
     }
 
     @Override
@@ -97,7 +135,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
             mWasBrakeMode = mBrakeMode;
         }
 
-        mOutputControlLeft.Velocity = -mSetpointSpeedLeft; // TODO: make this hack proper
+        mOutputControlLeft.Velocity = mSetpointSpeedLeft; // TODO: make this hack proper
         mOutputControlRight.Velocity = mSetpointSpeedRight;
 
         if (mSpinDownMode) {

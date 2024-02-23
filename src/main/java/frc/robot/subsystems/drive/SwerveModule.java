@@ -21,16 +21,17 @@ public class SwerveModule {
     private final SwerveModuleIOInputsAutoLogged inputs = new SwerveModuleIOInputsAutoLogged();
     private final int index;
 
+    private static final LoggedTunableNumber drivekS = new LoggedTunableNumber("Drive/Module/Drive/KS", Constants.DriveSubsystem.kDrivePIDConfig.kS);
+    private static final LoggedTunableNumber driveKV = new LoggedTunableNumber("Drive/Module/Drive/KV", Constants.DriveSubsystem.kDrivePIDConfig.kV);
     private static final LoggedTunableNumber driveKP = new LoggedTunableNumber("Drive/Module/Drive/KP", Constants.DriveSubsystem.kDrivePIDConfig.kP);
     private static final LoggedTunableNumber driveKI = new LoggedTunableNumber("Drive/Module/Drive/KI", Constants.DriveSubsystem.kDrivePIDConfig.kI);
     private static final LoggedTunableNumber driveKD = new LoggedTunableNumber("Drive/Module/Drive/KD", Constants.DriveSubsystem.kDrivePIDConfig.kD);
-    private static final LoggedTunableNumber driveKV = new LoggedTunableNumber("Drive/Module/Drive/KV", Constants.DriveSubsystem.kDrivePIDConfig.kV);
-    private static final LoggedTunableNumber drivekS = new LoggedTunableNumber("Drive/Module/Drive/KS", Constants.DriveSubsystem.kDrivePIDConfig.kS);
+    
+    private static final LoggedTunableNumber steerKS = new LoggedTunableNumber("Drive/Module/Steer/KS", Constants.DriveSubsystem.kSteerPIDConfig.kS);
+    private static final LoggedTunableNumber steerKV = new LoggedTunableNumber("Drive/Module/Steer/KV", Constants.DriveSubsystem.kSteerPIDConfig.kV);
     private static final LoggedTunableNumber steerKP = new LoggedTunableNumber("Drive/Module/Steer/KP", Constants.DriveSubsystem.kSteerPIDConfig.kP);
     private static final LoggedTunableNumber steerKI = new LoggedTunableNumber("Drive/Module/Steer/KI", Constants.DriveSubsystem.kSteerPIDConfig.kI);
     private static final LoggedTunableNumber steerKD = new LoggedTunableNumber("Drive/Module/Steer/KD", Constants.DriveSubsystem.kSteerPIDConfig.kD);
-    private static final LoggedTunableNumber steerKS = new LoggedTunableNumber("Drive/Module/Steer/KS", Constants.DriveSubsystem.kSteerPIDConfig.kS);
-    private static final LoggedTunableNumber steerKV = new LoggedTunableNumber("Drive/Module/Steer/KV", Constants.DriveSubsystem.kSteerPIDConfig.kV);
     
     private static final LoggedDashboardBoolean steerVoltageOverride = new LoggedDashboardBoolean("Drive/Module/Steer/OverrideVoltage", false);
     private boolean overrideSteerVoltage = false;

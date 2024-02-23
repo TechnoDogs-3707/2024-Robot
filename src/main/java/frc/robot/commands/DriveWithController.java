@@ -100,7 +100,7 @@ public class DriveWithController extends Command {
         boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapAutoAlignAngle, 0.2);
 
         if (shouldSnapAutoAlignAngle) {
-            mHeadingGoal = Optional.of(AutoAlignPointSelector.getAlignTarget(drive.getPose(), RequestedAlignment.AUTO).orElse(drive.getPose()).getRotation().getDegrees()); //TODO: make this use our RequestedAlignment Planner
+            mHeadingGoal = Optional.of(0.0); //Optional.of(AutoAlignPointSelector.getAlignTarget(drive.getPose(), RequestedAlignment.AUTO).orElse(drive.getPose()).getRotation().getDegrees()); //TODO: make this use our RequestedAlignment Planner
         } else if (!autoMaintain) {
             mHeadingGoal = Optional.of(drive.getPose().getRotation().getDegrees());
         }

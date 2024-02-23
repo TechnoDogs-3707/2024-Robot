@@ -94,9 +94,13 @@ public class LoggedTunableNumber {
         return false;
     }
 
-    public void ifChanged(int id, Consumer<Double> consumer) {
+    @SafeVarargs
+    public final void ifChanged(int id, Consumer<Double>... consumer) {
         if (hasChanged(id)) {
-            consumer.accept(get());
+            for (Consumer<Double> c : consumer) {
+                c.accept(get());
+            }
+            // consumer.accept(get());
         }
     }
 }

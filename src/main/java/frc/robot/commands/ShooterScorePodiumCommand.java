@@ -11,11 +11,11 @@ import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.Flywhe
 import frc.robot.subsystems.shooterTilt.ShooterTilt;
 import frc.robot.subsystems.shooterTilt.ShooterTilt.ShooterTiltGoalState;
 
-public class ShooterScoreSubwooferCommand extends Command {
+public class ShooterScorePodiumCommand extends Command {
     private final ShooterTilt mTilt;
     private final ShooterFlywheels mFlywheels;
 
-    public ShooterScoreSubwooferCommand(ShooterTilt tilt, ShooterFlywheels flywheels) {
+    public ShooterScorePodiumCommand(ShooterTilt tilt, ShooterFlywheels flywheels) {
         mTilt = tilt;
         mFlywheels = flywheels;
 
@@ -24,10 +24,10 @@ public class ShooterScoreSubwooferCommand extends Command {
 
     @Override
     public void initialize() {
-        mFlywheels.setSetpointSpeedLeft(80);
+        mFlywheels.setSetpointSpeedLeft(35);
         mFlywheels.setSetpointSpeedRight(100);
         mFlywheels.setWantedAction(FlywheelsWantedAction.SHOOT);
-        mTilt.setGoalState(ShooterTiltGoalState.CLOSE);
+        mTilt.setGoalState(ShooterTiltGoalState.PODIUM);
     }
     
     @Override

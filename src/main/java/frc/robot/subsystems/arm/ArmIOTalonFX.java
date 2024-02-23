@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import static frc.robot.Constants.ArmSubsystem.*;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
-import frc.robot.lib.phoenixpro.TalonConfigHelper;
+import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
 // TODO: account for the virtual four-bar created by the fact that the J2 drive chain is coaxial to the J1 axis.
 
@@ -79,13 +79,15 @@ public class ArmIOTalonFX implements ArmIO {
         // TODO: get motor IDs from constants
         mTiltMotorMaster = new TalonFX(J1.kMasterMotorID, J1.kMotorBus);
         mTiltMotorFollower = new TalonFX(J1.kFollowerMotorID, J1.kMotorBus);
-        mTiltConfig = TalonConfigHelper.getBaseConfig();
+        mTiltConfig = TalonFXConfigHelper.getBaseConfig();
         
+        mTiltConfig.Slot0.kS = Constants.ArmSubsystem.J1.kS;
+        mTiltConfig.Slot0.kV = Constants.ArmSubsystem.J1.kV;
+        mTiltConfig.Slot0.kA = Constants.ArmSubsystem.J1.kA;
         mTiltConfig.Slot0.kP = Constants.ArmSubsystem.J1.kP;
         mTiltConfig.Slot0.kI = Constants.ArmSubsystem.J1.kI;
         mTiltConfig.Slot0.kD = Constants.ArmSubsystem.J1.kD;
-        mTiltConfig.Slot0.kV = Constants.ArmSubsystem.J1.kV;
-
+        
         mTiltConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.ArmSubsystem.J1.kMagicVel;
         mTiltConfig.MotionMagic.MotionMagicAcceleration = Constants.ArmSubsystem.J1.kMagicAccel;
         mTiltConfig.MotionMagic.MotionMagicJerk = Constants.ArmSubsystem.J1.kMagicJerk;
@@ -98,12 +100,14 @@ public class ArmIOTalonFX implements ArmIO {
         ////////// WRIST MOTOR \\\\\\\\\\
         mWristMotorMaster = new TalonFX(J2.kMasterMotorID, J2.kMotorBus);
         
-        mWristConfig = TalonConfigHelper.getBaseConfig();
+        mWristConfig = TalonFXConfigHelper.getBaseConfig();
         
+        mWristConfig.Slot0.kS = Constants.ArmSubsystem.J2.kS;
+        mWristConfig.Slot0.kV = Constants.ArmSubsystem.J2.kV;
+        mWristConfig.Slot0.kA = Constants.ArmSubsystem.J2.kA;
         mWristConfig.Slot0.kP = Constants.ArmSubsystem.J2.kP;
         mWristConfig.Slot0.kI = Constants.ArmSubsystem.J2.kI;
         mWristConfig.Slot0.kD = Constants.ArmSubsystem.J2.kD;
-        mWristConfig.Slot0.kV = Constants.ArmSubsystem.J2.kV;
 
         mWristConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.ArmSubsystem.J2.kMagicVel;
         mWristConfig.MotionMagic.MotionMagicAcceleration = Constants.ArmSubsystem.J2.kMagicAccel;
@@ -116,7 +120,7 @@ public class ArmIOTalonFX implements ArmIO {
         ////////// INTAKE MOTORS \\\\\\\\\\
         mIntakeMotorMaster = new TalonFX(Intake.kMasterMotorID, Intake.kMotorBus);
 
-        mIntakeConfig = TalonConfigHelper.getBaseConfig(); //TODO: set up intake config
+        mIntakeConfig = TalonFXConfigHelper.getBaseConfig(); //TODO: set up intake config
 
         mIntakeControlMaster = new DutyCycleOut(0, false, false, false, false);
 

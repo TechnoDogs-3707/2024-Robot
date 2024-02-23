@@ -10,7 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 /** Add your docs here. */
-public class FalconFeedbackControlHelper {
+public class TalonFXFeedbackControlHelper {
     private static final double kTimeout = 0.1;
 
     private final TalonFXConfigurator mConfigurator;
@@ -18,7 +18,7 @@ public class FalconFeedbackControlHelper {
     private final Slot0Configs mPIDConfigs;
     private final MotionMagicConfigs mMagicConfigs;
 
-    public FalconFeedbackControlHelper(TalonFX motor, Slot0Configs defaultPID, MotionMagicConfigs defaultMagic) {
+    public TalonFXFeedbackControlHelper(TalonFX motor, Slot0Configs defaultPID, MotionMagicConfigs defaultMagic) {
         mConfigurator = motor.getConfigurator();
 
         if (defaultPID == null) {
@@ -36,11 +36,11 @@ public class FalconFeedbackControlHelper {
         refreshConfigs();
     }
 
-    public FalconFeedbackControlHelper(TalonFX motor, Slot0Configs defaultPID) {
+    public TalonFXFeedbackControlHelper(TalonFX motor, Slot0Configs defaultPID) {
         this(motor, defaultPID, null);
     }
 
-    public FalconFeedbackControlHelper(TalonFX motor) {
+    public TalonFXFeedbackControlHelper(TalonFX motor) {
         mConfigurator = motor.getConfigurator();
         
         mPIDConfigs = new Slot0Configs();
