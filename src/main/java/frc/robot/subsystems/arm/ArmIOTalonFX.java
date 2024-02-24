@@ -10,6 +10,7 @@ import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -121,6 +122,7 @@ public class ArmIOTalonFX implements ArmIO {
         mIntakeMotorMaster = new TalonFX(Intake.kMasterMotorID, Intake.kMotorBus);
 
         mIntakeConfig = TalonFXConfigHelper.getBaseConfig(); //TODO: set up intake config
+        mIntakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         mIntakeControlMaster = new DutyCycleOut(0, false, false, false, false);
 
@@ -193,6 +195,8 @@ public class ArmIOTalonFX implements ArmIO {
         PhoenixProUtil.checkErrorAndRetry(() -> mWristMotorMaster.getConfigurator().apply(mWristConfig));
 
         PhoenixProUtil.checkErrorAndRetry(() -> mWristMotorMaster.setPosition(J2.kHomePosition));
+
+        PhoenixProUtil.checkErrorAndRetry(() -> mIntakeMotorMaster.getConfigurator().apply(mIntakeConfig));
     }
 
     @Override

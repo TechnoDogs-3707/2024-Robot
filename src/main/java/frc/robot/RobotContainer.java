@@ -24,7 +24,7 @@ import frc.robot.commands.DriveAlignClosestCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.ScoringCommands;
-import frc.robot.commands.ShooterAutomaticCommand;
+import frc.robot.commands.ShooterIdleCommand;
 import frc.robot.commands.ShooterScorePodiumCommand;
 import frc.robot.commands.ShooterScoreSubwooferCommand;
 import frc.robot.commands.ShooterTesting;
@@ -36,6 +36,7 @@ import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
+import frc.robot.subsystems.arm.ArmIOTalonFX;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveIOTalonFX;
@@ -142,7 +143,7 @@ public class RobotContainer {
                         new SwerveIOTalonFX(2, "canivore"), 
                         new SwerveIOTalonFX(3, "canivore")
                     );
-                    arm = new Arm(new ArmIOSimV1());
+                    arm = new Arm(new ArmIOTalonFX());
                     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
                     shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
@@ -301,14 +302,14 @@ public class RobotContainer {
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
         //Operator button bindings
-        operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer, shooterTilt, shooterFlywheels));
+        operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer));
         operatorIntakeSourceToHold.onTrue(ScoringCommands.sensorIntakeFromSource(arm, indexer, shooterFlywheels, shooterTilt));
         // operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
         operatorSubwoofer.toggleOnTrue(new ShooterScoreSubwooferCommand(shooterTilt, shooterFlywheels));
         operatorPodium.toggleOnTrue(new ShooterScorePodiumCommand(shooterTilt, shooterFlywheels));
         // operatorOverrideScore.toggleOnTrue(ScoringCommands.instantScore(arm, indexer, shooterFlywheels));
         operatorOverrideScore.whileTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
-        operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer/*, shooterFlywheels, shooterTilt*/));
+        operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer, arm/*, shooterFlywheels, shooterTilt*/));
         operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
         operatorResetIndexer.onTrue(ScoringCommands.resetIndexer(indexer, shooterTilt, shooterFlywheels));
         operatorResetArmAndIndexer.onTrue(

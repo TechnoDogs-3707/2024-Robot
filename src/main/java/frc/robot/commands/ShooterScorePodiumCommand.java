@@ -1,12 +1,7 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.indexer.Indexer;
-import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerSystemState;
-import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsSystemState;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
 import frc.robot.subsystems.shooterTilt.ShooterTilt;
 import frc.robot.subsystems.shooterTilt.ShooterTilt.ShooterTiltGoalState;

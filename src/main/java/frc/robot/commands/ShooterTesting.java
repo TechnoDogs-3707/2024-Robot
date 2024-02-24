@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIntakeStateMachine.ArmIntakeWantedAction;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerStateMachine;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
@@ -78,14 +80,16 @@ public class ShooterTesting {
 
     public static class JamClear extends Command {
         private Indexer mIndexer;
+        private Arm mArm;
         // private ShooterFlywheels mFlywheels;
         // private ShooterTilt mTilt;
 
-        public JamClear(Indexer indexer/*, ShooterFlywheels flywheels, ShooterTilt tilt*/) {
+        public JamClear(Indexer indexer, Arm arm/*, ShooterFlywheels flywheels, ShooterTilt tilt*/) {
+            mArm = arm;
             mIndexer = indexer;
             // mFlywheels = flywheels;
             // mTilt = tilt;
-            addRequirements(indexer/*, flywheels, tilt*/);
+            addRequirements(indexer, arm/*, flywheels, tilt*/);
         }
 
         @Override
@@ -93,6 +97,8 @@ public class ShooterTesting {
             // mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
             // mTilt.setGoalState(ShooterTiltGoalState.STOW);
             mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.REVERSE);
+            mArm.setWantedAction(ArmIntakeWantedAction.REVERSE);
+
         }
 
         @Override
@@ -100,6 +106,7 @@ public class ShooterTesting {
             // mFlywheels.setWantedAction(ShooterFlywheelsStateMachine.FlywheelsWantedAction.OFF);
             // mTilt.setGoalState(ShooterTiltGoalState.STOW);
             mIndexer.setWantedAction(IndexerStateMachine.IndexerWantedAction.OFF);
+            mArm.setWantedAction(ArmIntakeWantedAction.OFF);
         }
     }
 

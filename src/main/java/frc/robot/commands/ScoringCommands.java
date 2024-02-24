@@ -100,7 +100,7 @@ public class ScoringCommands {
         );
     }
 
-    public static Command sensorIntakeGroundToIndexer(Arm arm, Indexer indexer, ShooterTilt tilt, ShooterFlywheels flywheels) {
+    public static Command sensorIntakeGroundToIndexer(Arm arm, Indexer indexer) {
         return new SequentialCommandGroup(
             new ConditionalCommand(
                 new SequentialCommandGroup(
@@ -108,18 +108,15 @@ public class ScoringCommands {
                     setIndexerAction(indexer, IndexerWantedAction.INTAKE)
                 ),
                 new SequentialCommandGroup(
-                    setShooterWheelsAction(flywheels, FlywheelsWantedAction.OFF),
-                    setShooterTiltGoalState(tilt, ShooterTiltGoalState.STOW),
                     setIndexerAction(indexer, IndexerWantedAction.INTAKE),
                     setArmGoalState(arm, GoalState.INTAKE_GROUND),
-                    setArmIntakeAction(arm, ArmIntakeWantedAction.INTAKE_HANDOFF),
+                    setArmIntakeAction(arm, ArmIntakeWantedAction.INTAKE_CONSTANT),
                     new WaitUntilCommand(indexer::temporaryHasGamepiece)
                 ), 
                 indexer::temporaryHasGamepiece
             ),
             setArmIntakeAction(arm, ArmIntakeWantedAction.OFF),
-            setArmGoalState(arm, GoalState.STOW),
-            setShooterWheelsAction(flywheels, FlywheelsWantedAction.IDLE)
+            setArmGoalState(arm, GoalState.STOW)
         );
     }
 

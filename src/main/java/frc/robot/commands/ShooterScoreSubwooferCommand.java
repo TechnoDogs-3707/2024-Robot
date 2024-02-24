@@ -24,8 +24,8 @@ public class ShooterScoreSubwooferCommand extends Command {
 
     @Override
     public void initialize() {
-        mFlywheels.setSetpointSpeedLeft(80);
-        mFlywheels.setSetpointSpeedRight(100);
+        mFlywheels.setSetpointSpeedLeft(35);
+        mFlywheels.setSetpointSpeedRight(90);
         mFlywheels.setWantedAction(FlywheelsWantedAction.SHOOT);
         mTilt.setGoalState(ShooterTiltGoalState.CLOSE);
     }
