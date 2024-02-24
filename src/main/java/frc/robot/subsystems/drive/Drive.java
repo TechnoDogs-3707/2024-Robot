@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -40,6 +41,7 @@ import frc.robot.lib.drive.AutoAlignMotionPlanner;
 import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
+import frc.robot.lib.field.Field;
 import frc.robot.subsystems.localizer.VisionPose;
 
 /** Add your docs here. */
@@ -186,7 +188,7 @@ public class Drive extends SubsystemBase {
             this::getMeasuredSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::setPathFollowing, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kPathFollowerConfig,
-            () -> true,
+            this::checkFlip,
             this // Reference to this subsystem to set requirements
         );
         PathPlannerLogging.setLogActivePathCallback(
@@ -583,6 +585,14 @@ public class Drive extends SubsystemBase {
 
     public ChassisSpeeds getMeasuredSpeeds() {
         return mMeasuredSpeeds;
+    }
+
+    public boolean checkFlip() {
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+                return true;
+            } else {
+                return false;
+            }
     }
 
     private Optional<ChassisSpeeds> updatePathFollower() {
