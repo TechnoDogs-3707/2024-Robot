@@ -32,9 +32,9 @@ public class Arm extends SubsystemBase {
 
     public enum GoalState {
         STOW(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
-        INTAKE_GROUND(ArmState.withConservativeConstraints(0, 0.4, ArmSend.LOW)),
+        INTAKE_GROUND(ArmState.withConservativeConstraints(0, 0.5, ArmSend.LOW)),
         INTAKE_SOURCE(ArmState.withConservativeConstraints(0.24, 0, ArmSend.LOW)),
-        SCORE_AMP(ArmState.withConservativeConstraints(0.27, 0.25, ArmSend.LOW)),
+        SCORE_AMP(ArmState.withConservativeConstraints(0.27, 0.0, ArmSend.LOW)),
         SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW));
         
         public ArmState state;

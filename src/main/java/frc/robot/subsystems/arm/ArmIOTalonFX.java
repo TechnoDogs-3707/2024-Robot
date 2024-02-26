@@ -7,10 +7,12 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -36,7 +38,8 @@ public class ArmIOTalonFX implements ArmIO {
 
     private final TalonFXConfiguration mWristConfig;
 
-    private final MotionMagicTorqueCurrentFOC mWristControlMaster;
+    // private final MotionMagicTorqueCurrentFOC mWristControlMaster;
+    private final PositionVoltage mWristControlMaster;
 
     ////////// INTAKE MOTORS \\\\\\\\\\
     private final TalonFX mIntakeMotorMaster;
@@ -102,6 +105,14 @@ public class ArmIOTalonFX implements ArmIO {
         mWristMotorMaster = new TalonFX(J2.kMasterMotorID, J2.kMotorBus);
         
         mWristConfig = TalonFXConfigHelper.getBaseConfig();
+
+        mWristConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        mWristConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        mWristConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        mWristConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.5;
+        mWristConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        mWristConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.0;
         
         mWristConfig.Slot0.kS = Constants.ArmSubsystem.J2.kS;
         mWristConfig.Slot0.kV = Constants.ArmSubsystem.J2.kV;
@@ -116,13 +127,15 @@ public class ArmIOTalonFX implements ArmIO {
 
         mWristConfig.Feedback.SensorToMechanismRatio = 48.0;
 
-        mWristControlMaster = new MotionMagicTorqueCurrentFOC(0, 0, 0, false, false, false);
+        // mWristControlMaster = new MotionMagicTorqueCurrentFOC(0, 0, 0, false, false, false);
+        mWristControlMaster = new PositionVoltage(0, 0, true, 0, 0, false, false, false);
 
         ////////// INTAKE MOTORS \\\\\\\\\\
         mIntakeMotorMaster = new TalonFX(Intake.kMasterMotorID, Intake.kMotorBus);
 
         mIntakeConfig = TalonFXConfigHelper.getBaseConfig(); //TODO: set up intake config
         mIntakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        // mIntakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         mIntakeControlMaster = new DutyCycleOut(0, false, false, false, false);
 

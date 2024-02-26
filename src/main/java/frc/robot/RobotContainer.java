@@ -30,9 +30,12 @@ import frc.robot.commands.ShooterScoreSubwooferCommand;
 import frc.robot.commands.ShooterTesting;
 import frc.robot.commands.XModeDriveCommand;
 import frc.robot.lib.OverrideSwitches;
+import frc.robot.lib.Utility;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
+import frc.robot.lib.util.Util;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
@@ -74,6 +77,8 @@ public class RobotContainer {
     private Localizer vision;
     private ControllerFeedback controllerFeedback;
     private Dashboard dashboard;
+
+    private Climb climb;
 
     public final LoggedDashboardChooser<Command> autoChooser;
 
@@ -143,8 +148,8 @@ public class RobotContainer {
                         new SwerveIOTalonFX(2, "canivore"), 
                         new SwerveIOTalonFX(3, "canivore")
                     );
-                    arm = new Arm(new ArmIOTalonFX());
-                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
+                    arm = new Arm(new ArmIOSimV1());
+                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
                     shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
@@ -239,6 +244,8 @@ public class RobotContainer {
         if (vision == null) {
             vision = new Localizer(new LocalizerIO() {}, (v) -> {});
         }
+
+        climb = new Climb(operator::getLeftY);
 
         controllerFeedback = new ControllerFeedback(driver.getHID(), operator.getHID());
 

@@ -380,7 +380,7 @@ public final class Constants {
             public static final double kS = 0.0;
             public static final double kV = 0.0;
             public static final double kA = 0.0;
-            public static final double kP = 0.0;
+            public static final double kP = 8.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 
@@ -388,8 +388,8 @@ public final class Constants {
             public static final double kMagicAccel = 3.0;
             public static final double kMagicJerk = 0.0;
 
-            public static final double kLiberalAllowableError = 0.05;
-            public static final double kConservativeAllowableError = 0.01;
+            public static final double kLiberalAllowableError = 0.1;
+            public static final double kConservativeAllowableError = 0.1;
 
             public static final double kHomePosition = 0.0;
             public static final double kMinTargetPosition = 0.0;
