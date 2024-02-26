@@ -4,6 +4,7 @@
 
 package frc.robot.lib.phoenixpro;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -28,6 +29,34 @@ public class TalonFXConfigHelper {
         baseConfig.Voltage.PeakReverseVoltage = -12;
         
         return baseConfig;
+    }
+
+    public static final CurrentLimitsConfigs getDefaultCurrentLimits() {
+        CurrentLimitsConfigs config = new CurrentLimitsConfigs();
+
+        config.StatorCurrentLimitEnable = true;
+        config.StatorCurrentLimit = 80;
+
+        config.SupplyCurrentLimitEnable = true;
+        config.SupplyCurrentThreshold = 0.0;
+        config.SupplyTimeThreshold = 0.0;
+        config.SupplyCurrentLimit = 40.0;
+
+        return config;
+    }
+
+    public static final CurrentLimitsConfigs get20ACurrentLimits() {
+        CurrentLimitsConfigs config = new CurrentLimitsConfigs();
+
+        config.StatorCurrentLimitEnable = true;
+        config.StatorCurrentLimit = 40;
+
+        config.SupplyCurrentLimitEnable = true;
+        config.SupplyCurrentThreshold = 0.0;
+        config.SupplyTimeThreshold = 0.0;
+        config.SupplyCurrentLimit = 20.0;
+
+        return config;
     }
 
 }

@@ -23,6 +23,7 @@ import frc.robot.Constants;
 import frc.robot.lib.phoenixpro.CANcoderLiveConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
+import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
 /** Add your docs here. */
@@ -38,10 +39,10 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
     private final VoltageOut mSteerControlOpenLoop;
     private boolean mUseOpenLoopSteering = false;
 
-    private final TalonFXConfiguration mDriveConfig = new TalonFXConfiguration();
+    private final TalonFXConfiguration mDriveConfig;
     private final TalonFXFeedbackControlHelper mDriveFeedbackHelper;
 
-    private final TalonFXConfiguration mSteerConfig = new TalonFXConfiguration();
+    private final TalonFXConfiguration mSteerConfig;
     private final TalonFXFeedbackControlHelper mSteerFeedbackHelper;
 
     private final CANcoder mEncoder;
@@ -65,6 +66,9 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mDriveControl = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
         mDriveControlOpenLoop = new DutyCycleOut(0, false, false, false, false);
 
+        mDriveConfig = TalonFXConfigHelper.getBaseConfig();
+        mDriveConfig.CurrentLimits = TalonFXConfigHelper.getDefaultCurrentLimits();
+
         mDriveConfig.Slot0.kP = 0.0;
         mDriveConfig.Slot0.kV = 0.0;
         mDriveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -77,6 +81,9 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
 
         mSteerControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mSteerControlOpenLoop = new VoltageOut(0, true, false, false, false);
+
+        mSteerConfig = TalonFXConfigHelper.getBaseConfig();
+        mSteerConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
 
         mSteerConfig.TorqueCurrent.PeakForwardTorqueCurrent = 20;
         mSteerConfig.TorqueCurrent.PeakReverseTorqueCurrent = -20;

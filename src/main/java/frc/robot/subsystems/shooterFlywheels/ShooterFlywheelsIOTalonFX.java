@@ -58,6 +58,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
         mRightMotorConfig = TalonFXConfigHelper.getBaseConfig();
+        mRightMotorConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
         mRightMotorConfig.Slot0.kS = kS;
         mRightMotorConfig.Slot0.kV = kV;
         mRightMotorConfig.Slot0.kA = kA;
@@ -67,12 +68,13 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
         mRightMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         mLeftMotorConfig = TalonFXConfigHelper.getBaseConfig();
-        mRightMotorConfig.Slot0.kS = kS;
-        mRightMotorConfig.Slot0.kV = kV;
-        mRightMotorConfig.Slot0.kA = kA;
-        mRightMotorConfig.Slot0.kP = kP;
-        mRightMotorConfig.Slot0.kI = kI;
-        mRightMotorConfig.Slot0.kD = kD;
+        mLeftMotorConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
+        mLeftMotorConfig.Slot0.kS = kS;
+        mLeftMotorConfig.Slot0.kV = kV;
+        mLeftMotorConfig.Slot0.kA = kA;
+        mLeftMotorConfig.Slot0.kP = kP;
+        mLeftMotorConfig.Slot0.kI = kI;
+        mLeftMotorConfig.Slot0.kD = kD;
         mLeftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mLeftMotorConfig));

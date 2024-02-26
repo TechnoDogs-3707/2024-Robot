@@ -51,6 +51,7 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
         mConfig = TalonFXConfigHelper.getBaseConfig();
+        mConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
         mConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.1;
