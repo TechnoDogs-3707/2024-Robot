@@ -1,11 +1,16 @@
 package frc.robot.subsystems.shooterFlywheels;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsSystemState;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
 
 public class ShooterFlywheels extends SubsystemBase{
@@ -71,6 +76,22 @@ public class ShooterFlywheels extends SubsystemBase{
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
         }
+    }
+
+    public Command setActionCommand(FlywheelsWantedAction action) {
+        return setActionCommand(() -> action);
+    }
+
+    public Command setActionCommand(Supplier<FlywheelsWantedAction> action) {
+        return runOnce(() -> setWantedAction(action.get()));
+    }
+
+    public Command waitUntilStateCommand(FlywheelsSystemState state) {
+        return waitUntilStateCommand(() -> state);
+    }
+
+    public Command waitUntilStateCommand(Supplier<FlywheelsSystemState> state) {
+        return Commands.waitUntil(() -> mStateMachine.getSystemState().equals(state.get()));
     }
 
     public void setSetpointSpeedLeft(double setpointRPS) {

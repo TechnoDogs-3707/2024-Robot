@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -15,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotStateTracker;
@@ -35,7 +38,8 @@ public class Arm extends SubsystemBase {
         INTAKE_GROUND(ArmState.withConservativeConstraints(0, 0.4, ArmSend.LOW)),
         INTAKE_SOURCE(ArmState.withConservativeConstraints(0.24, 0, ArmSend.LOW)),
         SCORE_AMP(ArmState.withConservativeConstraints(0.27, 0.25, ArmSend.LOW)),
-        SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW));
+        SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
+        HANDOFF(ArmState.withConservativeConstraints(0, 0.4, ArmSend.LOW));
         
         public ArmState state;
 
@@ -52,8 +56,6 @@ public class Arm extends SubsystemBase {
     private GoalState mGoalState = GoalState.STOW;
     private GoalState mLastGoalState = GoalState.STOW;
     private boolean mResetMotionPlanner = false;
-
-    private ArmIntakeStateMachine mArmIntakeStateMachine = new ArmIntakeStateMachine();
 
     private boolean mForceFailure = false;
 
@@ -94,13 +96,15 @@ public class Arm extends SubsystemBase {
 
         double timestamp = Timer.getFPGATimestamp();
 
+        //TODO: led states
+
         Optional<TimedLEDState> ledState = handleLEDs(timestamp);
         if (DriverStation.isEnabled()) {
             if (ledState.isPresent()) {
                 if (DriverStation.isAutonomous()) {
                     LED.setWantedAction(LED.WantedAction.DISPLAY_VISION);
                 } else {
-                    LED.setArmLEDState(ledState.get());
+                    // LED.setDeliveryLEDState(ledState.get()); 
                     LED.setWantedAction(LED.WantedAction.DISPLAY_ARM);
                 }
             } else {
@@ -111,7 +115,6 @@ public class Arm extends SubsystemBase {
             double simCurrent = 0.0;
             simCurrent += mArmInputs.tiltSuppliedCurrentAmps;
             simCurrent += mArmInputs.wristSuppliedCurrentAmps;
-            simCurrent += mArmInputs.intakeSuppliedCurrentAmps;
 
             Robot.updateSimCurrentDraw(this.getClass().getName(), simCurrent);
         }
@@ -148,14 +151,6 @@ public class Arm extends SubsystemBase {
         if (mResetMotionPlanner) {
             mMotionPlanner.reset();
         }
-
-        boolean intakeBeamBreakTriggered = mArmInputs.intakeBeamBreakTriggered;
-        double intakeThrottle = mArmIntakeStateMachine.update(intakeBeamBreakTriggered);
-        Logger.recordOutput("Arm/Intake/BeamBreakTriggered", intakeBeamBreakTriggered);
-        Logger.recordOutput("Arm/Intake/StateMachine/WantedAction", mArmIntakeStateMachine.getWantedAction());
-        Logger.recordOutput("Arm/Intake/StateMachine/SystemState", mArmIntakeStateMachine.getSystemState());
-        Logger.recordOutput("Arm/Intake/StateMachine/Throttle", intakeThrottle);
-        mArmIO.setIntakeThrottle(intakeThrottle);
 
         if (mCommandedState.j1 != mLastCommandedState.j1) {
             mArmIO.setTiltTarget(mCommandedState.j1);
@@ -205,6 +200,15 @@ public class Arm extends SubsystemBase {
         mMotionPlanner.setDesiredState(mGoalState.state, mMeasuredState);
     }
 
+    public Command setGoalCommand(GoalState goal) {
+        return setGoalCommand(() -> goal);
+    }
+
+    public Command setGoalCommand(Supplier<GoalState> goal) {
+        return runOnce(() -> setGoalState(goal.get()))
+            .andThen(Commands.waitUntil(this::atGoal));
+    }
+
     public void setForceFailure(boolean forceFailure) {
         mForceFailure = forceFailure;
     }
@@ -221,40 +225,17 @@ public class Arm extends SubsystemBase {
         return 0; // TODO: J2 feedforward
     }
 
-    public void setWantedAction(ArmIntakeStateMachine.ArmIntakeWantedAction wantedAction) {
-        mArmIntakeStateMachine.setWantedAction(wantedAction);
-    }
-
-    public ArmIntakeStateMachine.ArmIntakeSystemState getIntakeSystemState() {
-        return mArmIntakeStateMachine.getSystemState();
-    }
-
-    public boolean intakeHasGamepiece() {
-        return mArmInputs.intakeBeamBreakTriggered;
-    }
-
     public RequestedAlignment getRequestedAlignment() {
         return RequestedAlignment.AUTO; // TODO: calculate requested alignment
     }
 
     private synchronized Optional<TimedLEDState> handleLEDs(double timestamp) {
-        Optional<TimedLEDState> state = handleFailureLEDs(timestamp);
-        if (state.isEmpty()) {
-            state = handleScoringAlignmentLEDs(timestamp);
-        }
-        if (state.isEmpty()) {
-            state = handleIntakingLEDs(timestamp);
-        }
+        Optional<TimedLEDState> state = handleScoringAlignmentLEDs(timestamp);
         return state;
     }
 
-    private synchronized Optional<TimedLEDState> handleIntakingLEDs(double timestamp) {
-        boolean hasPiece = false; // TODO: determine if we have a gamepiece
-        return Optional.of(hasPiece ? TimedLEDState.StaticLEDState.kHasGamepiece : TimedLEDState.RSLBasedLEDState.kWaitForGamepiece);
-    }
-
     private synchronized Optional<TimedLEDState> handleScoringAlignmentLEDs(double timestamp) {
-        LEDState pieceColor = LEDState.kGamepiece;
+        LEDState pieceColor = LEDState.kOrange;
         // double maxError = 0.56 / 2.0; // m (distance between low goals)
         double maxError = 2;
 
@@ -272,9 +253,9 @@ public class Arm extends SubsystemBase {
             boolean auto_align_on_target = RobotStateTracker.getInstance().getAutoAlignComplete();
             if ((errorMagnitude < Constants.kLEDClosenessDeadbandMeters && !auto_align_active) || (auto_align_active && auto_align_on_target)) {
                 if (atGoal()) {
-                    return Optional.of(TimedLEDState.StaticLEDState.kAtAlignment);
+                    return Optional.of(TimedLEDState.StaticLEDState.kAutoAlignScoringComplete);
                 }
-                return Optional.of(TimedLEDState.BlinkingLEDState.kWaitingForDelivery);
+                return Optional.of(TimedLEDState.BlinkingLEDState.kAutoAimScoring);
             } else {
                 if (errorMagnitude <= Constants.kLEDClosenessDeadbandMeters) {
                     errorMagnitude = 0.0;
@@ -284,12 +265,4 @@ public class Arm extends SubsystemBase {
             }
         }
     }
-
-    private synchronized Optional<TimedLEDState> handleFailureLEDs(double timestamp) {
-        if (mForceFailure) {
-            return Optional.of(TimedLEDState.StaticLEDState.kArmFailure);
-        } else {
-            return Optional.empty();
-        }
-    } 
 }

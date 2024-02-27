@@ -398,8 +398,9 @@ public final class Constants {
             public static final double kAbsoluteMaxPosition = 0.0;
             public static final double kAbsoluteMinPosition = 0.0;
         }
+    }
 
-        public static final class Intake {
+    public static final class Intake {
             public static final int kMasterMotorID = 33;
             public static final String kMotorBus = "canivore";
 
@@ -411,7 +412,6 @@ public final class Constants {
             public static final double kConstantThrottle = 0.7;
             public static final double kReverseThrottle = -0.33;
         }
-    }
 
     public static final class Indexer {
         public static final int kMotorID = 40;

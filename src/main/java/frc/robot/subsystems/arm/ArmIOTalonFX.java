@@ -7,6 +7,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -16,8 +17,11 @@ import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 import static frc.robot.Constants.ArmSubsystem.*;
+
+import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
+import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 
 // TODO: account for the virtual four-bar created by the fact that the J2 drive chain is coaxial to the J1 axis.
 
@@ -28,22 +32,34 @@ public class ArmIOTalonFX implements ArmIO {
 
     private final TalonFXConfiguration mTiltConfig;
 
-    private final MotionMagicTorqueCurrentFOC mTiltControlMaster;
+    private final MotionMagicVoltage mTiltControlMaster;
     private final StrictFollower mTiltControlFollower;
+
+    private final TalonFXFeedbackControlHelper mFeedbackHelperTiltMaster;
+    private final TalonFXFeedbackControlHelper mFeedbackHelperTiltFollower;
+
+    private final LoggedTunableNumber mTunableTiltKS = new LoggedTunableNumber("Arm/Tilt/kS", J1.kS);
+    private final LoggedTunableNumber mTunableTiltKV = new LoggedTunableNumber("Arm/Tilt/kV", J1.kV);
+    private final LoggedTunableNumber mTunableTiltKA = new LoggedTunableNumber("Arm/Tilt/kA", J1.kA);
+    private final LoggedTunableNumber mTunableTiltKP = new LoggedTunableNumber("Arm/Tilt/kP", J1.kP);
+    private final LoggedTunableNumber mTunableTiltKI = new LoggedTunableNumber("Arm/Tilt/kI", J1.kI);
+    private final LoggedTunableNumber mTunableTiltKD = new LoggedTunableNumber("Arm/Tilt/kD", J1.kD);
 
     ////////// WRIST MOTORS \\\\\\\\\\
     private final TalonFX mWristMotorMaster;
 
     private final TalonFXConfiguration mWristConfig;
 
-    private final MotionMagicTorqueCurrentFOC mWristControlMaster;
+    private final MotionMagicVoltage mWristControlMaster;
 
-    ////////// INTAKE MOTORS \\\\\\\\\\
-    private final TalonFX mIntakeMotorMaster;
+    private final TalonFXFeedbackControlHelper mFeedbackHelperWrist;
 
-    private final TalonFXConfiguration mIntakeConfig;
-
-    private final DutyCycleOut mIntakeControlMaster;
+    private final LoggedTunableNumber mTunableWristKS = new LoggedTunableNumber("Arm/Wrist/kS", J2.kS);
+    private final LoggedTunableNumber mTunableWristKV = new LoggedTunableNumber("Arm/Wrist/kV", J2.kV);
+    private final LoggedTunableNumber mTunableWristKA = new LoggedTunableNumber("Arm/Wrist/kA", J2.kA);
+    private final LoggedTunableNumber mTunableWristKP = new LoggedTunableNumber("Arm/Wrist/kP", J2.kP);
+    private final LoggedTunableNumber mTunableWristKI = new LoggedTunableNumber("Arm/Wrist/kI", J2.kI);
+    private final LoggedTunableNumber mTunableWristKD = new LoggedTunableNumber("Arm/Wrist/kD", J2.kD);
 
     ///////// STATUS SIGNALS \\\\\\\\\\
     private StatusSignal<Double> tiltMasterPosition;
@@ -67,17 +83,10 @@ public class ArmIOTalonFX implements ArmIO {
     private StatusSignal<ReverseLimitValue> wristMasterReverseHardLimit;
     private StatusSignal<Boolean> wristMasterForwardSoftLimit;
 
-    private StatusSignal<Double> intakeMasterVelocity;
-    private StatusSignal<Double> intakeMasterSuppliedCurrent;
-    private StatusSignal<Double> intakeMasterTempCelsius;
-
     private Collection<StatusSignal<?>> m_signals = new ArrayList<StatusSignal<?>>();
-
-    private final DigitalInput mIntakeSensor;
 
     public ArmIOTalonFX() {
         ////////// TILT MOTORS \\\\\\\\\\
-        // TODO: get motor IDs from constants
         mTiltMotorMaster = new TalonFX(J1.kMasterMotorID, J1.kMotorBus);
         mTiltMotorFollower = new TalonFX(J1.kFollowerMotorID, J1.kMotorBus);
         mTiltConfig = TalonFXConfigHelper.getBaseConfig();
@@ -95,8 +104,11 @@ public class ArmIOTalonFX implements ArmIO {
 
         mTiltConfig.Feedback.SensorToMechanismRatio = 110.73;
 
-        mTiltControlMaster = new MotionMagicTorqueCurrentFOC(0, 0, 0, false, false, false);
+        mTiltControlMaster = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mTiltControlFollower = new StrictFollower(mTiltMotorMaster.getDeviceID());
+
+        mFeedbackHelperTiltMaster = new TalonFXFeedbackControlHelper(mTiltMotorMaster, mTiltConfig.Slot0, mTiltConfig.MotionMagic);
+        mFeedbackHelperTiltFollower = new TalonFXFeedbackControlHelper(mTiltMotorFollower, mTiltConfig.Slot0, mTiltConfig.MotionMagic);
 
         ////////// WRIST MOTOR \\\\\\\\\\
         mWristMotorMaster = new TalonFX(J2.kMasterMotorID, J2.kMotorBus);
@@ -116,21 +128,16 @@ public class ArmIOTalonFX implements ArmIO {
 
         mWristConfig.Feedback.SensorToMechanismRatio = 48.0;
 
-        mWristControlMaster = new MotionMagicTorqueCurrentFOC(0, 0, 0, false, false, false);
+        mWristControlMaster = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
+
+        mFeedbackHelperWrist = new TalonFXFeedbackControlHelper(mWristMotorMaster, mWristConfig.Slot0, mWristConfig.MotionMagic);
 
         ////////// INTAKE MOTORS \\\\\\\\\\
-        mIntakeMotorMaster = new TalonFX(Intake.kMasterMotorID, Intake.kMotorBus);
-
-        mIntakeConfig = TalonFXConfigHelper.getBaseConfig(); //TODO: set up intake config
-        mIntakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-
-        mIntakeControlMaster = new DutyCycleOut(0, false, false, false, false);
+        
 
         ////////// ALL MOTORS \\\\\\\\\\
         configMotors();
         refreshFollowers();
-
-        mIntakeSensor = new DigitalInput(0);
 
         ////////// STATUS SIGNALS \\\\\\\\\\
         tiltMasterPosition = mTiltMotorMaster.getPosition();
@@ -153,10 +160,6 @@ public class ArmIOTalonFX implements ArmIO {
         wristMasterTempCelsius = mWristMotorMaster.getDeviceTemp();
         wristMasterForwardSoftLimit = mWristMotorMaster.getFault_ForwardSoftLimit();
         wristMasterReverseHardLimit = mWristMotorMaster.getReverseLimit();
-
-        intakeMasterVelocity = mIntakeMotorMaster.getVelocity();
-        intakeMasterSuppliedCurrent = mIntakeMotorMaster.getSupplyCurrent();
-        intakeMasterTempCelsius = mIntakeMotorMaster.getDeviceTemp();
         
 
         m_signals.add(tiltMasterPosition);
@@ -179,10 +182,6 @@ public class ArmIOTalonFX implements ArmIO {
         m_signals.add(wristMasterTempCelsius);
         m_signals.add(wristMasterForwardSoftLimit);
         m_signals.add(wristMasterReverseHardLimit);
-
-        m_signals.add(intakeMasterVelocity);
-        m_signals.add(intakeMasterSuppliedCurrent);
-        m_signals.add(intakeMasterTempCelsius);
     }
 
     private void configMotors() {
@@ -193,10 +192,7 @@ public class ArmIOTalonFX implements ArmIO {
         PhoenixProUtil.checkErrorAndRetry(() -> mTiltMotorFollower.setPosition(J1.kHomePosition));
 
         PhoenixProUtil.checkErrorAndRetry(() -> mWristMotorMaster.getConfigurator().apply(mWristConfig));
-
         PhoenixProUtil.checkErrorAndRetry(() -> mWristMotorMaster.setPosition(J2.kHomePosition));
-
-        PhoenixProUtil.checkErrorAndRetry(() -> mIntakeMotorMaster.getConfigurator().apply(mIntakeConfig));
     }
 
     @Override
@@ -220,11 +216,19 @@ public class ArmIOTalonFX implements ArmIO {
         inputs.wristReverseHardLimit = wristMasterReverseHardLimit.getValue() == ReverseLimitValue.ClosedToGround;
         inputs.wristForwardSoftLimit = wristMasterForwardSoftLimit.getValue();
 
-        inputs.intakeVelocityRotPerSec = intakeMasterVelocity.getValue();
-        inputs.intakeSuppliedCurrentAmps = intakeMasterSuppliedCurrent.getValue();
-        inputs.intakeHottestTempCelsius = intakeMasterTempCelsius.getValue();
+        mTunableTiltKS.ifChanged(hashCode(), mFeedbackHelperTiltMaster::setKS, mFeedbackHelperTiltFollower::setKS);
+        mTunableTiltKV.ifChanged(hashCode(), mFeedbackHelperTiltMaster::setKV, mFeedbackHelperTiltFollower::setKV);
+        mTunableTiltKA.ifChanged(hashCode(), mFeedbackHelperTiltMaster::setKA, mFeedbackHelperTiltFollower::setKA);
+        mTunableTiltKP.ifChanged(hashCode(), mFeedbackHelperTiltMaster::setKP, mFeedbackHelperTiltFollower::setKP);
+        mTunableTiltKI.ifChanged(hashCode(), mFeedbackHelperTiltMaster::setKI, mFeedbackHelperTiltFollower::setKI);
+        mTunableTiltKD.ifChanged(hashCode(), mFeedbackHelperTiltMaster::setKD, mFeedbackHelperTiltFollower::setKD);
 
-        inputs.intakeBeamBreakTriggered = !mIntakeSensor.get();
+        mTunableWristKS.ifChanged(hashCode(), mFeedbackHelperWrist::setKS);
+        mTunableWristKV.ifChanged(hashCode(), mFeedbackHelperWrist::setKV);
+        mTunableWristKA.ifChanged(hashCode(), mFeedbackHelperWrist::setKA);
+        mTunableWristKP.ifChanged(hashCode(), mFeedbackHelperWrist::setKP);
+        mTunableWristKI.ifChanged(hashCode(), mFeedbackHelperWrist::setKI);
+        mTunableWristKD.ifChanged(hashCode(), mFeedbackHelperWrist::setKD);
     }
 
     @Override
@@ -247,16 +251,12 @@ public class ArmIOTalonFX implements ArmIO {
         mWristControlMaster.FeedForward = amps;
     }
 
-    @Override
-    public void setIntakeThrottle(double throttle) {
-        mIntakeControlMaster.Output = throttle;
-    }
+    
 
     @Override
     public void updateOutputs() {
         mTiltMotorMaster.setControl(mTiltControlMaster);
         mWristMotorMaster.setControl(mWristControlMaster);
-        mIntakeMotorMaster.setControl(mIntakeControlMaster);
     }
 
     @Override

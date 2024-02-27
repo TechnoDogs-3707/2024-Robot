@@ -1,11 +1,11 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 
-import static frc.robot.Constants.ArmSubsystem.Intake.*;
+import static frc.robot.Constants.Intake.*;
 
-public class ArmIntakeStateMachine {
-    public enum ArmIntakeWantedAction {
+public class IntakeStateMachine {
+    public enum IntakeWantedAction {
         OFF,
         INTAKE_PARTIAL,
         INTAKE_HANDOFF,
@@ -13,7 +13,7 @@ public class ArmIntakeStateMachine {
         REVERSE
     }
 
-    public enum ArmIntakeSystemState {
+    public enum IntakeSystemState {
         OFF,
         INTAKE_PARTIAL_EMPTY,
         INTAKE_PARTIAL_FULL,
@@ -23,22 +23,22 @@ public class ArmIntakeStateMachine {
         INTAKE_REVERSE
     }
 
-    private ArmIntakeWantedAction mWantedAction = ArmIntakeWantedAction.OFF;
-    private ArmIntakeSystemState mSystemState = ArmIntakeSystemState.OFF;
+    private IntakeWantedAction mWantedAction = IntakeWantedAction.OFF;
+    private IntakeSystemState mSystemState = IntakeSystemState.OFF;
     private double mStateStartTime = Timer.getFPGATimestamp();
 
-    public void setWantedAction(ArmIntakeWantedAction wantedAction) {
+    public void setWantedAction(IntakeWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
             mStateStartTime = Timer.getFPGATimestamp();
         }
     }
 
-    public ArmIntakeSystemState getSystemState() {
+    public IntakeSystemState getSystemState() {
         return mSystemState;
     }
 
-    public ArmIntakeWantedAction getWantedAction() {
+    public IntakeWantedAction getWantedAction() {
         return mWantedAction;
     }
 
@@ -49,30 +49,30 @@ public class ArmIntakeStateMachine {
 
         switch (mWantedAction) {
             case OFF:
-                mSystemState = ArmIntakeSystemState.OFF;
+                mSystemState = IntakeSystemState.OFF;
                 break;
             case INTAKE_PARTIAL:
                 if (intakeBeamBreakTriggered) {
-                    mSystemState = ArmIntakeSystemState.INTAKE_PARTIAL_FULL;
+                    mSystemState = IntakeSystemState.INTAKE_PARTIAL_FULL;
                 } else {
-                    mSystemState = ArmIntakeSystemState.INTAKE_PARTIAL_EMPTY;
+                    mSystemState = IntakeSystemState.INTAKE_PARTIAL_EMPTY;
                 }
                 break;
             case INTAKE_HANDOFF:
                 if (intakeBeamBreakTriggered) {
-                    mSystemState = ArmIntakeSystemState.INTAKE_HANDOFF_FULL;
+                    mSystemState = IntakeSystemState.INTAKE_HANDOFF_FULL;
                 } else {
-                    mSystemState = ArmIntakeSystemState.INTAKE_HANDOFF_EMPTY;
+                    mSystemState = IntakeSystemState.INTAKE_HANDOFF_EMPTY;
                 }
                 break;
             case INTAKE_CONSTANT:
-                mSystemState = ArmIntakeSystemState.INTAKE_CONSTANT;
+                mSystemState = IntakeSystemState.INTAKE_CONSTANT;
                 break;
             case REVERSE:
-                mSystemState = ArmIntakeSystemState.INTAKE_REVERSE;
+                mSystemState = IntakeSystemState.INTAKE_REVERSE;
                 break;
             default:
-                mSystemState = ArmIntakeSystemState.OFF;
+                mSystemState = IntakeSystemState.OFF;
                 break;
         }
 

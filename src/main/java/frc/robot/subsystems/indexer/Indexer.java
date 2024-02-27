@@ -1,7 +1,11 @@
 package frc.robot.subsystems.indexer;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -52,11 +56,23 @@ public class Indexer extends SubsystemBase{
         }
     }
 
+    public Command setActionCommand(IndexerWantedAction wantedAction) {
+        return setActionCommand(() -> wantedAction);
+    }
+
+    public Command setActionCommand(Supplier<IndexerWantedAction> wantedAction) {
+        return runOnce(() -> setWantedAction(wantedAction.get()));
+    }
+
+    public Command waitUntilNoteCommand() {
+        return Commands.waitUntil(this::hasNote);
+    }
+
     public IndexerSystemState getSystemState() {
         return mStateMachine.getSystemState();
     }
 
-    public boolean temporaryHasGamepiece() {
-        return mInputs.firstBannerTriggered;
+    public boolean hasNote() {
+        return mInputs.firstBannerTriggered || mInputs.secondBannerTriggered;
     }
 }

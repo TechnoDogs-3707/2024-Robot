@@ -23,11 +23,14 @@ import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveAlignClosestCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
-import frc.robot.commands.ScoringCommands;
+import frc.robot.commands.IndexerJamClearing;
+import frc.robot.commands.IntakeHandoffToIndexer;
+import frc.robot.commands.IntakeNoteGroundHold;
+import frc.robot.commands.IntakeNoteGroundToIndexer;
+import frc.robot.commands.IntakeNoteSource;
 import frc.robot.commands.ShooterIdleCommand;
 import frc.robot.commands.ShooterScorePodiumCommand;
 import frc.robot.commands.ShooterScoreSubwooferCommand;
-import frc.robot.commands.ShooterTesting;
 import frc.robot.commands.XModeDriveCommand;
 import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
@@ -49,12 +52,17 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOSim;
 import frc.robot.subsystems.indexer.IndexerIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
 import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOTalonFX;
@@ -67,11 +75,13 @@ import frc.robot.subsystems.shooterTilt.ShooterTiltIOTalonFX;
 public class RobotContainer {
     private Drive drive;
     private Arm arm;
+    private Intake intake;
     private ShooterFlywheels shooterFlywheels;
     private ShooterTilt shooterTilt;
     private Indexer indexer;
     private LED leds;
     private Localizer vision;
+    private ObjectiveTracker objective;
     private ControllerFeedback controllerFeedback;
     private Dashboard dashboard;
 
@@ -144,6 +154,7 @@ public class RobotContainer {
                         new SwerveIOTalonFX(3, "canivore")
                     );
                     arm = new Arm(new ArmIOTalonFX());
+                    intake = new Intake(new IntakeIOTalonFX());
                     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
                     shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
@@ -182,6 +193,7 @@ public class RobotContainer {
                             new SimSwerveIO(),
                             new SimSwerveIO());
                     arm = new Arm(new ArmIOSimV1());
+                    intake = new Intake(new IntakeIOSim());
                     indexer = new Indexer(new IndexerIOSim());
                     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
                     shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
@@ -212,6 +224,12 @@ public class RobotContainer {
             });
         }
 
+        if (intake == null) {
+            intake = new Intake(new IntakeIO() {
+                
+            });
+        }
+
         if (shooterFlywheels == null) {
             shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIO() {
                 
@@ -239,6 +257,8 @@ public class RobotContainer {
         if (vision == null) {
             vision = new Localizer(new LocalizerIO() {}, (v) -> {});
         }
+
+        objective = new ObjectiveTracker(intake, indexer);
 
         controllerFeedback = new ControllerFeedback(driver.getHID(), operator.getHID());
 
@@ -302,25 +322,18 @@ public class RobotContainer {
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
         //Operator button bindings
-        operatorIntakeGroundToIndexer.onTrue(ScoringCommands.sensorIntakeGroundToIndexer(arm, indexer));
-        operatorIntakeSourceToHold.onTrue(ScoringCommands.sensorIntakeFromSource(arm, indexer, shooterFlywheels, shooterTilt));
+        operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, objective));
+        operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(arm, intake, objective));
         // operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
         operatorSubwoofer.toggleOnTrue(new ShooterScoreSubwooferCommand(shooterTilt, shooterFlywheels));
         operatorPodium.toggleOnTrue(new ShooterScorePodiumCommand(shooterTilt, shooterFlywheels));
         // operatorOverrideScore.toggleOnTrue(ScoringCommands.instantScore(arm, indexer, shooterFlywheels));
-        operatorOverrideScore.whileTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
-        operatorJamClear.whileTrue(new ShooterTesting.JamClear(indexer, arm/*, shooterFlywheels, shooterTilt*/));
-        operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
-        operatorResetIndexer.onTrue(ScoringCommands.resetIndexer(indexer, shooterTilt, shooterFlywheels));
-        operatorResetArmAndIndexer.onTrue(
-            new SequentialCommandGroup(
-                new ShooterTesting.StowEverything(indexer, shooterFlywheels, shooterTilt), 
-                ScoringCommands.stowArm(arm)
-            )
-        );
-        operatorIntakeGroundToHold.onTrue(ScoringCommands.sensorIntakeGroundToHold(arm, indexer, shooterTilt, shooterFlywheels));
-        operatorAmp.onTrue(ScoringCommands.armSetAmp(arm));
-        operatorHandoffToIndexer.onTrue(ScoringCommands.sensorHandoffToIndexer(arm, indexer, shooterFlywheels, shooterTilt));
+        // operatorOverrideScore.whileTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
+        operatorJamClear.whileTrue(new IndexerJamClearing(arm, intake, indexer));
+        // operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
+        operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
+        // operatorAmp.onTrue(ScoringCommands.armSetAmp(arm));
+        operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, objective));
         
         // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
