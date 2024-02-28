@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotStateTracker;
@@ -16,26 +18,24 @@ import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.Flywhe
 import frc.robot.subsystems.shooterTilt.ShooterTilt;
 import frc.robot.subsystems.shooterTilt.ShooterTilt.ShooterTiltGoalState;
 
-public class AutoAlignShoot extends SequentialCommandGroup {
-    public AutoAlignShoot(Drive drive, Indexer indexer, ShooterTilt tilt, ShooterFlywheels flywheels, ObjectiveTracker objective) {
+public class AutoScoreSpeaker extends SequentialCommandGroup {
+    public AutoScoreSpeaker(Drive drive, Indexer indexer, ShooterTilt tilt, ShooterFlywheels flywheels, ObjectiveTracker objective, Supplier<ShooterTiltGoalState> tiltGoal, Supplier<Boolean> scoreOverride) {
         addCommands(
-            drive.autoAlignAndWaitCommand(
-                () -> AutoAlignPointSelector.getAlignTarget(
-                    RobotStateTracker.getInstance().getCurrentRobotPose(), 
-                    RequestedAlignment.SPEAKER_CLOSE
-                )
-            ).alongWith(
+            Commands.waitUntil(drive::autoAlignAtTarget)
+            .raceWith(Commands.waitUntil(scoreOverride::get))
+            .alongWith(
                 Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.SCORE_SPEAKER_AUTOALIGN))
                 .andThen(Commands.runOnce(() -> objective.setAutoAlignState(AutoAlignScoreState.DRIVING_TO_TARGET))),
+                Commands.runOnce(() -> flywheels.setSetpointSpeedLeft(35)),
+                Commands.runOnce(() -> flywheels.setSetpointSpeedRight(100)),
                 flywheels.setActionCommand(FlywheelsWantedAction.SHOOT),
-                tilt.setGoalCommand(ShooterTiltGoalState.CLOSE)
+                tilt.setGoalCommand(tiltGoal.get())
             ).andThen(
                 Commands.runOnce(() -> objective.setAutoAlignState(AutoAlignScoreState.SCORE_RUNNING)),
                 indexer.setActionCommand(IndexerWantedAction.SCORE),
                 indexer.waitUntilNoteGoneCommand()
             ).finallyDo(() -> {
                 objective.setMasterObjective(MasterObjective.NONE);
-                drive.stop();
                 indexer.setActionCommand(IndexerWantedAction.OFF);
                 tilt.setGoalState(ShooterTiltGoalState.STOW);
                 flywheels.setWantedAction(FlywheelsWantedAction.OFF);

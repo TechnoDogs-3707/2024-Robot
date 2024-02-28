@@ -16,6 +16,9 @@ public interface TimedLEDState {
         public static BlinkingLEDState kAutoAimScoring = new BlinkingLEDState(LEDState.kOff, LEDState.kWhite, 0.1);
         public static BlinkingLEDState kAutoAlignScoring = new BlinkingLEDState(LEDState.kOff, LEDState.kWhite, 0.1);
 
+        public static BlinkingLEDState kIntakingToIndexer = new BlinkingLEDState(LEDState.kOff, LEDState.kOrange, 0.1);
+        public static BlinkingLEDState kIntakingToArm = new BlinkingLEDState(LEDState.kOff, LEDState.kPurple, 0.1);
+
         public static BlinkingLEDState kClimbRunningDutyCycle = new BlinkingLEDState(LEDState.kOff, LEDState.kYellow, 0.1);
 
         LEDState mStateOne = new LEDState(0, 0, 0);
@@ -79,11 +82,12 @@ public interface TimedLEDState {
         public static RSLBasedLEDState kVisionMissing = new RSLBasedLEDState(LEDState.kOff, LEDState.kYellow);
         public static RSLBasedLEDState kVisionPresent = new RSLBasedLEDState(LEDState.kOff, LEDState.kGreen);
 
-        public static RSLBasedLEDState kIntakingGroundToIndexer = new RSLBasedLEDState(LEDState.kOff, LEDState.kOrange);
-        public static RSLBasedLEDState kIntakingGroundToArm = new RSLBasedLEDState(LEDState.kOff, LEDState.kPurple);
+        public static RSLBasedLEDState kIndexerEmpty = new RSLBasedLEDState(LEDState.kOff, LEDState.kOrange);
 
         public static RSLBasedLEDState kClimbRaising = new RSLBasedLEDState(LEDState.kOff, LEDState.kBlue);
         public static RSLBasedLEDState kClimbManual = new RSLBasedLEDState(LEDState.kRed, LEDState.kYellow);
+
+        public static RSLBasedLEDState kTempAutoAligning = new RSLBasedLEDState(LEDState.kOff, LEDState.kGreen);
 
         private final double mDurationIfSimulating = 0.2;
         LEDState mStateWhenOff = new LEDState(0, 0, 0);

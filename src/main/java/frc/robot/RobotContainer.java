@@ -19,17 +19,24 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.ArmCommandFactory;
+import frc.robot.commands.ArmStow;
+import frc.robot.commands.AutoScoreAmp;
+import frc.robot.commands.AutoScoreSpeaker;
+import frc.robot.commands.AutoScoreSpeakerPodium;
+import frc.robot.commands.AutoScoreSpeakerSubwoofer;
 import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveAlignClosestCommand;
 import frc.robot.commands.DriveAutoAlignCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.IndexerJamClearing;
+import frc.robot.commands.IndexerReset;
 import frc.robot.commands.IntakeHandoffToIndexer;
 import frc.robot.commands.IntakeNoteGroundHold;
 import frc.robot.commands.IntakeNoteGroundToIndexer;
 import frc.robot.commands.IntakeNoteSource;
 import frc.robot.commands.ShooterIdleCommand;
+import frc.robot.commands.ShooterPrepare;
 import frc.robot.commands.ShooterScorePodiumCommand;
 import frc.robot.commands.ShooterScoreSubwooferCommand;
 import frc.robot.commands.XModeDriveCommand;
@@ -98,6 +105,8 @@ public class RobotContainer {
     private final Trigger driverAutoAlignPreferred = driver.R2();
     private final Trigger driverAutoAlignClosest = driver.L2();
     private final Trigger driverSnapAutoAlignAngle = driver.square();
+    private final Trigger driverSnapAngleIgnoringPreference = driver.triangle();
+    private final Trigger driverAutoAim = driver.circle();
     // private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
     private final Trigger driverTempDisableFieldOriented = driver.R1();
 
@@ -297,13 +306,16 @@ public class RobotContainer {
         drive.setDefaultCommand(
             new DriveWithController(
                 drive, 
+                objective,
                 this::getDriveInputs, 
                 driverSlowMode::getAsBoolean, 
                 driverNoFieldOriented::getAsBoolean, 
-                driverSnapAutoAlignAngle::getAsBoolean
+                driverSnapAutoAlignAngle::getAsBoolean,
+                driverSnapAngleIgnoringPreference::getAsBoolean
             )
         );
 
+        shooterFlywheels.setDefaultCommand(new ShooterPrepare(indexer, shooterFlywheels));
         // shooterFlywheels.setDefaultCommand(new ShooterAutomaticCommand(shooterFlywheels, indexer));
     }
 
@@ -313,7 +325,6 @@ public class RobotContainer {
         // Drive button bindings
         driverXMode.whileTrue(new XModeDriveCommand(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
-        // driverAutoAlignClosest.whileTrue(new DriveAlignClosestCommand(drive, arm));
         driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> true));
         driverAutoAlignPreferred.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
 
@@ -326,16 +337,14 @@ public class RobotContainer {
 
         //Operator button bindings
         operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, shooterFlywheels, objective));
-        operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(arm, intake, objective));
-        // operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
-        operatorSubwoofer.toggleOnTrue(new ShooterScoreSubwooferCommand(shooterTilt, shooterFlywheels));
-        operatorPodium.toggleOnTrue(new ShooterScorePodiumCommand(shooterTilt, shooterFlywheels));
-        // operatorOverrideScore.toggleOnTrue(ScoringCommands.instantScore(arm, indexer, shooterFlywheels));
-        // operatorOverrideScore.whileTrue(new ShooterTesting.IndexerScoreGampiece(indexer));
+        operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
+        operatorSubwoofer.onTrue(new AutoScoreSpeakerSubwoofer(drive, indexer, shooterTilt, shooterFlywheels, objective, operatorOverrideScore::getAsBoolean));
+        operatorPodium.toggleOnTrue(new AutoScoreSpeakerPodium(drive, indexer, shooterTilt, shooterFlywheels, objective, operatorOverrideScore::getAsBoolean));
         operatorJamClear.whileTrue(new IndexerJamClearing(arm, intake, indexer));
-        // operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
+        operatorStowArm.onTrue(new ArmStow(arm, intake));
+        operatorResetIndexer.onTrue(new IndexerReset(indexer, shooterTilt, shooterFlywheels));
         operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
-        // operatorAmp.onTrue(ScoringCommands.armSetAmp(arm));
+        operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore::getAsBoolean));
         operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, shooterFlywheels, objective));
         
         // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));

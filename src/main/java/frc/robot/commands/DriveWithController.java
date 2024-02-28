@@ -21,15 +21,18 @@ import frc.robot.lib.drive.SwerveHeadingController.HeadingControllerState;
 import frc.robot.lib.util.TimeDelayedBoolean;
 import frc.robot.lib.util.Util;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 
 public class DriveWithController extends Command {
     private static final LoggedTunableBoolean mUseOpenLoopDrive = new LoggedTunableBoolean("/Drive/UseOpenLoop", Constants.kDriveUseOpenLoop);
 
     private final Drive drive;
+    private final ObjectiveTracker objective;
     private final Supplier<ControllerDriveInputs> driveInputSupplier;
     private final Supplier<Boolean> slowModeSupplier;
     private final Supplier<Boolean> disableFieldOrient;
     private final Supplier<Boolean> snapAutoAlignAngle;
+    private final Supplier<Boolean> snapAutoAlignIgnoringPreferred;
 
     private boolean mUseOpenLoop = false;
 
@@ -55,18 +58,22 @@ public class DriveWithController extends Command {
     /** Creates a new DefaultDriveCommand. */
     public DriveWithController(
             Drive drive,
+            ObjectiveTracker objective,
             Supplier<ControllerDriveInputs> driveInputSupplier,
             Supplier<Boolean> slowModeSupplier,
             Supplier<Boolean> disableFieldOrient,
-            Supplier<Boolean> snapClosestCardinal
+            Supplier<Boolean> snapAutoAlign,
+            Supplier<Boolean> snapAutoAlignIngoringPreferred
         ) {
         addRequirements(drive);
 
         this.drive = drive;
+        this.objective = objective;
         this.driveInputSupplier = driveInputSupplier;
         this.slowModeSupplier = slowModeSupplier;
         this.disableFieldOrient = disableFieldOrient;
-        this.snapAutoAlignAngle = snapClosestCardinal;
+        this.snapAutoAlignAngle = snapAutoAlign;
+        this.snapAutoAlignIgnoringPreferred = snapAutoAlignIngoringPreferred;
     }
 
     // Called when the command is initially scheduled.
@@ -97,10 +104,13 @@ public class DriveWithController extends Command {
         boolean drive_translating = Utility.getSpeedAsScalar(drive.getMeasuredSpeeds()) >= 0.1;
 
         boolean shouldSnapAutoAlignAngle = snapAutoAlignAngle.get();
+        boolean shouldSnapAutoAlignIgnoringPreferred = snapAutoAlignIgnoringPreferred.get();
         boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapAutoAlignAngle, 0.2);
 
         if (shouldSnapAutoAlignAngle) {
-            mHeadingGoal = Optional.of(0.0); //Optional.of(AutoAlignPointSelector.getAlignTarget(drive.getPose(), RequestedAlignment.AUTO).orElse(drive.getPose()).getRotation().getDegrees()); //TODO: make this use our RequestedAlignment Planner
+            mHeadingGoal = Optional.of(AutoAlignPointSelector.getAlignTarget(drive.getPose(), objective.getRequestedAlignment(false)).orElse(drive.getPose()).getRotation().getDegrees());
+        } else if (shouldSnapAutoAlignIgnoringPreferred) {
+            mHeadingGoal = Optional.of(AutoAlignPointSelector.getAlignTarget(drive.getPose(), objective.getRequestedAlignment(true)).orElse(drive.getPose()).getRotation().getDegrees());
         } else if (!autoMaintain) {
             mHeadingGoal = Optional.of(drive.getPose().getRotation().getDegrees());
         }

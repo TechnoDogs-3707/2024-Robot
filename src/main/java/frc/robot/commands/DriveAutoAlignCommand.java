@@ -17,8 +17,6 @@ public class DriveAutoAlignCommand extends SequentialCommandGroup {
                     RobotStateTracker.getInstance().getCurrentRobotPose(), 
                     tracker.getRequestedAlignment(ignorePreference.get())
                 )
-            ).andThen(
-                Commands.print("Drive At Target: " + drive.autoAlignAtTarget())
             ).finallyDo(() -> {
                 drive.stop();
             })

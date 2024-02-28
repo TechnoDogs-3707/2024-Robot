@@ -114,16 +114,17 @@ public class ObjectiveTracker extends VirtualSubsystem {
         } else if (mIndexer.hasNote()) {
             LED.setArmLEDState(TimedLEDState.StaticLEDState.kNoteInIndexer);
         } else {
+            LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kIndexerEmpty);
         }
     }
 
     public void handleIntakeGroundLEDs() {
        switch (mIntakeGroundState) {
         case TO_INTAKE:
-            LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kIntakingGroundToArm);
+            LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kIntakingToArm);
             break;
         case TO_INDEXER:
-            LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kIntakingGroundToIndexer);
+            LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kIntakingToIndexer);
             break;
         default:
             break;
@@ -134,6 +135,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         switch (mAutoIntakeState) {
             case DRIVING_TO_TARGET:
                 // TODO: percent full based on distance
+                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kTempAutoAligning);
                 break;
             case ON_TARGET:
                 LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kIntakeAutoAlignOnTarget);
@@ -168,6 +170,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         switch (mAutoAlignState) {
             case DRIVING_TO_TARGET:
                 //TODO: distance to target point
+                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kTempAutoAligning);
                 break;
             case SCORE_FINISHED:
                 LED.setArmLEDState(TimedLEDState.StaticLEDState.kAutoAlignScoringComplete);
