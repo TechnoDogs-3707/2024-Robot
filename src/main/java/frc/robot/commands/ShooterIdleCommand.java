@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
 
@@ -9,7 +10,7 @@ public class ShooterIdleCommand extends Command {
     private final ShooterFlywheels mFlywheels;
     private final Indexer mIndexer;
 
-    public ShooterIdleCommand(ShooterFlywheels flywheels, Indexer indexer) {
+    public ShooterIdleCommand(ShooterFlywheels flywheels, Indexer indexer, ObjectiveTracker objective) {
         mFlywheels = flywheels;
         mIndexer = indexer;
 

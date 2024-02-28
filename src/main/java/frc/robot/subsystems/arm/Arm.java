@@ -99,18 +99,18 @@ public class Arm extends SubsystemBase {
         //TODO: led states
 
         Optional<TimedLEDState> ledState = handleLEDs(timestamp);
-        if (DriverStation.isEnabled()) {
-            if (ledState.isPresent()) {
-                if (DriverStation.isAutonomous()) {
-                    LED.setWantedAction(LED.WantedAction.DISPLAY_VISION);
-                } else {
-                    // LED.setDeliveryLEDState(ledState.get()); 
-                    LED.setWantedAction(LED.WantedAction.DISPLAY_ARM);
-                }
-            } else {
-                LED.setWantedAction(LED.WantedAction.OFF);
-            }
-        }
+        // if (DriverStation.isEnabled()) {
+        //     if (ledState.isPresent()) {
+        //         if (DriverStation.isAutonomous()) {
+        //             LED.setWantedAction(LED.WantedAction.DISPLAY_VISION);
+        //         } else {
+        //             // LED.setDeliveryLEDState(ledState.get()); 
+        //             LED.setWantedAction(LED.WantedAction.DISPLAY_ARM);
+        //         }
+        //     } else {
+        //         LED.setWantedAction(LED.WantedAction.OFF);
+        //     }
+        // }
         if (Constants.getMode() == Mode.SIM) {
             double simCurrent = 0.0;
             simCurrent += mArmInputs.tiltSuppliedCurrentAmps;

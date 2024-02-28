@@ -9,15 +9,11 @@ public interface TimedLEDState {
     void getCurrentLEDState(LEDStateContainer desiredState, double timestamp);
 
     class BlinkingLEDState implements TimedLEDState {
-        public static BlinkingLEDState kTest = new BlinkingLEDState(LEDState.kOff, LEDState.kBlue, 1);
-
-        public static BlinkingLEDState kConfigureFail = new BlinkingLEDState(LEDState.kOff, LEDState.kRed, 0.5);
-
+        public static BlinkingLEDState kHandoffRunning = new BlinkingLEDState(LEDState.kPurple, LEDState.kOrange, 0.1);
+        
         public static BlinkingLEDState kIntakeAutoAlignOnTarget = new BlinkingLEDState(LEDState.kOff, LEDState.kBlue, 0.1);
-
         public static BlinkingLEDState kAutoAimPreparing = new BlinkingLEDState(LEDState.kOff, LEDState.kYellow, 0.1);
         public static BlinkingLEDState kAutoAimScoring = new BlinkingLEDState(LEDState.kOff, LEDState.kWhite, 0.1);
-
         public static BlinkingLEDState kAutoAlignScoring = new BlinkingLEDState(LEDState.kOff, LEDState.kWhite, 0.1);
 
         public static BlinkingLEDState kClimbRunningDutyCycle = new BlinkingLEDState(LEDState.kOff, LEDState.kYellow, 0.1);
@@ -124,9 +120,6 @@ public interface TimedLEDState {
         public static StaticLEDState kStaticBatteryLow = new StaticLEDState(LEDState.kBatteryLow);
         public static StaticLEDState kStaticNotHomed = new StaticLEDState(LEDState.kYellow);
         public static StaticLEDState kVisionDisabled = new StaticLEDState(LEDState.kRed);
-
-        public static StaticLEDState kAutonLimelightHasTarget = new StaticLEDState(LEDState.kGreen);
-        public static StaticLEDState kAutonLimelightNoTargets = new StaticLEDState(LEDState.kYellow);
 
         public static StaticLEDState kNoteInIndexer = new StaticLEDState(LEDState.kOrange);
         public static StaticLEDState kNoteInArm = new StaticLEDState(LEDState.kPurple);

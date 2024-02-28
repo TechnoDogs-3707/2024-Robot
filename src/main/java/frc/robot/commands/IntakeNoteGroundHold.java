@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.Arm;
@@ -14,8 +15,8 @@ public class IntakeNoteGroundHold extends SequentialCommandGroup {
     public IntakeNoteGroundHold(Arm arm, Intake intake, ObjectiveTracker objective) {
         addCommands(
             arm.setGoalCommand(GoalState.INTAKE_GROUND).alongWith(
-                new InstantCommand(() -> objective.setMasterObjective(MasterObjective.INTAKE_GROUND)),
-                new InstantCommand(() -> objective.setIntakeGroundState(IntakeGroundState.TO_INTAKE)),
+                Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.INTAKE_GROUND)),
+                Commands.runOnce(() -> objective.setIntakeGroundState(IntakeGroundState.TO_INTAKE)),
                 intake.setActionCommand(IntakeWantedAction.INTAKE_PARTIAL)
             ).andThen(
                 intake.waitUntilNoteCommand()

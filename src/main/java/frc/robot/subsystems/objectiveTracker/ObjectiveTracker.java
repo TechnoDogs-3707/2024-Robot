@@ -1,5 +1,8 @@
 package frc.robot.subsystems.objectiveTracker;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.leds.TimedLEDState;
 import frc.robot.lib.util.VirtualSubsystem;
 import frc.robot.subsystems.indexer.Indexer;
@@ -14,6 +17,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         NONE,
         INTAKE_GROUND,
         INTAKE_SOURCE_AUTOALIGN,
+        INTAKE_HANDOFF,
         SCORE_SPEAKER_AUTOALIGN,
         SCORE_SPEAKER_AUTOAIM,
         SCORE_AMP_AUTOALIGN,
@@ -139,6 +143,10 @@ public class ObjectiveTracker extends VirtualSubsystem {
         }
     }
 
+    public void handleHandoffLEDs() {
+        LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kHandoffRunning);
+    }
+
     public void handleScoreSpeakerAutoAimLEDs() {
         switch (mAutoAimState) {
             case SCORE_FINISHED:
@@ -194,6 +202,14 @@ public class ObjectiveTracker extends VirtualSubsystem {
     public ObjectiveTracker(Intake intake, Indexer indexer) {
         mIntake = intake;
         mIndexer = indexer;
+
+        mAutoAlignSourcePreference.addDefaultOption("Any", RequestedAlignment.SOURCE_AUTO);
+        mAutoAlignSourcePreference.addOption("Left", RequestedAlignment.SOURCE_LEFT);
+        mAutoAlignSourcePreference.addOption("Right", RequestedAlignment.SOURCE_RIGHT);
+
+        mAutoAlignSpeakerPreference.addDefaultOption("Any", RequestedAlignment.SPEAKER_AUTO);
+        mAutoAlignSpeakerPreference.addOption("Close", RequestedAlignment.SPEAKER_CLOSE);
+        mAutoAlignSpeakerPreference.addOption("Podium", RequestedAlignment.SPEAKER_PODIUM);
     }
 
     @Override
@@ -204,22 +220,57 @@ public class ObjectiveTracker extends VirtualSubsystem {
                 handleNoneLEDs();
                 break;
             case INTAKE_GROUND:
-
+                handleIntakeGroundLEDs();
                 break;
             case INTAKE_SOURCE_AUTOALIGN:
-
+                handleIntakeSourceAutoAlignLEDs();
+                break;
+            case INTAKE_HANDOFF:
+                handleHandoffLEDs();
                 break;
             case SCORE_SPEAKER_AUTOAIM:
-
+                handleScoreSpeakerAutoAimLEDs();
                 break;
             case SCORE_SPEAKER_AUTOALIGN:
-
-                break;
             case SCORE_AMP_AUTOALIGN:
-
+                handleScoreAutoAlignLEDs();
                 break;
             default:
                 break;
+        }
+    }
+
+    public enum SimpleObjective {
+        SOURCE,
+        SPEAKER,
+        AMP
+    }
+
+    public SimpleObjective getSimpleObjective() {
+        if (mIntake.hasNote()) {
+            return SimpleObjective.AMP;
+        } else if (mIndexer.hasNote()) {
+            return SimpleObjective.SPEAKER;
+        } else {
+            return SimpleObjective.SOURCE;
+        }
+    }
+
+    public final LoggedDashboardChooser<RequestedAlignment> mAutoAlignSourcePreference = new LoggedDashboardChooser<>("Source Align Preference");
+    public final LoggedDashboardChooser<RequestedAlignment> mAutoAlignSpeakerPreference = new LoggedDashboardChooser<>("Speaker Align Preference");
+
+    public RequestedAlignment getRequestedAlignment(boolean ignorePreference) {
+        SimpleObjective objective = getSimpleObjective();
+
+        switch (objective) {
+            case AMP:
+                return RequestedAlignment.AMP;
+            case SOURCE:
+                return ignorePreference ? RequestedAlignment.SOURCE_AUTO : mAutoAlignSourcePreference.get();
+            case SPEAKER:
+                return ignorePreference ? RequestedAlignment.SPEAKER_AUTO : mAutoAlignSpeakerPreference.get();
+            default:
+                return RequestedAlignment.AUTO;
         }
     }
 }

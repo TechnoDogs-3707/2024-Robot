@@ -21,6 +21,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.commands.ArmCommandFactory;
 import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveAlignClosestCommand;
+import frc.robot.commands.DriveAutoAlignCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.IndexerJamClearing;
@@ -60,6 +61,7 @@ import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
 import frc.robot.subsystems.leds.LEDIOSim;
+import frc.robot.subsystems.leds.LED.WantedAction;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
@@ -274,7 +276,7 @@ public class RobotContainer {
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());
 
-        dashboard = new Dashboard(robot, this, drive, arm, leds, vision, controllerFeedback);
+        dashboard = new Dashboard(robot, this, drive, arm, intake, shooterFlywheels, shooterTilt, indexer, leds, vision, objective, controllerFeedback);
         dashboard.resetWidgets();
 
         configureBindings();
@@ -311,8 +313,9 @@ public class RobotContainer {
         // Drive button bindings
         driverXMode.whileTrue(new XModeDriveCommand(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
-        driverAutoAlignClosest.whileTrue(new DriveAlignClosestCommand(drive, arm));
-        // driverAutoAlignPreferred.whileTrue(new DriveAutoAlignCommand(alignmentTracker, drive, arm));
+        // driverAutoAlignClosest.whileTrue(new DriveAlignClosestCommand(drive, arm));
+        driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> true));
+        driverAutoAlignPreferred.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
 
         // Driver override switches
         driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));
@@ -322,7 +325,7 @@ public class RobotContainer {
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
         //Operator button bindings
-        operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, objective));
+        operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, shooterFlywheels, objective));
         operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(arm, intake, objective));
         // operatorSpeaker.onTrue(ScoringCommands.scoreSpeakerClose(indexer, shooterTilt, shooterFlywheels));
         operatorSubwoofer.toggleOnTrue(new ShooterScoreSubwooferCommand(shooterTilt, shooterFlywheels));
@@ -333,7 +336,7 @@ public class RobotContainer {
         // operatorStowArm.onTrue(ScoringCommands.stowArm(arm));
         operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(ScoringCommands.armSetAmp(arm));
-        operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, objective));
+        operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, shooterFlywheels, objective));
         
         // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));

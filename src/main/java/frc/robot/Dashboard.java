@@ -16,8 +16,13 @@ import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveModule;
 import frc.robot.subsystems.drive.Drive.DriveControlState;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.localizer.Localizer;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
+import frc.robot.subsystems.shooterTilt.ShooterTilt;
 
 public class Dashboard {
     // Drive Tab
@@ -78,7 +83,7 @@ public class Dashboard {
 
     // public final SendableWidget<SendableChooser<String>> testing_preloadSimGripper;
     
-    public Dashboard(Robot robot, RobotContainer container, Drive drive, Arm arm, LED led, Localizer vision, ControllerFeedback controllerFeedback) {
+    public Dashboard(Robot robot, RobotContainer container, Drive drive, Arm arm, Intake intake, ShooterFlywheels flywheels, ShooterTilt tilt, Indexer indexer,  LED led, Localizer vision, ObjectiveTracker objective, ControllerFeedback controllerFeedback) {
         // Drive Tab
         drive_linearSpeedChooser = new SendableWidget<SendableChooser<Double>>(driveTabName, "Linear Speed Limit",
         DriveWithController.linearSpeedLimitChooser,
@@ -106,8 +111,8 @@ public class Dashboard {
         
         setup_autonMode = new SendableWidget<SendableChooser<String>>(setupTabName, "Autonomous Mode", container.autoChooser.getSendableChooser(), new WidgetConfig(0, 0, 4, 1, BuiltInWidgets.kComboBoxChooser));
         
-        setup_preferredSourceSide = new SendableWidget<SendableChooser<String>>(setupTabName, "Preferred Source", drive.mAutoAlignSourcePreference.getSendableChooser(), new WidgetConfig(4, 1, 2, 1, BuiltInWidgets.kComboBoxChooser));
-        setup_preferredSpeakerLocation = new SendableWidget<SendableChooser<String>>(setupTabName, "Preferred Speaker", drive.mAutoAlignSpeakerPreference.getSendableChooser(), new WidgetConfig(4, 2, 2, 1, BuiltInWidgets.kComboBoxChooser));
+        setup_preferredSourceSide = new SendableWidget<SendableChooser<String>>(setupTabName, "Preferred Source", objective.mAutoAlignSourcePreference.getSendableChooser(), new WidgetConfig(4, 1, 2, 1, BuiltInWidgets.kComboBoxChooser));
+        setup_preferredSpeakerLocation = new SendableWidget<SendableChooser<String>>(setupTabName, "Preferred Speaker", objective.mAutoAlignSpeakerPreference.getSendableChooser(), new WidgetConfig(4, 2, 2, 1, BuiltInWidgets.kComboBoxChooser));
 
         setup_initPreview = new SendableWidget<Field2d>(setupTabName, "Initial Pose Preview", drive.mPosePreviewSource, new WidgetConfig(0, 1, 4, 2, BuiltInWidgets.kField));
         setup_poseWidgetSource = new SendableWidget<SendableChooser<String>>(setupTabName, "Pose Widget Source", drive.mPoseWidgetUsePreview.getChooser(), new WidgetConfig(0, 3, 2, 1, BuiltInWidgets.kSplitButtonChooser));

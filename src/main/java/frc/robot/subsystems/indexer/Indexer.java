@@ -68,6 +68,10 @@ public class Indexer extends SubsystemBase{
         return Commands.waitUntil(this::hasNote);
     }
 
+    public Command waitUntilNoteGoneCommand() {
+        return Commands.waitUntil(() -> !this.hasNote());
+    }
+
     public IndexerSystemState getSystemState() {
         return mStateMachine.getSystemState();
     }

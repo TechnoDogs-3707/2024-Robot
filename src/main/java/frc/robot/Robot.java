@@ -272,6 +272,7 @@ public class Robot extends LoggedRobot {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+        LED.setWantedAction(WantedAction.DISPLAY_ARM);
         robotContainer.onTeleopInit();
     }
     

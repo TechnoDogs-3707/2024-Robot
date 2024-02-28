@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.Arm;
@@ -15,11 +16,9 @@ public class IntakeNoteSource extends SequentialCommandGroup {
         addCommands(
             arm.setGoalCommand(GoalState.INTAKE_SOURCE)
             .alongWith(
-                new InstantCommand(() -> objective.setMasterObjective(MasterObjective.INTAKE_SOURCE_AUTOALIGN)),
-                new InstantCommand(() -> objective.setAutoIntakeState(AutoAlignIntakeState.DRIVING_TO_TARGET)),
+                Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.INTAKE_SOURCE_AUTOALIGN)),
                 intake.setActionCommand(IntakeWantedAction.INTAKE_PARTIAL),
-                // wait until we are aligned
-                new InstantCommand(() -> objective.setAutoIntakeState(AutoAlignIntakeState.ON_TARGET)),
+                Commands.runOnce(() -> objective.setAutoIntakeState(AutoAlignIntakeState.ON_TARGET)),
                 intake.waitUntilNoteCommand()
             ).finallyDo(() -> {
                 objective.setMasterObjective(MasterObjective.NONE);

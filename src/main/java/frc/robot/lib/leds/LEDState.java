@@ -15,7 +15,7 @@ public class LEDState implements ILEDDisplayable {
     public static final LEDState kGreen = new LEDState(0, 255, 0);
     public static final LEDState kYellow = new LEDState(255, 215, 0);
     public static final LEDState kPurple = new LEDState(255, 0, 255);
-    public static final LEDState kOrange = new LEDState(); //TODO: colors
+    public static final LEDState kOrange = new LEDState(255, 165, 0);
     public static final LEDState kWhite = new LEDState(255, 255, 255);
 
 

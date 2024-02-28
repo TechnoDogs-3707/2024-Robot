@@ -3,6 +3,8 @@ package frc.robot.subsystems.shooterTilt;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -11,6 +13,8 @@ import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.util.Util;
 
 import static frc.robot.Constants.ShooterTilt.*;
+
+import java.util.function.Supplier;
 
 public class ShooterTilt extends SubsystemBase {
     public enum ShooterTiltGoalState {
@@ -94,6 +98,16 @@ public class ShooterTilt extends SubsystemBase {
         // assume that we are not within tolerance of the new target in the case that withinTolerance() is called before
         // the next run of periodic() (i.e. A command changes the goal state, then checks if the tilt has moved.)
         mWithinTolerance = false;
+    }
+
+    public Command setGoalCommand(ShooterTiltGoalState goalState) {
+        return setGoalCommand(() -> goalState);
+    }
+
+    public Command setGoalCommand(Supplier<ShooterTiltGoalState> goalState) {
+        return runOnce(() -> setGoalState(goalState.get())).andThen(
+            Commands.waitUntil(this::withinTolerance)
+        );
     }
 
     public boolean withinTolerance() {

@@ -1,7 +1,5 @@
 package frc.robot.subsystems.leds;
 
-import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -107,9 +105,6 @@ public class LED extends SubsystemBase {
             case DISPLAYING_BATTERY_LOW:
                 setBatteryLowCommand(timeInState);
                 break;
-            case DISPLAYING_CONFIGURE_FAULT:
-                setConfigureFault(timeInState);
-                break;
             case DISPLAYING_GOOD_BATTERY:
                 setGoodBattery(timeInState);
                 break;
@@ -140,10 +135,6 @@ public class LED extends SubsystemBase {
 
     private void setOffCommand(double timeInState) {
         TimedLEDState.StaticLEDState.kStaticOff.getCurrentLEDState(mDesiredLEDState, timeInState);
-    }
-
-    private void setConfigureFault(double timeInState) {
-        TimedLEDState.BlinkingLEDState.kConfigureFail.getCurrentLEDState(mDesiredLEDState, timeInState);
     }
 
     private void setDisplayingVision(double timeInState) {

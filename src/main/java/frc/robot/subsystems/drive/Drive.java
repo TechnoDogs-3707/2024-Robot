@@ -5,6 +5,7 @@
 package frc.robot.subsystems.drive;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -26,7 +27,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotStateTracker;
@@ -116,10 +120,7 @@ public class Drive extends SubsystemBase {
     public final DashboardToggleSwitch mPoseWidgetUsePreview = new DashboardToggleSwitch("poseWidgetPreview", false, "Current Pose", "Pose Preview");
     public final DashboardToggleSwitch mPoseInitFromEstimator = new DashboardToggleSwitch("poseInitFromTags", false, "Auton Init", "Estimated Pose");
     public final DashboardToggleSwitch mUseAutoAlignDuringAuto = new DashboardToggleSwitch("useTagsDuringAuto", false, "Disabled", "Enabled");
-
-    public final LoggedDashboardChooser<RequestedAlignment> mAutoAlignSourcePreference = new LoggedDashboardChooser<>("Source Align Preference");
-    public final LoggedDashboardChooser<RequestedAlignment> mAutoAlignSpeakerPreference = new LoggedDashboardChooser<>("Speaker Align Preference");
-        
+ 
     private final SwerveModule[] mModules;
     private final int kFrontLeftID = 0;
     private final int kFrontRightID = 1;
@@ -169,14 +170,6 @@ public class Drive extends SubsystemBase {
         mPoseEstimator = new SwerveDrivePoseEstimator(mKinematics, mLastGyroYaw, mLastSwervePositions, new Pose2d());
 
         mAutonRotationTarget = new Rotation2d();
-
-        mAutoAlignSourcePreference.addDefaultOption("Any", RequestedAlignment.SOURCE_AUTO);
-        mAutoAlignSourcePreference.addOption("Left", RequestedAlignment.SOURCE_LEFT);
-        mAutoAlignSourcePreference.addOption("Right", RequestedAlignment.SOURCE_RIGHT);
-
-        mAutoAlignSpeakerPreference.addDefaultOption("Any", RequestedAlignment.SPEAKER_AUTO);
-        mAutoAlignSpeakerPreference.addOption("Close", RequestedAlignment.SPEAKER_CLOSE);
-        mAutoAlignSpeakerPreference.addOption("Podium", RequestedAlignment.SPEAKER_PODIUM);
 
         mLastMovementTimer.reset();
     }
@@ -450,6 +443,21 @@ public class Drive extends SubsystemBase {
     private void setSetpoint(ChassisSpeeds speeds) {
         mSetpoint = speeds;
     }
+
+    public Command autoAlignAndWaitCommand(Supplier<Optional<Pose2d>> targetPoint) {
+        return Commands.either(
+            runOnce(() -> this.setSnapToPoint(targetPoint.get().get()))
+            .andThen(Commands.waitUntil(this::autoAlignAtTarget))
+            .andThen(Commands.waitSeconds(0.25)), // add a small time delay to make sure we stop before continuing 
+            Commands.none(), 
+            () -> targetPoint.get().isPresent()
+        );
+    }
+
+    // public Command autoAlignAndWaitCommand(Pose2d targetPoint) {
+    //     return runOnce(() -> this.setSnapToPoint(targetPoint))
+    //     .alongWith(Commands.waitUntil(this::autoAlignAtTarget));
+    // }
 
     public Pose2d getTargetPoint() {
         return mTargetPoint;
