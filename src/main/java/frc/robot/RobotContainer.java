@@ -71,6 +71,7 @@ import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.leds.LED.WantedAction;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
+import frc.robot.subsystems.localizer.LocalizerIOLL3;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
@@ -156,6 +157,22 @@ public class RobotContainer {
     public RobotContainer(Robot robot) {
         if (Constants.getMode() != Mode.REPLAY) {
             switch (Constants.getRobot()) {
+                // case ROBOT_2024_HARD_ROCK:
+                //     drive = new Drive(
+                //         new GyroPigeonIO(9, "canivore"), 
+                //         new SwerveIOTalonFX(0, "canivore"), 
+                //         new SwerveIOTalonFX(1, "canivore"), 
+                //         new SwerveIOTalonFX(2, "canivore"), 
+                //         new SwerveIOTalonFX(3, "canivore")
+                //     );
+                //     arm = new Arm(new ArmIOTalonFX());
+                //     intake = new Intake(new IntakeIOTalonFX());
+                //     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
+                //     shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
+                //     indexer = new Indexer(new IndexerIOTalonFX());
+                //     leds = new LED(new LEDIOSim(127));
+                //     //vision
+                //     break;
                 case ROBOT_2024_HARD_ROCK:
                     drive = new Drive(
                         new GyroPigeonIO(9, "canivore"), 
@@ -164,13 +181,13 @@ public class RobotContainer {
                         new SwerveIOTalonFX(2, "canivore"), 
                         new SwerveIOTalonFX(3, "canivore")
                     );
-                    arm = new Arm(new ArmIOTalonFX());
-                    intake = new Intake(new IntakeIOTalonFX());
-                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
-                    shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
-                    indexer = new Indexer(new IndexerIOTalonFX());
+                    arm = new Arm(new ArmIOSimV1());
+                    intake = new Intake(new IntakeIOSim());
+                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
+                    shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
+                    indexer = new Indexer(new IndexerIOSim());
                     leds = new LED(new LEDIOSim(127));
-                    //vision
+                    vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
                     break;
                 case ROBOT_2023_HEAVYMETAL:
                     drive = new Drive(

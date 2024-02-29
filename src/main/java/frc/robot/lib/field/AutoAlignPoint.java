@@ -11,7 +11,7 @@ public class AutoAlignPoint {
     public enum Points {
         SPEAKER_FRONT_CLOSE(new AutoAlignPoint(new Pose2d(), new Pose2d(1.331, 5.561, Rotation2d.fromRotations(0.0)), 2.0)),
         SPEAKER_FRONT_PODIUM(new AutoAlignPoint(new Pose2d(), new Pose2d(2.849, 4.565, Rotation2d.fromRotations(-0.052)), 2.0)),
-        AMP_SCORING(new AutoAlignPoint(new Pose2d(), new Pose2d(1.901, 7.740, Rotation2d.fromRotations(-0.25)), 2.0)),
+        AMP_SCORING(new AutoAlignPoint(new Pose2d(), new Pose2d(1.901, 7.440, Rotation2d.fromRotations(-0.25)), 2.0)), // 7.740
         SOURCE_LEFT_INTAKE(new AutoAlignPoint(new Pose2d(), new Pose2d(15.984, 1.263, Rotation2d.fromRotations(0.336)), 4.0)),
         SOURCE_RIGHT_INTAKE(new AutoAlignPoint(new Pose2d(), new Pose2d(14.993, 0.641, Rotation2d.fromRotations(0.336)), 4.0)),
         STAGE_LEFT_CLIMB(new AutoAlignPoint(new Pose2d(), new Pose2d(0, 0, Rotation2d.fromRotations(0)), 2.0)),

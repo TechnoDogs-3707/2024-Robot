@@ -28,7 +28,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    private static final RobotType robot = RobotType.ROBOT_2024_HARD_ROCK;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -248,7 +248,7 @@ public final class Constants {
 
     public static final double kSnapSwerveHeadingKp = 0.05;
     public static final double kSnapSwerveHeadingKi = 0.0;
-    public static final double kSnapSwerveHeadingKd = 0.0075;
+    public static final double kSnapSwerveHeadingKd = 0.02;
 
     public static final double kMaintainSwerveHeadingKpHighVelocity = 0.0125; //0.0225
     public static final double kMaintainSwerveHeadingKiHighVelocity = 0.0;
@@ -481,5 +481,5 @@ public final class Constants {
         }
     }
 
-    public static final double kLEDClosenessDeadbandMeters = 0.06;
+    public static final double kLEDClosenessDeadbandMeters = 0.03;
 }

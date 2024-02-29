@@ -35,20 +35,19 @@ public class LocalizerIOLL3 implements LocalizerIO {
         // use the assumption that recent NT data means that limelight is connected
         double lastNTTimestampSeconds = kLLLatencySub.getAtomic().timestamp / 1_000_000.0;
         double NTLatencySeconds = Timer.getFPGATimestamp() - lastNTTimestampSeconds;
-        inputs.visionConnected = !(NTLatencySeconds >= kNetworkTablesLatencyThreshold);
+        // inputs.visionConnected = !(NTLatencySeconds >= kNetworkTablesLatencyThreshold);
+        inputs.visionConnected = true;
 
         if (inputs.visionConnected) {
             Results results = LimelightHelpers.getLatestResults("limelight").targetingResults;
             var botpose = results.botpose;
 
-            boolean flipToRed = DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);
-
-            inputs.position = flipToRed ? results.botpose_wpired : results.botpose_wpiblue;
+            inputs.position = results.botpose_wpiblue;
             inputs.stddevs = getStdDevs(results).getData();
 
             inputs.targetsVisible = results.targets_Fiducials.length;
 
-            inputs.lastUpdateTimestamp = Timer.getFPGATimestamp() - (botpose[6]/1000.0) - results.latency_jsonParse;
+            inputs.lastUpdateTimestamp = Timer.getFPGATimestamp();// - results.latency_capture/1000.0 - results.latency_pipeline/1000.0 - results.latency_jsonParse/1000.0;
 
             inputs.poseValid = results.valid;
         } else {
