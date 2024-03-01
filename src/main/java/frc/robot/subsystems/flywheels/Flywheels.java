@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooterFlywheels;
+package frc.robot.subsystems.flywheels;
 
 import java.util.function.Supplier;
 
@@ -10,21 +10,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsSystemState;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
+import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsSystemState;
+import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsWantedAction;
 
-public class ShooterFlywheels extends SubsystemBase{
-    private ShooterFlywheelsIO mIO;
-    private ShooterFlywheelsIOInputsAutoLogged mInputs;
+public class Flywheels extends SubsystemBase{
+    private FlywheelsIO mIO;
+    private FlywheelsIOInputsAutoLogged mInputs;
 
     private double mSetpointSpeedLeft = 60.0;
     private double mSetpointSpeedRight = 100.0;
-    private ShooterFlywheelsStateMachine mStateMachine = new ShooterFlywheelsStateMachine();
+    private FlywheelsStateMachine mStateMachine = new FlywheelsStateMachine();
     private FlywheelsWantedAction mWantedAction = FlywheelsWantedAction.OFF;
 
-    public ShooterFlywheels(ShooterFlywheelsIO io) {
+    public Flywheels(FlywheelsIO io) {
         mIO = io;
-        mInputs = new ShooterFlywheelsIOInputsAutoLogged();
+        mInputs = new FlywheelsIOInputsAutoLogged();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ShooterFlywheels extends SubsystemBase{
 
         // update state machine
         mStateMachine.setWantedAction(mWantedAction);
-        ShooterFlywheelsState outputState = mStateMachine.update(mInputs.leftMotorSpeedRPS, mInputs.rightMotorSpeedRPS, mSetpointSpeedLeft, mSetpointSpeedRight);
+        FlywheelsState outputState = mStateMachine.update(mInputs.leftMotorSpeedRPS, mInputs.rightMotorSpeedRPS, mSetpointSpeedLeft, mSetpointSpeedRight);
 
         double finalSetpointLeft = mSetpointSpeedLeft;
         double finalSetpointRight = mSetpointSpeedRight;
@@ -110,7 +110,7 @@ public class ShooterFlywheels extends SubsystemBase{
         // mSetpointSpeedRight = setpointRPS;
     }
 
-    public ShooterFlywheelsStateMachine.FlywheelsSystemState getSystemState() {
+    public FlywheelsStateMachine.FlywheelsSystemState getSystemState() {
         return mStateMachine.getSystemState();
     }
 }

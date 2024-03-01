@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooterTilt;
+package frc.robot.subsystems.tilt;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -11,37 +11,38 @@ import frc.robot.Robot;
 import frc.robot.Constants.Mode;
 import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.util.Util;
+import frc.robot.subsystems.tilt.TiltIOInputsAutoLogged;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
 import java.util.function.Supplier;
 
-public class ShooterTilt extends SubsystemBase {
-    public enum ShooterTiltGoalState {
-        STOW(new ShooterTiltState(0.01, false, false)),
-        CLOSE(new ShooterTiltState(0.10, false, true)),
-        PODIUM(new ShooterTiltState(0.055, false, true)),
-        AUTO_AIM(new ShooterTiltState(0.03, true, true));
+public class Tilt extends SubsystemBase {
+    public enum TiltGoalState {
+        STOW(new TiltState(0.01, false, false)),
+        CLOSE(new TiltState(0.10, false, true)),
+        PODIUM(new TiltState(0.055, false, true)),
+        AUTO_AIM(new TiltState(0.03, true, true));
 
-        public ShooterTiltState state;
+        public TiltState state;
 
-        ShooterTiltGoalState(ShooterTiltState state) {
+        TiltGoalState(TiltState state) {
             this.state = state;
         }
     } 
 
-    private ShooterTiltIO mIO;
-    private ShooterTiltIOInputsAutoLogged mInputs;
+    private TiltIO mIO;
+    private TiltIOInputsAutoLogged mInputs;
 
-    private ShooterTiltGoalState mGoalState = ShooterTiltGoalState.STOW;
+    private TiltGoalState mGoalState = TiltGoalState.STOW;
     private boolean mWithinTolerance = false;
 
     private final LoggedTunableNumber kFeedforwardConstant = new LoggedTunableNumber("Tilt/Feedforward", kG);
     private double feedforward = kG;
 
-    public ShooterTilt(ShooterTiltIO io) {
+    public Tilt(TiltIO io) {
         mIO = io;
-        mInputs = new ShooterTiltIOInputsAutoLogged();
+        mInputs = new TiltIOInputsAutoLogged();
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ShooterTilt extends SubsystemBase {
         double tiltFeedforward = getTiltFeedforward(tiltAngle);
 
         // cache goal state and record its values
-        ShooterTiltGoalState goal = mGoalState;
+        TiltGoalState goal = mGoalState;
         Logger.recordOutput("ShooterTilt/GoalState/BasePosition", goal.state.defaultPosition);
         Logger.recordOutput("ShooterTilt/GoalState/AutoAim", goal.state.autoAim);
         Logger.recordOutput("ShooterTilt/GoalState/StrictTolerance", goal.state.strictPositionTolerance);
@@ -93,18 +94,18 @@ public class ShooterTilt extends SubsystemBase {
         return angle.plus(Rotation2d.fromDegrees(20.8)).getCos() * feedforward; //TODO: set feedforward
     }
 
-    public void setGoalState(ShooterTiltGoalState goalState) {
+    public void setGoalState(TiltGoalState goalState) {
         mGoalState = goalState;
         // assume that we are not within tolerance of the new target in the case that withinTolerance() is called before
         // the next run of periodic() (i.e. A command changes the goal state, then checks if the tilt has moved.)
         mWithinTolerance = false;
     }
 
-    public Command setGoalCommand(ShooterTiltGoalState goalState) {
+    public Command setGoalCommand(TiltGoalState goalState) {
         return setGoalCommand(() -> goalState);
     }
 
-    public Command setGoalCommand(Supplier<ShooterTiltGoalState> goalState) {
+    public Command setGoalCommand(Supplier<TiltGoalState> goalState) {
         return runOnce(() -> setGoalState(goalState.get())).andThen(
             Commands.waitUntil(this::withinTolerance)
         );
@@ -114,7 +115,7 @@ public class ShooterTilt extends SubsystemBase {
         return mWithinTolerance;
     }
 
-    public ShooterTiltGoalState getGoalState() {
+    public TiltGoalState getGoalState() {
         return mGoalState;
     }
 }

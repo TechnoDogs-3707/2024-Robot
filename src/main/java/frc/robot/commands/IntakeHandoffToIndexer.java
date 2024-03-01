@@ -5,17 +5,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Arm.GoalState;
+import frc.robot.subsystems.flywheels.Flywheels;
+import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsWantedAction;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeStateMachine.IntakeWantedAction;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
 
 public class IntakeHandoffToIndexer extends SequentialCommandGroup {
-    public IntakeHandoffToIndexer(Arm arm, Intake intake, Indexer indexer, ShooterFlywheels flywheels, ObjectiveTracker objective) {
+    public IntakeHandoffToIndexer(Arm arm, Intake intake, Indexer indexer, Flywheels flywheels, ObjectiveTracker objective) {
         addCommands(
             arm.setGoalCommand(GoalState.HANDOFF)
             .alongWith(

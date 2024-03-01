@@ -57,6 +57,11 @@ import frc.robot.subsystems.drive.GyroNavXIO;
 import frc.robot.subsystems.drive.GyroPigeonIO;
 import frc.robot.subsystems.drive.SimSwerveIO;
 import frc.robot.subsystems.drive.SwerveModuleIO;
+import frc.robot.subsystems.flywheels.Flywheels;
+import frc.robot.subsystems.flywheels.FlywheelsIO;
+import frc.robot.subsystems.flywheels.FlywheelsIOSim;
+import frc.robot.subsystems.flywheels.FlywheelsIOTalonFX;
+import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsWantedAction;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOSim;
@@ -76,23 +81,18 @@ import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
 import frc.robot.subsystems.localizer.LocalizerIOLL3;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOTalonFX;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOSim;
-import frc.robot.subsystems.shooterTilt.ShooterTilt;
-import frc.robot.subsystems.shooterTilt.ShooterTiltIO;
-import frc.robot.subsystems.shooterTilt.ShooterTiltIOSim;
-import frc.robot.subsystems.shooterTilt.ShooterTiltIOTalonFX;
-import frc.robot.subsystems.shooterTilt.ShooterTilt.ShooterTiltGoalState;
+import frc.robot.subsystems.tilt.Tilt;
+import frc.robot.subsystems.tilt.TiltIO;
+import frc.robot.subsystems.tilt.TiltIOSim;
+import frc.robot.subsystems.tilt.TiltIOTalonFX;
+import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class RobotContainer {
     private Drive drive;
     private Arm arm;
     private Intake intake;
-    private ShooterFlywheels shooterFlywheels;
-    private ShooterTilt shooterTilt;
+    private Flywheels flywheels;
+    private Tilt tilt;
     private Indexer indexer;
     private LED leds;
     private Localizer vision;
@@ -172,8 +172,8 @@ public class RobotContainer {
                     );
                     arm = new Arm(new ArmIOSimV1());
                     intake = new Intake(new IntakeIOSim());
-                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
-                    shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
+                    flywheels = new Flywheels(new FlywheelsIOTalonFX());
+                    tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
                     //vision
@@ -228,8 +228,8 @@ public class RobotContainer {
                     arm = new Arm(new ArmIOSimV1());
                     intake = new Intake(new IntakeIOSim());
                     indexer = new Indexer(new IndexerIOSim());
-                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
-                    shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
+                    flywheels = new Flywheels(new FlywheelsIOSim());
+                    tilt = new Tilt(new TiltIOSim());
                     leds = new LED(new LEDIOSim(127));
                     break;
                 default:
@@ -263,14 +263,14 @@ public class RobotContainer {
             });
         }
 
-        if (shooterFlywheels == null) {
-            shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIO() {
+        if (flywheels == null) {
+            flywheels = new Flywheels(new FlywheelsIO() {
                 
             });
         }
 
-        if (shooterTilt == null) {
-            shooterTilt = new ShooterTilt(new ShooterTiltIO() {
+        if (tilt == null) {
+            tilt = new Tilt(new TiltIO() {
                 
             });
         }
@@ -304,10 +304,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("Indexer Set Intake", indexer.setActionCommand(IndexerWantedAction.INTAKE));
         NamedCommands.registerCommand("Indexer Set Score", indexer.setActionCommand(IndexerWantedAction.SCORE));
         NamedCommands.registerCommand("Indexer Set Off", indexer.setActionCommand(IndexerWantedAction.OFF));
-        NamedCommands.registerCommand("Flywheels Set Shoot", shooterFlywheels.setActionCommand(FlywheelsWantedAction.SHOOT));
-        NamedCommands.registerCommand("Flywheels Set Off", shooterFlywheels.setActionCommand(FlywheelsWantedAction.OFF));
-        NamedCommands.registerCommand("Tilt Set Close", shooterTilt.setGoalCommand(ShooterTiltGoalState.CLOSE));
-        NamedCommands.registerCommand("Tilt Set Stow", shooterTilt.setGoalCommand(ShooterTiltGoalState.STOW));
+        NamedCommands.registerCommand("Flywheels Set Shoot", flywheels.setActionCommand(FlywheelsWantedAction.SHOOT));
+        NamedCommands.registerCommand("Flywheels Set Off", flywheels.setActionCommand(FlywheelsWantedAction.OFF));
+        NamedCommands.registerCommand("Tilt Set Close", tilt.setGoalCommand(TiltGoalState.CLOSE));
+        NamedCommands.registerCommand("Tilt Set Stow", tilt.setGoalCommand(TiltGoalState.STOW));
         NamedCommands.registerCommand("Intake Set Run", intake.setActionCommand(IntakeWantedAction.INTAKE_CONSTANT));
         NamedCommands.registerCommand("Intake Set Off", intake.setActionCommand(IntakeWantedAction.OFF));
         NamedCommands.registerCommand("Deploy Intake", arm.setGoalCommand(GoalState.INTAKE_GROUND));
@@ -316,7 +316,7 @@ public class RobotContainer {
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());
 
-        dashboard = new Dashboard(robot, this, drive, arm, intake, shooterFlywheels, shooterTilt, indexer, leds, vision, objective, controllerFeedback);
+        dashboard = new Dashboard(robot, this, drive, arm, intake, flywheels, tilt, indexer, leds, vision, objective, controllerFeedback);
         dashboard.resetWidgets();
 
         configureBindings();
@@ -346,7 +346,7 @@ public class RobotContainer {
             )
         );
 
-        shooterFlywheels.setDefaultCommand(new ShooterPrepare(indexer, shooterFlywheels));
+        flywheels.setDefaultCommand(new ShooterPrepare(indexer, flywheels));
         // shooterFlywheels.setDefaultCommand(new ShooterAutomaticCommand(shooterFlywheels, indexer));
     }
 
@@ -367,16 +367,16 @@ public class RobotContainer {
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
         //Operator button bindings
-        operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, shooterFlywheels, objective));
+        operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
         operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
-        operatorSubwoofer.onTrue(new AutoScoreSpeakerSubwoofer(drive, indexer, shooterTilt, shooterFlywheels, objective, operatorOverrideScore::getAsBoolean));
-        operatorPodium.toggleOnTrue(new AutoScoreSpeakerPodium(drive, indexer, shooterTilt, shooterFlywheels, objective, operatorOverrideScore::getAsBoolean));
+        operatorSubwoofer.onTrue(new AutoScoreSpeakerSubwoofer(drive, indexer, tilt, flywheels, objective, operatorOverrideScore::getAsBoolean));
+        operatorPodium.toggleOnTrue(new AutoScoreSpeakerPodium(drive, indexer, tilt, flywheels, objective, operatorOverrideScore::getAsBoolean));
         operatorJamClear.whileTrue(new IndexerJamClearing(arm, intake, indexer));
         operatorStowArm.onTrue(new ArmStow(arm, intake));
-        operatorResetIndexer.onTrue(new IndexerReset(indexer, shooterTilt, shooterFlywheels));
+        operatorResetIndexer.onTrue(new IndexerReset(indexer, tilt, flywheels));
         operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore::getAsBoolean));
-        operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, shooterFlywheels, objective));
+        operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, flywheels, objective));
         
         // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));

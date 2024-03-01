@@ -1,23 +1,23 @@
-package frc.robot.subsystems.shooterTilt;
+package frc.robot.subsystems.tilt;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
 import frc.robot.lib.util.Util;
 
-public class ShooterTiltState {
+public class TiltState {
     public double defaultPosition = kHomePosition;
     public boolean autoAim = false;
     public boolean strictPositionTolerance = false;
 
-    public ShooterTiltState(double defaultPosition, boolean autoAim, boolean strictPositionTolerance) {
+    public TiltState(double defaultPosition, boolean autoAim, boolean strictPositionTolerance) {
         this.defaultPosition = defaultPosition;
         this.autoAim = autoAim;
         this.strictPositionTolerance = strictPositionTolerance;
     }
 
-    public ShooterTiltState() {}
+    public TiltState() {}
 
-    public boolean isInRange(ShooterTiltState other) {
+    public boolean isInRange(TiltState other) {
         return 
             Util.epsilonEquals(
                 defaultPosition, 

@@ -1,11 +1,11 @@
-package frc.robot.subsystems.shooterFlywheels;
+package frc.robot.subsystems.flywheels;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.lib.util.Util;
 
 import static frc.robot.Constants.ShooterFlywheels.*;
 
-public class ShooterFlywheelsStateMachine {
+public class FlywheelsStateMachine {
     public enum FlywheelsWantedAction {
         /**
          * Shooting motors are off, and in brake mode to prevent the indexer
@@ -70,7 +70,7 @@ public class ShooterFlywheelsStateMachine {
         return mSystemState;
     }
 
-    protected ShooterFlywheelsState update(double leftMotorRPS, double rightMotorRPS, double leftSetpointRPS, double rightSetpointRPS) {
+    protected FlywheelsState update(double leftMotorRPS, double rightMotorRPS, double leftSetpointRPS, double rightSetpointRPS) {
         double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
 
         boolean shouldEnableFlywheel = false;
@@ -131,6 +131,6 @@ public class ShooterFlywheelsStateMachine {
                 break;
         }
 
-        return new ShooterFlywheelsState(shouldEnableFlywheel, shouldSlowIdle, shouldEnableBrakeMode);
+        return new FlywheelsState(shouldEnableFlywheel, shouldSlowIdle, shouldEnableBrakeMode);
     }
 }

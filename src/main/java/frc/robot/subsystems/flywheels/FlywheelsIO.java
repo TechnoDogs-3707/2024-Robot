@@ -1,10 +1,10 @@
-package frc.robot.subsystems.shooterFlywheels;
+package frc.robot.subsystems.flywheels;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ShooterFlywheelsIO {
+public interface FlywheelsIO {
     @AutoLog
-    public static class ShooterFlywheelsIOInputs {
+    public static class FlywheelsIOInputs {
         public double leftMotorSpeedRPS = 0.0;
         public double leftMotorSuppliedCurrentAmps = 0.0;
         public double leftMotorTempCelsius = 0.0;
@@ -14,7 +14,7 @@ public interface ShooterFlywheelsIO {
         public double rightMotorTempCelsius = 0.0;
     }
 
-    public default void updateInputs(ShooterFlywheelsIOInputs inputs) {}
+    public default void updateInputs(FlywheelsIOInputs inputs) {}
 
     public default void updateOutputs() {}
 

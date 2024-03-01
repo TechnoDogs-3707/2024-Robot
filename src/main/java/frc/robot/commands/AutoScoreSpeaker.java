@@ -8,18 +8,18 @@ import frc.robot.RobotStateTracker;
 import frc.robot.lib.drive.AutoAlignPointSelector;
 import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.flywheels.Flywheels;
+import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsWantedAction;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.AutoAlignScoreState;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
-import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
-import frc.robot.subsystems.shooterTilt.ShooterTilt;
-import frc.robot.subsystems.shooterTilt.ShooterTilt.ShooterTiltGoalState;
+import frc.robot.subsystems.tilt.Tilt;
+import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class AutoScoreSpeaker extends SequentialCommandGroup {
-    public AutoScoreSpeaker(Drive drive, Indexer indexer, ShooterTilt tilt, ShooterFlywheels flywheels, ObjectiveTracker objective, Supplier<ShooterTiltGoalState> tiltGoal, Supplier<Boolean> scoreOverride) {
+    public AutoScoreSpeaker(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, Supplier<TiltGoalState> tiltGoal, Supplier<Boolean> scoreOverride) {
         addCommands(
             Commands.waitUntil(drive::autoAlignAtTarget)
             .raceWith(Commands.waitUntil(scoreOverride::get))
@@ -37,7 +37,7 @@ public class AutoScoreSpeaker extends SequentialCommandGroup {
             ).finallyDo(() -> {
                 objective.setMasterObjective(MasterObjective.NONE);
                 indexer.setActionCommand(IndexerWantedAction.OFF);
-                tilt.setGoalState(ShooterTiltGoalState.STOW);
+                tilt.setGoalState(TiltGoalState.STOW);
                 flywheels.setWantedAction(FlywheelsWantedAction.OFF);
             })
         );

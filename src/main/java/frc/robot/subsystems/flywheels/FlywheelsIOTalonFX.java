@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooterFlywheels;
+package frc.robot.subsystems.flywheels;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -17,7 +17,7 @@ import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 import static frc.robot.Constants.ShooterFlywheels.*;
 import java.util.ArrayList;
 
-public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
+public class FlywheelsIOTalonFX implements FlywheelsIO {
     private final TalonFX mLeftMotor;
     private final TalonFX mRightMotor;
 
@@ -53,7 +53,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
 
     private boolean mSpinDownMode = false;
 
-    public ShooterFlywheelsIOTalonFX() {
+    public FlywheelsIOTalonFX() {
         mLeftMotor = new TalonFX(kLeftMotorID, kMotorBus);
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
@@ -105,7 +105,7 @@ public class ShooterFlywheelsIOTalonFX implements ShooterFlywheelsIO {
     }
 
     @Override
-    public void updateInputs(ShooterFlywheelsIOInputs inputs) {
+    public void updateInputs(FlywheelsIOInputs inputs) {
         mStatusSignals.forEach((s) -> s.refresh());
 
         inputs.leftMotorSpeedRPS = mLeftMotorSpeed.getValue();

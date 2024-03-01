@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooterTilt;
+package frc.robot.subsystems.tilt;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
-public class ShooterTiltIOTalonFX implements ShooterTiltIO {
+public class TiltIOTalonFX implements TiltIO {
     private final TalonFX mMotor;
 
     private final TalonFXConfiguration mConfig;
@@ -47,7 +47,7 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
     private final LoggedTunableNumber mTunableMagicAccel = new LoggedTunableNumber("Tilt/MagicAcceleration", kMagicAccel);
     private final LoggedTunableNumber mTunableMagicJerk = new LoggedTunableNumber("Tilt/MagicVelocity", kMagicJerk);
     
-    public ShooterTiltIOTalonFX() {
+    public TiltIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
         mConfig = TalonFXConfigHelper.getBaseConfig();
@@ -94,7 +94,7 @@ public class ShooterTiltIOTalonFX implements ShooterTiltIO {
     }
 
     @Override
-    public void updateInputs(ShooterTiltIOInputs inputs) {
+    public void updateInputs(TiltIOInputs inputs) {
         mStatusSignals.forEach((s) -> s.refresh());
 
         inputs.tiltForwardSoftLimit = mMotorForwardSoftLimit.getValue();

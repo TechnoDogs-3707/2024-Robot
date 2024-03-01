@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.shooterFlywheels;
+package frc.robot.subsystems.flywheels;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants;
 
 /** Add your docs here. */
-public class ShooterFlywheelsIOSim implements ShooterFlywheelsIO {
+public class FlywheelsIOSim implements FlywheelsIO {
     private final FlywheelSim mLeftFlywheelSim;
     private final FlywheelSim mRightFlywheelSim;
 
@@ -21,7 +21,7 @@ public class ShooterFlywheelsIOSim implements ShooterFlywheelsIO {
 
     private boolean mSpinDownMode = false;
 
-    public ShooterFlywheelsIOSim() {
+    public FlywheelsIOSim() {
         mLeftFlywheelSim = new FlywheelSim(DCMotor.getFalcon500(1), 1, 0.0025);
         mRightFlywheelSim = new FlywheelSim(DCMotor.getFalcon500(1), 1, 0.0025);
 
@@ -29,7 +29,7 @@ public class ShooterFlywheelsIOSim implements ShooterFlywheelsIO {
     }
 
     @Override
-    public void updateInputs(ShooterFlywheelsIOInputs inputs) {
+    public void updateInputs(FlywheelsIOInputs inputs) {
         if (mSpinDownMode) {
             mLeftFlywheelSim.setInputVoltage(0);
             mRightFlywheelSim.setInputVoltage(0);
