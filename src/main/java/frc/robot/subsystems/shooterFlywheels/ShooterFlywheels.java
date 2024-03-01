@@ -17,8 +17,8 @@ public class ShooterFlywheels extends SubsystemBase{
     private ShooterFlywheelsIO mIO;
     private ShooterFlywheelsIOInputsAutoLogged mInputs;
 
-    private double mSetpointSpeedLeft = 0.0;
-    private double mSetpointSpeedRight = 0.0;
+    private double mSetpointSpeedLeft = 60.0;
+    private double mSetpointSpeedRight = 100.0;
     private ShooterFlywheelsStateMachine mStateMachine = new ShooterFlywheelsStateMachine();
     private FlywheelsWantedAction mWantedAction = FlywheelsWantedAction.OFF;
 
@@ -86,6 +86,14 @@ public class ShooterFlywheels extends SubsystemBase{
         return runOnce(() -> setWantedAction(action.get()));
     }
 
+    public Command setActionPersistCommand(FlywheelsWantedAction action) {
+        return setActionPersistCommand(() -> action);
+    }
+
+    public Command setActionPersistCommand(Supplier<FlywheelsWantedAction> action) {
+        return runOnce(() -> setWantedAction(action.get())).andThen(Commands.idle());
+    }
+
     public Command waitUntilStateCommand(FlywheelsSystemState state) {
         return waitUntilStateCommand(() -> state);
     }
@@ -95,11 +103,11 @@ public class ShooterFlywheels extends SubsystemBase{
     }
 
     public void setSetpointSpeedLeft(double setpointRPS) {
-        mSetpointSpeedLeft = setpointRPS;
+        // mSetpointSpeedLeft = setpointRPS;
     }
 
     public void setSetpointSpeedRight(double setpointRPS) {
-        mSetpointSpeedRight = setpointRPS;
+        // mSetpointSpeedRight = setpointRPS;
     }
 
     public ShooterFlywheelsStateMachine.FlywheelsSystemState getSystemState() {

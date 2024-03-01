@@ -64,6 +64,14 @@ public class Indexer extends SubsystemBase{
         return runOnce(() -> setWantedAction(wantedAction.get()));
     }
 
+    public Command setActionPersistCommand(IndexerWantedAction wantedAction) {
+        return setActionPersistCommand(() -> wantedAction);
+    }
+
+    public Command setActionPersistCommand(Supplier<IndexerWantedAction> wantedAction) {
+        return runOnce(() -> setWantedAction(wantedAction.get())).andThen(Commands.idle());
+    }
+
     public Command waitUntilNoteCommand() {
         return Commands.waitUntil(this::hasNote);
     }

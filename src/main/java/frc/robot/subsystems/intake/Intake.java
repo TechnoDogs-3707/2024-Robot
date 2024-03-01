@@ -58,6 +58,14 @@ public class Intake extends SubsystemBase {
         return runOnce(() -> setWantedAction(wantedAction.get()));
     }
 
+    public Command setActionPersistCommand(IntakeWantedAction wantedAction) {
+        return setActionPersistCommand(() -> wantedAction);
+    }
+
+    public Command setActionPersistCommand(Supplier<IntakeWantedAction> wantedAction) {
+        return runOnce(() -> setWantedAction(wantedAction.get())).andThen(Commands.idle());
+    }
+
     public Command waitUntilNoteCommand() {
         return Commands.waitUntil(this::hasNote);
     }

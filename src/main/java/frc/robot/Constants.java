@@ -391,7 +391,7 @@ public final class Constants {
             public static final double kLiberalAllowableError = 0.05;
             public static final double kConservativeAllowableError = 0.01;
 
-            public static final double kHomePosition = 0.0;
+            public static final double kHomePosition = -0.4;
             public static final double kMinTargetPosition = 0.0;
             public static final double kMaxTargetPosition = 0.0;
 

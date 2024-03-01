@@ -48,6 +48,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
 import frc.robot.subsystems.arm.ArmIOTalonFX;
+import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveIOTalonFX;
@@ -60,10 +61,12 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOSim;
 import frc.robot.subsystems.indexer.IndexerIOTalonFX;
+import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
+import frc.robot.subsystems.intake.IntakeStateMachine.IntakeWantedAction;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
@@ -76,11 +79,13 @@ import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheels;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIO;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOTalonFX;
+import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsStateMachine.FlywheelsWantedAction;
 import frc.robot.subsystems.shooterFlywheels.ShooterFlywheelsIOSim;
 import frc.robot.subsystems.shooterTilt.ShooterTilt;
 import frc.robot.subsystems.shooterTilt.ShooterTiltIO;
 import frc.robot.subsystems.shooterTilt.ShooterTiltIOSim;
 import frc.robot.subsystems.shooterTilt.ShooterTiltIOTalonFX;
+import frc.robot.subsystems.shooterTilt.ShooterTilt.ShooterTiltGoalState;
 
 public class RobotContainer {
     private Drive drive;
@@ -157,22 +162,6 @@ public class RobotContainer {
     public RobotContainer(Robot robot) {
         if (Constants.getMode() != Mode.REPLAY) {
             switch (Constants.getRobot()) {
-                // case ROBOT_2024_HARD_ROCK:
-                //     drive = new Drive(
-                //         new GyroPigeonIO(9, "canivore"), 
-                //         new SwerveIOTalonFX(0, "canivore"), 
-                //         new SwerveIOTalonFX(1, "canivore"), 
-                //         new SwerveIOTalonFX(2, "canivore"), 
-                //         new SwerveIOTalonFX(3, "canivore")
-                //     );
-                //     arm = new Arm(new ArmIOTalonFX());
-                //     intake = new Intake(new IntakeIOTalonFX());
-                //     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
-                //     shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
-                //     indexer = new Indexer(new IndexerIOTalonFX());
-                //     leds = new LED(new LEDIOSim(127));
-                //     //vision
-                //     break;
                 case ROBOT_2024_HARD_ROCK:
                     drive = new Drive(
                         new GyroPigeonIO(9, "canivore"), 
@@ -183,12 +172,28 @@ public class RobotContainer {
                     );
                     arm = new Arm(new ArmIOSimV1());
                     intake = new Intake(new IntakeIOSim());
-                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
-                    shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
-                    indexer = new Indexer(new IndexerIOSim());
+                    shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOTalonFX());
+                    shooterTilt = new ShooterTilt(new ShooterTiltIOTalonFX());
+                    indexer = new Indexer(new IndexerIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
-                    vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
+                    //vision
                     break;
+                // case ROBOT_2024_HARD_ROCK:
+                //     drive = new Drive(
+                //         new GyroPigeonIO(9, "canivore"), 
+                //         new SwerveIOTalonFX(0, "canivore"), 
+                //         new SwerveIOTalonFX(1, "canivore"), 
+                //         new SwerveIOTalonFX(2, "canivore"), 
+                //         new SwerveIOTalonFX(3, "canivore")
+                //     );
+                //     arm = new Arm(new ArmIOSimV1());
+                //     intake = new Intake(new IntakeIOSim());
+                //     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
+                //     shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
+                //     indexer = new Indexer(new IndexerIOSim());
+                //     leds = new LED(new LEDIOSim(127));
+                //     vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
+                //     break;
                 case ROBOT_2023_HEAVYMETAL:
                     drive = new Drive(
                             // new GyroNavXIO(SPI.Port.kMXP),
@@ -296,8 +301,17 @@ public class RobotContainer {
 
         // Register Commands with PathPlanner
         NamedCommands.registerCommand("Drive Set X Mode", new AutonXModeCommand(drive));
-        NamedCommands.registerCommand("Enable Align Override", ArmCommandFactory.setAlignStateOverride(true, drive));
-        NamedCommands.registerCommand("Disable Align Override", ArmCommandFactory.setAlignStateOverride(false, drive));
+        NamedCommands.registerCommand("Indexer Set Intake", indexer.setActionCommand(IndexerWantedAction.INTAKE));
+        NamedCommands.registerCommand("Indexer Set Score", indexer.setActionCommand(IndexerWantedAction.SCORE));
+        NamedCommands.registerCommand("Indexer Set Off", indexer.setActionCommand(IndexerWantedAction.OFF));
+        NamedCommands.registerCommand("Flywheels Set Shoot", shooterFlywheels.setActionCommand(FlywheelsWantedAction.SHOOT));
+        NamedCommands.registerCommand("Flywheels Set Off", shooterFlywheels.setActionCommand(FlywheelsWantedAction.OFF));
+        NamedCommands.registerCommand("Tilt Set Close", shooterTilt.setGoalCommand(ShooterTiltGoalState.CLOSE));
+        NamedCommands.registerCommand("Tilt Set Stow", shooterTilt.setGoalCommand(ShooterTiltGoalState.STOW));
+        NamedCommands.registerCommand("Intake Set Run", intake.setActionCommand(IntakeWantedAction.INTAKE_CONSTANT));
+        NamedCommands.registerCommand("Intake Set Off", intake.setActionCommand(IntakeWantedAction.OFF));
+        NamedCommands.registerCommand("Deploy Intake", arm.setGoalCommand(GoalState.INTAKE_GROUND));
+        NamedCommands.registerCommand("Stow Intake", arm.setGoalCommand(GoalState.STOW));
         drive.setupPathPlanner();
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());

@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -114,6 +115,8 @@ public class ArmIOTalonFX implements ArmIO {
         mWristMotorMaster = new TalonFX(J2.kMasterMotorID, J2.kMotorBus);
         
         mWristConfig = TalonFXConfigHelper.getBaseConfig();
+        mWristConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        mWristConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         
         mWristConfig.Slot0.kS = Constants.ArmSubsystem.J2.kS;
         mWristConfig.Slot0.kV = Constants.ArmSubsystem.J2.kV;

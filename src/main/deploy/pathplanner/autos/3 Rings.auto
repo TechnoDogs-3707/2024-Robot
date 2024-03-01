@@ -1,0 +1,237 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.395506739616394,
+      "y": 5.543531894683838
+    },
+    "rotation": -5.729992716633824e-36
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Close"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.75
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Simple 3 Ring Center.1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Off"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Simple 3 Ring Center.2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Off"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Simple 3 Ring Center.3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Off"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Simple 3 Ring Center.4"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": true
+}

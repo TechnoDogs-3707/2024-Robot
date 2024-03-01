@@ -34,8 +34,8 @@ import frc.robot.subsystems.leds.LED;
 public class Arm extends SubsystemBase {
 
     public enum GoalState {
-        STOW(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
-        INTAKE_GROUND(ArmState.withConservativeConstraints(0, 0.4, ArmSend.LOW)),
+        STOW(ArmState.withConservativeConstraints(0, -0.4, ArmSend.LOW)),
+        INTAKE_GROUND(ArmState.withConservativeConstraints(0, 0.5, ArmSend.LOW)),
         INTAKE_SOURCE(ArmState.withConservativeConstraints(0.24, 0, ArmSend.LOW)),
         SCORE_AMP(ArmState.withConservativeConstraints(0.27, 0.25, ArmSend.LOW)),
         SCORE_SPEAKER_SUBWOOFER(ArmState.withConservativeConstraints(0, 0, ArmSend.LOW)),
@@ -123,7 +123,7 @@ public class Arm extends SubsystemBase {
         Rotation2d wristAngle = Rotation2d.fromRotations(mArmInputs.wristRotations);
 
         mSensorMechJ1.setAngle(tiltAngle);
-        mSensorMechJ2.setAngle(wristAngle.plus(tiltAngle).unaryMinus().minus(Rotation2d.fromDegrees(235)));
+        mSensorMechJ2.setAngle(wristAngle);
 
         mMeasuredState = new ArmState(mArmInputs.tiltRotations, mArmInputs.wristRotations, mCommandedState.send);
 
@@ -138,7 +138,7 @@ public class Arm extends SubsystemBase {
         Logger.recordOutput("Arm/CommandedState/Tolerance/J2", mCommandedState.j2Tolerance);
 
         mTargetMechJ1.setAngle(Rotation2d.fromRotations(mCommandedState.j1));
-        mTargetMechJ2.setAngle(Rotation2d.fromRotations(mCommandedState.j2).plus(Rotation2d.fromRotations(mCommandedState.j1)).unaryMinus().minus(Rotation2d.fromDegrees(235)));
+        mTargetMechJ2.setAngle(Rotation2d.fromRotations(mCommandedState.j2));
 
         Logger.recordOutput("Arm/MeasuredPositions", mSensorMech);
         Logger.recordOutput("Arm/TargetPositions", mTargetMech);

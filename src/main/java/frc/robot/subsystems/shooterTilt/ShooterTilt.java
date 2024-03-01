@@ -20,7 +20,7 @@ public class ShooterTilt extends SubsystemBase {
     public enum ShooterTiltGoalState {
         STOW(new ShooterTiltState(0.01, false, false)),
         CLOSE(new ShooterTiltState(0.10, false, true)),
-        PODIUM(new ShooterTiltState(0.05, false, true)),
+        PODIUM(new ShooterTiltState(0.055, false, true)),
         AUTO_AIM(new ShooterTiltState(0.03, true, true));
 
         public ShooterTiltState state;
