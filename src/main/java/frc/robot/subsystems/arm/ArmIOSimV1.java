@@ -24,11 +24,11 @@ public class ArmIOSimV1 implements ArmIO {
         kJ1Constraints = new Constraints(J1.kMagicVel, J1.kMagicAccel);
         kJ2Constraints = new Constraints(J2.kMagicVel, J2.kMagicAccel);
 
-        mJ1LastState = new State();
-        mJ2LastState = new State();
+        mJ1LastState = new State(J1.kHomePosition, 0);
+        mJ2LastState = new State(J2.kHomePosition, 0);
 
-        mJ1GoalState = new State();
-        mJ2GoalState = new State();
+        mJ1GoalState = new State(J1.kHomePosition, 0);
+        mJ2GoalState = new State(J2.kHomePosition, 0);
 
         mJ1Estimator = new TrapezoidProfile(kJ1Constraints);
         mJ2Estimator = new TrapezoidProfile(kJ2Constraints);

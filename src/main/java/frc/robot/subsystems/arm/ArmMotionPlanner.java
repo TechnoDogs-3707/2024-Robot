@@ -12,7 +12,7 @@ import static frc.robot.Constants.ArmSubsystem.*;
 
 public class ArmMotionPlanner {
     private static final double kMaxJ1ForFullJ2Travel = 0.05;
-    private static final double kMinJ2ForFullJ1Travel = 0.05;
+    private static final double kMaxJ2ForFullJ1Travel = 0.25;
     private static final double kMaxSafeJ1Position = 0.2;
     // private static final double kScoringWaitTime = 0.1; // how long to stay at scoring position
 
@@ -57,7 +57,7 @@ public class ArmMotionPlanner {
          * to tilt J2 to the minimum tilt for full J1 motion range, then continue.
          */
         if (desiredState.j1 > kMaxJ1ForFullJ2Travel && currentState.j1 < kMaxJ1ForFullJ2Travel) {
-            mIntermediateStateQueue.add(new ArmState(kMaxJ1ForFullJ2Travel, kMinJ2ForFullJ1Travel));
+            mIntermediateStateQueue.add(new ArmState(kMaxJ1ForFullJ2Travel, kMaxJ2ForFullJ1Travel));
         }
 
         /*

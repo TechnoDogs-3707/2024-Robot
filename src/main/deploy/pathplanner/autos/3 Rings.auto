@@ -5,7 +5,7 @@
       "x": 1.395506739616394,
       "y": 5.543531894683838
     },
-    "rotation": -5.729992716633824e-36
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -205,25 +205,6 @@
                 "type": "wait",
                 "data": {
                   "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Simple 3 Ring Center.4"
                 }
               }
             ]
