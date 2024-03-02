@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Dashboard;
 import frc.robot.Robot;
 import frc.robot.RobotStateTracker;
 import frc.robot.Constants.Mode;
@@ -38,11 +39,13 @@ import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.AutoAlignMotionPlanner;
+import frc.robot.lib.drive.NoteAlignMotionPlanner;
 import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
 import frc.robot.lib.field.Field;
 import frc.robot.subsystems.localizer.VisionPose;
+import frc.robot.lib.LimelightHelpers;
 
 /** Add your docs here. */
 public class Drive extends SubsystemBase {
@@ -57,6 +60,7 @@ public class Drive extends SubsystemBase {
         PATH_FOLLOWING("CL Path Following"),
         AUTO_ALIGN("CL Auto Align"),
         AUTO_ALIGN_Y_THETA("CL Auto Align Y Theta"),
+        AUTO_ALIGN_NOTE("CL Auto Align Note"),
         X_MODE("CL X Mode");
 
         public String title;
@@ -67,8 +71,10 @@ public class Drive extends SubsystemBase {
     }
 
     private DriveControlState mControlState = DriveControlState.VELOCITY_CONTROL;
+    private DriveControlState mLastControlState = DriveControlState.VELOCITY_CONTROL;
     private boolean mAllowDriveAssists = true;
     private AutoAlignMotionPlanner mAutoAlignPlanner = new AutoAlignMotionPlanner();
+    private NoteAlignMotionPlanner mNoteAlignPlanner = new NoteAlignMotionPlanner();
     private Pose2d mTargetPoint = new Pose2d();
     private KinematicLimits mKinematicLimits = Constants.kUncappedKinematicLimits;
 
@@ -164,6 +170,8 @@ public class Drive extends SubsystemBase {
         mGyroInputs = new GyroIOInputsAutoLogged();
         mModules = new SwerveModule[4];
 
+        mNoteAlignPlanner.setXTolerance(Rotation2d.fromDegrees(10).getRadians());
+
         mModules[kFrontLeftID] = new SwerveModule(frontLeftIO, kFrontLeftID);
         mModules[kFrontRightID] = new SwerveModule(frontRightIO, kFrontRightID);
         mModules[kRearLeftID] = new SwerveModule(rearLeftIO, kRearLeftID);
@@ -255,6 +263,11 @@ public class Drive extends SubsystemBase {
                     driveSetpointOverride = updateAutoAlign();
                     Logger.recordOutput("Drive/AutoAlign/LastPoseTarget", mTargetPoint);
                     break;
+                case AUTO_ALIGN_NOTE:
+                    setKinematicLimits(Constants.kUncappedKinematicLimits);
+                    Logger.recordOutput("Drive/AutoAlignNote/state", true);
+                    driveSetpointOverride = updateAutoAlignNote();
+                    break;
                 case X_MODE:
                     setKinematicLimits(Constants.kUncappedKinematicLimits);
                     Logger.recordOutput("Drive/AutoAlign/LastPoseTarget", new Pose2d());
@@ -262,6 +275,10 @@ public class Drive extends SubsystemBase {
                     Logger.recordOutput("Drive/AutoAlign/LastPoseTarget", new Pose2d());
                     break;
             }
+
+            Logger.recordOutput("Drive/OverridePresent", driveSetpointOverride.isPresent());
+
+
 
             if (driveSetpointOverride.isPresent() && mAllowDriveAssists) {
                 setSetpoint(driveSetpointOverride.get());
@@ -615,6 +632,46 @@ public class Drive extends SubsystemBase {
         } else {
             return Optional.empty();
         }
+    }
+
+    private Optional<ChassisSpeeds> updateAutoAlignNote() {
+        Logger.recordOutput("Drive/AutoAlignNote/HasRun", true);
+        if (mControlState != DriveControlState.AUTO_ALIGN_NOTE) {
+            return Optional.empty();
+        }
+
+        var noteOffsetX = LimelightHelpers.getTX("limelight-note");
+        var noteOffsetY = LimelightHelpers.getTY("limelight-note");
+        final double now = Timer.getFPGATimestamp();
+
+        ChassisSpeeds output = mNoteAlignPlanner.updateAlignNote(now, mSetpoint, noteOffsetX, noteOffsetY);
+
+        Logger.recordOutput("Drive/AutoAlignNote/NoteOffsetX", noteOffsetX);
+        Logger.recordOutput("Drive/AutoAlignNote/NoteOffsetY", noteOffsetY);
+        Logger.recordOutput("Drive/AutoAlignNote/DriveOutput", output);
+
+        if (output != null) {
+            return Optional.of(output);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public void setAutAlignNoteMode() {
+        mControlState = DriveControlState.AUTO_ALIGN_NOTE;
+    }
+
+    public void enableAutoAlignNoteMode() {
+
+        Logger.recordOutput("Drive/AutoAlignNote/enabled", true);
+
+        mLastControlState = mControlState;
+        mControlState = DriveControlState.AUTO_ALIGN_NOTE;
+    }
+
+    public void disableAutoAlignNoteMode() { 
+        Logger.recordOutput("Drive/AutoAlignNote/enabled", false);
+        mControlState = mLastControlState;
     }
 
     public boolean autoAlignAtTarget() {

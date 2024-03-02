@@ -28,7 +28,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    private static final RobotType robot = RobotType.ROBOT_2023_FLAPJACK;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -327,6 +327,9 @@ public final class Constants {
 
     public static final class VisionSubsystem {
         public static final String kCameraName = "cam1";
+
+        public static final String kAprilTagLimelightName = "limelight-note"; //TODO: Change to limelight-tag
+        // TODO: add constant for note detection limelight name also... 
         // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
         public static final Transform3d kRobotToCam =
                 new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));

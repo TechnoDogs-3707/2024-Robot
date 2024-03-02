@@ -33,4 +33,12 @@ public class DriveUtilityCommandFactory {
     public static final Command unFailDriveAssist(Drive drive) {
         return new InstantCommand(() -> drive.setDriveAssistFail(false), drive);
     }
+
+    public static final Command enableAutoAlignNote(Drive drive) {
+        return new InstantCommand(() -> drive.enableAutoAlignNoteMode());
+    }
+
+        public static final Command disableAutoAlignNote(Drive drive) {
+        return new InstantCommand(() -> drive.disableAutoAlignNoteMode());
+    }
 }

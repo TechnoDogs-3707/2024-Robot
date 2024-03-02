@@ -23,6 +23,7 @@ import frc.robot.commands.ArmCommandFactory;
 import frc.robot.commands.ArmSetGoalTillFinished;
 import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveAutoAlignCommand;
+import frc.robot.commands.AutoAlignNoteCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.XModeDriveCommand;
@@ -50,6 +51,7 @@ import frc.robot.subsystems.leds.LEDIOCANdle;
 import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
+import frc.robot.subsystems.localizer.LocalizerIOLL3;
 
 public class RobotContainer {
     private Drive drive;
@@ -71,6 +73,9 @@ public class RobotContainer {
     private final Trigger driverSnapClosestCardinal = driver.rightTrigger(0.2);
     private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
     private final Trigger driverTempDisableFieldOriented = driver.rightBumper();
+
+    // Testing autoAlignNote stuff
+    private final Trigger updateAutoAlignNote = driver.b();
 
     // OPERATOR CONTROLS
     private final CommandXboxController operator = new CommandXboxController(1);
@@ -136,7 +141,7 @@ public class RobotContainer {
                             new FalconSwerveIO(3, "canivore"));
                     // arm = new Arm(new ArmIOSimV1(), new GripperMiniNeoSimIO()); // simulate arm on chassis bot
                     // leds =
-                    // vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
+                    vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
                     break;
                 case ROBOT_SIMBOT:
                     drive = new Drive(
@@ -194,18 +199,18 @@ public class RobotContainer {
 
         // Register Commands with PathPlanner
         NamedCommands.registerCommand("Drive Set X Mode", new AutonXModeCommand(drive));
-        NamedCommands.registerCommand("Set Gamepiece Cube", ArmCommandFactory.setGamepieceCube(arm));
-        NamedCommands.registerCommand("Set Gamepiece Cone", ArmCommandFactory.setGamepieceCone(arm));
-        NamedCommands.registerCommand("Deploy Intake Ground", ArmCommandFactory.groundIntakeOpen(arm));
-        NamedCommands.registerCommand("Stow Intake", ArmCommandFactory.retract(arm));
-        // NamedCommands.registerCommand("AutoScore Cube High", ArmCommandFactory.autoScore(GoalState.SCORE_WAIT, GoalState.SCORE_CUBE_HIGH, arm, drive));
-        NamedCommands.registerCommand("Position Score Wait", new ArmSetGoalTillFinished(arm, GoalState.SCORE_WAIT));
-        NamedCommands.registerCommand("Position Cube Score High", ArmCommandFactory.instantAutoScore(GoalState.SCORE_CUBE_HIGH, arm));
-        NamedCommands.registerCommand("Position Cone Score High", ArmCommandFactory.instantAutoScore(GoalState.SCORE_CONE_HIGH, arm));
-        NamedCommands.registerCommand("Retract After Score", ArmCommandFactory.waitForScoreThenRetract(arm));
-        NamedCommands.registerCommand("Partial Retract After Score", ArmCommandFactory.waitForScoreThenPartialRetract(arm));
-        NamedCommands.registerCommand("Enable Align Override", ArmCommandFactory.setAlignStateOverride(true, drive));
-        NamedCommands.registerCommand("Disable Align Override", ArmCommandFactory.setAlignStateOverride(false, drive));
+        // NamedCommands.registerCommand("Set Gamepiece Cube", ArmCommandFactory.setGamepieceCube(arm));
+        // NamedCommands.registerCommand("Set Gamepiece Cone", ArmCommandFactory.setGamepieceCone(arm));
+        // NamedCommands.registerCommand("Deploy Intake Ground", ArmCommandFactory.groundIntakeOpen(arm));
+        // NamedCommands.registerCommand("Stow Intake", ArmCommandFactory.retract(arm));
+        // // NamedCommands.registerCommand("AutoScore Cube High", ArmCommandFactory.autoScore(GoalState.SCORE_WAIT, GoalState.SCORE_CUBE_HIGH, arm, drive));
+        // NamedCommands.registerCommand("Position Score Wait", new ArmSetGoalTillFinished(arm, GoalState.SCORE_WAIT));
+        // NamedCommands.registerCommand("Position Cube Score High", ArmCommandFactory.instantAutoScore(GoalState.SCORE_CUBE_HIGH, arm));
+        // NamedCommands.registerCommand("Position Cone Score High", ArmCommandFactory.instantAutoScore(GoalState.SCORE_CONE_HIGH, arm));
+        // NamedCommands.registerCommand("Retract After Score", ArmCommandFactory.waitForScoreThenRetract(arm));
+        // NamedCommands.registerCommand("Partial Retract After Score", ArmCommandFactory.waitForScoreThenPartialRetract(arm));
+        // NamedCommands.registerCommand("Enable Align Override", ArmCommandFactory.setAlignStateOverride(true, drive));
+        // NamedCommands.registerCommand("Disable Align Override", ArmCommandFactory.setAlignStateOverride(false, drive));
         drive.setupPathPlanner();
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());
@@ -235,7 +240,9 @@ public class RobotContainer {
                 driverSlowMode::getAsBoolean, 
                 driverNoFieldOriented::getAsBoolean, 
                 driverSnapClosestCardinal::getAsBoolean,
-                driverSnapOppositeCardinal::getAsBoolean
+                driverSnapOppositeCardinal::getAsBoolean,
+                updateAutoAlignNote::getAsBoolean
+
             )
         );
     }
@@ -245,8 +252,11 @@ public class RobotContainer {
 
         // Drive button bindings
         driverXMode.whileTrue(new XModeDriveCommand(drive));
+        // updateAutoAlignNote.onTrue(DriveUtilityCommandFactory.enableAutoAlignNote(drive));
+        // updateAutoAlignNote.onFalse(DriveUtilityCommandFactory.disableAutoAlignNote(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
         driverAutoAlign.whileTrue(new DriveAutoAlignCommand(drive, arm));
+        
 
         // Driver override switches
         driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));
@@ -254,6 +264,9 @@ public class RobotContainer {
         driverGyroFail.onFalse(DriveUtilityCommandFactory.unFailGyro(drive));
         driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
+
+        // Testing autoAlign Stuff
+        // alignNote.onTrue(Drive.updateAutoAlignNote());
 
         //Operator button bindings
         operatorSwitchGamepiece.onTrue(ArmCommandFactory.toggleGamepiece(arm));

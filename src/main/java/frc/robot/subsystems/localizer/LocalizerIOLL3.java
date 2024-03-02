@@ -2,6 +2,8 @@ package frc.robot.subsystems.localizer;
 
 import static frc.robot.Constants.VisionSubsystem.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.numbers.N1;
@@ -12,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.VisionSubsystem;
 import frc.robot.lib.LimelightHelpers;
 import frc.robot.lib.LimelightHelpers.LimelightResults;
 import frc.robot.lib.LimelightHelpers.Results;
@@ -25,7 +28,7 @@ public class LocalizerIOLL3 implements LocalizerIO {
     public static final double kNetworkTablesLatencyThreshold = 5.0;
 
     public LocalizerIOLL3() {
-        kLLLatencyTopic = NetworkTableInstance.getDefault().getDoubleTopic("limelight/tl");
+        kLLLatencyTopic = NetworkTableInstance.getDefault().getDoubleTopic(String.format("%s/tl",VisionSubsystem.kAprilTagLimelightName));
         kLLLatencySub = kLLLatencyTopic.subscribe(0);
 
         // TODO: Change limelight to use pinhole camera model
@@ -36,10 +39,14 @@ public class LocalizerIOLL3 implements LocalizerIO {
         // use the assumption that recent NT data means that limelight is connected
         double lastNTTimestampSeconds = kLLLatencySub.getAtomic().timestamp / 1_000_000.0;
         double NTLatencySeconds = Timer.getFPGATimestamp() - lastNTTimestampSeconds;
+        Logger.recordOutput("Vision/Apriltags/NTLatencySeconds", NTLatencySeconds);
         inputs.visionConnected = !(NTLatencySeconds >= kNetworkTablesLatencyThreshold);
 
+        Logger.recordOutput("Vision/Apriltags/VisionConnected", inputs.visionConnected);
+
+
         if (inputs.visionConnected) {
-            Results results = LimelightHelpers.getLatestResults("limelight").targetingResults;
+            Results results = LimelightHelpers.getLatestResults(VisionSubsystem.kAprilTagLimelightName).targetingResults;
             var botpose = results.botpose;
 
             boolean flipToRed = DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);

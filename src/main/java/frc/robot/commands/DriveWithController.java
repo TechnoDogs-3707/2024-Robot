@@ -29,6 +29,7 @@ public class DriveWithController extends Command {
     private final Supplier<Boolean> disableFieldOrient;
     private final Supplier<Boolean> snapClosestCardinal;
     private final Supplier<Boolean> snapOppositeCardinal;
+    private final Supplier<Boolean> enableAutoAlignNote;
 
     private boolean mUseOpenLoop = false;
 
@@ -61,7 +62,8 @@ public class DriveWithController extends Command {
             Supplier<Boolean> slowModeSupplier,
             Supplier<Boolean> disableFieldOrient,
             Supplier<Boolean> snapClosestCardinal,
-            Supplier<Boolean> snapOppositeCardinal
+            Supplier<Boolean> snapOppositeCardinal,
+            Supplier<Boolean> enableAutoAlignNote
         ) {
         addRequirements(drive);
 
@@ -71,6 +73,7 @@ public class DriveWithController extends Command {
         this.disableFieldOrient = disableFieldOrient;
         this.snapClosestCardinal = snapClosestCardinal;
         this.snapOppositeCardinal = snapOppositeCardinal;
+        this.enableAutoAlignNote = enableAutoAlignNote;
     }
 
     // Called when the command is initially scheduled.
@@ -150,6 +153,13 @@ public class DriveWithController extends Command {
             drive.setVelocityOpenLoop(speeds);
         } else {
             drive.setVelocityClosedLoop(speeds);
+        }
+
+        if(enableAutoAlignNote.get()) {
+            drive.enableAutoAlignNoteMode();
+        }
+        else {
+            drive.disableAutoAlignNoteMode();
         }
     }
 
