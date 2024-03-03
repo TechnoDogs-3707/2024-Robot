@@ -17,8 +17,8 @@ public class Flywheels extends SubsystemBase{
     private FlywheelsIO mIO;
     private FlywheelsIOInputsAutoLogged mInputs;
 
-    private double mSetpointSpeedLeft = 60.0;
-    private double mSetpointSpeedRight = 100.0;
+    private double mSetpointSpeedLeft = 18.0;
+    private double mSetpointSpeedRight = 22.0;
     private FlywheelsStateMachine mStateMachine = new FlywheelsStateMachine();
     private FlywheelsWantedAction mWantedAction = FlywheelsWantedAction.OFF;
 

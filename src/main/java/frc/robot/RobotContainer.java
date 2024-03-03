@@ -171,7 +171,7 @@ public class RobotContainer {
                         new SwerveIOTalonFX(3, "canivore")
                     );
                     arm = new Arm(new ArmIOSimV1());
-                    intake = new Intake(new IntakeIOSim());
+                    intake = new Intake(new IntakeIOTalonFX());
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
                     tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
@@ -369,8 +369,8 @@ public class RobotContainer {
         //Operator button bindings
         operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
         operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
-        operatorSubwoofer.onTrue(new AutoScoreSpeakerSubwoofer(drive, indexer, tilt, flywheels, objective, operatorOverrideScore::getAsBoolean));
-        operatorPodium.toggleOnTrue(new AutoScoreSpeakerPodium(drive, indexer, tilt, flywheels, objective, operatorOverrideScore::getAsBoolean));
+        operatorSubwoofer.onTrue(new AutoScoreSpeakerSubwoofer(drive, indexer, tilt, flywheels, objective, operatorOverrideScore));
+        operatorPodium.onTrue(new AutoScoreSpeakerPodium(drive, indexer, tilt, flywheels, objective, operatorOverrideScore));
         operatorJamClear.whileTrue(new IndexerJamClearing(arm, intake, indexer));
         operatorStowArm.onTrue(new ArmStow(arm, intake));
         operatorResetIndexer.onTrue(new IndexerReset(indexer, tilt, flywheels));

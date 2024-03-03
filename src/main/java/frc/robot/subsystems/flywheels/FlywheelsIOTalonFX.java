@@ -65,7 +65,7 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
         mRightMotorConfig.Slot0.kP = kP;
         mRightMotorConfig.Slot0.kI = kI;
         mRightMotorConfig.Slot0.kD = kD;
-        mRightMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        mRightMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         mLeftMotorConfig = TalonFXConfigHelper.getBaseConfig();
         mLeftMotorConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();

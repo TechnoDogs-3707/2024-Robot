@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -11,7 +12,7 @@ import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class AutoScoreSpeakerSubwoofer extends SequentialCommandGroup {
-    public AutoScoreSpeakerSubwoofer(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, Supplier<Boolean> scoreOverride) {
+    public AutoScoreSpeakerSubwoofer(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
             new AutoScoreSpeaker(drive, indexer, tilt, flywheels, objective, () -> TiltGoalState.CLOSE, scoreOverride)
         );

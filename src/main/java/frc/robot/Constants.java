@@ -465,9 +465,9 @@ public final class Constants {
 
         public static final double kHomePosition = 0.0;
         public static final double kMinTargetPosition = 0.0;
-        public static final double kMaxTargetPosition = 0.1;
+        public static final double kMaxTargetPosition = 0.08;
 
-        public static final double kAbsoluteMaxPosition = 0.1;
+        public static final double kAbsoluteMaxPosition = 0.8;
         public static final double kAbsoluteMinPosition = 0.0;
     }
 

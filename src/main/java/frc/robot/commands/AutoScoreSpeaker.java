@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,15 +20,15 @@ import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class AutoScoreSpeaker extends SequentialCommandGroup {
-    public AutoScoreSpeaker(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, Supplier<TiltGoalState> tiltGoal, Supplier<Boolean> scoreOverride) {
+    public AutoScoreSpeaker(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, Supplier<TiltGoalState> tiltGoal, BooleanSupplier scoreOverride) {
         addCommands(
             Commands.waitUntil(drive::autoAlignAtTarget)
-            .raceWith(Commands.waitUntil(scoreOverride::get))
+            .raceWith(Commands.waitUntil(scoreOverride))
             .alongWith(
                 Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.SCORE_SPEAKER_AUTOALIGN))
                 .andThen(Commands.runOnce(() -> objective.setAutoAlignState(AutoAlignScoreState.DRIVING_TO_TARGET))),
-                Commands.runOnce(() -> flywheels.setSetpointSpeedLeft(35)),
-                Commands.runOnce(() -> flywheels.setSetpointSpeedRight(100)),
+                // Commands.runOnce(() -> flywheels.setSetpointSpeedLeft(35)),
+                // Commands.runOnce(() -> flywheels.setSetpointSpeedRight(100)),
                 flywheels.setActionCommand(FlywheelsWantedAction.SHOOT),
                 tilt.setGoalCommand(tiltGoal.get())
             ).andThen(
