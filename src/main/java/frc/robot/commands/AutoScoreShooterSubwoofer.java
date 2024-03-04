@@ -11,10 +11,10 @@ import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
-public class AutoScoreSpeakerPodium extends SequentialCommandGroup {
-    public AutoScoreSpeakerPodium(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
+public class AutoScoreShooterSubwoofer extends SequentialCommandGroup {
+    public AutoScoreShooterSubwoofer(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
-            new AutoScoreSpeaker(drive, indexer, tilt, flywheels, objective, () -> TiltGoalState.PODIUM, scoreOverride)
+            new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 65.0, () -> 55.0, () -> TiltGoalState.CLOSE, scoreOverride)
         );
     }
 }

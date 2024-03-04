@@ -17,8 +17,8 @@ public class Flywheels extends SubsystemBase{
     private FlywheelsIO mIO;
     private FlywheelsIOInputsAutoLogged mInputs;
 
-    private double mSetpointSpeedLeft = 18.0;
-    private double mSetpointSpeedRight = 22.0;
+    private double mSetpointSpeedLeft = 0.0; //18, 65
+    private double mSetpointSpeedRight = 0.0; //22, 55
     private FlywheelsStateMachine mStateMachine = new FlywheelsStateMachine();
     private FlywheelsWantedAction mWantedAction = FlywheelsWantedAction.OFF;
 
@@ -102,12 +102,12 @@ public class Flywheels extends SubsystemBase{
         return Commands.waitUntil(() -> mStateMachine.getSystemState().equals(state.get()));
     }
 
-    public void setSetpointSpeedLeft(double setpointRPS) {
-        // mSetpointSpeedLeft = setpointRPS;
+    public void setSetpointSpeedTop(double setpointRPS) {
+        mSetpointSpeedLeft = setpointRPS;
     }
 
-    public void setSetpointSpeedRight(double setpointRPS) {
-        // mSetpointSpeedRight = setpointRPS;
+    public void setSetpointSpeedBottom(double setpointRPS) {
+        mSetpointSpeedRight = setpointRPS;
     }
 
     public FlywheelsStateMachine.FlywheelsSystemState getSystemState() {

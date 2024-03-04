@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -23,10 +24,10 @@ import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class AutoScoreAmp extends SequentialCommandGroup {
-    public AutoScoreAmp(Drive drive, Arm arm, Intake intake, ObjectiveTracker objective, Supplier<Boolean> scoreOverride) {
+    public AutoScoreAmp(Drive drive, Arm arm, Intake intake, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
             Commands.waitUntil(drive::autoAlignAtTarget)
-            .raceWith(Commands.waitUntil(scoreOverride::get))
+            .raceWith(Commands.waitUntil(scoreOverride))
             .alongWith(
                 Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.SCORE_AMP_AUTOALIGN))
                 .andThen(Commands.runOnce(() -> objective.setAutoAlignState(AutoAlignScoreState.DRIVING_TO_TARGET))),

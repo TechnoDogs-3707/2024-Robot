@@ -19,8 +19,8 @@ public class ShooterScorePodiumCommand extends Command {
 
     @Override
     public void initialize() {
-        mFlywheels.setSetpointSpeedLeft(35);
-        mFlywheels.setSetpointSpeedRight(100);
+        mFlywheels.setSetpointSpeedTop(35);
+        mFlywheels.setSetpointSpeedBottom(100);
         mFlywheels.setWantedAction(FlywheelsWantedAction.SHOOT);
         mTilt.setGoalState(TiltGoalState.PODIUM);
     }

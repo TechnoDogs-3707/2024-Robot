@@ -14,7 +14,7 @@ public class IndexerJamClearing extends SequentialCommandGroup {
         addCommands(
             arm.setGoalCommand(GoalState.STOW).andThen(
                 indexer.setActionCommand(IndexerWantedAction.REVERSE),
-                intake.setActionCommand(IntakeWantedAction.INTAKE_CONSTANT),
+                intake.setActionCommand(IntakeWantedAction.REVERSE),
                 Commands.idle()
             ).finallyDo(() -> {
                 indexer.setWantedAction(IndexerWantedAction.OFF);

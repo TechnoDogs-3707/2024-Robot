@@ -210,7 +210,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         mAutoAlignSourcePreference.addOption("Left", RequestedAlignment.SOURCE_LEFT);
         mAutoAlignSourcePreference.addOption("Right", RequestedAlignment.SOURCE_RIGHT);
 
-        mAutoAlignSpeakerPreference.addDefaultOption("Any", RequestedAlignment.SPEAKER_AUTO);
+        mAutoAlignSpeakerPreference.addDefaultOption("Any", RequestedAlignment.SHOOTER_AUTO);
         mAutoAlignSpeakerPreference.addOption("Close", RequestedAlignment.SPEAKER_CLOSE);
         mAutoAlignSpeakerPreference.addOption("Podium", RequestedAlignment.SPEAKER_PODIUM);
     }
@@ -245,14 +245,11 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
     public enum SimpleObjective {
         SOURCE,
-        SPEAKER,
-        AMP
+        SPEAKER
     }
 
     public SimpleObjective getSimpleObjective() {
-        if (mIntake.hasNote()) {
-            return SimpleObjective.AMP;
-        } else if (mIndexer.hasNote()) {
+        if (mIndexer.hasNote()) {
             return SimpleObjective.SPEAKER;
         } else {
             return SimpleObjective.SOURCE;
@@ -266,12 +263,10 @@ public class ObjectiveTracker extends VirtualSubsystem {
         SimpleObjective objective = getSimpleObjective();
 
         switch (objective) {
-            case AMP:
-                return RequestedAlignment.AMP;
             case SOURCE:
                 return ignorePreference ? RequestedAlignment.SOURCE_AUTO : mAutoAlignSourcePreference.get();
             case SPEAKER:
-                return ignorePreference ? RequestedAlignment.SPEAKER_AUTO : mAutoAlignSpeakerPreference.get();
+                return ignorePreference ? RequestedAlignment.SHOOTER_AUTO : mAutoAlignSpeakerPreference.get();
             default:
                 return RequestedAlignment.AUTO;
         }

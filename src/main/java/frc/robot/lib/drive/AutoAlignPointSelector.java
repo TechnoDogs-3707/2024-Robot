@@ -13,7 +13,7 @@ public class AutoAlignPointSelector {
     public enum RequestedAlignment {
         AUTO,
 
-        SPEAKER_AUTO,
+        SHOOTER_AUTO,
         SPEAKER_CLOSE,
         SPEAKER_PODIUM,
 
@@ -72,11 +72,12 @@ public class AutoAlignPointSelector {
         switch (alignment) {
             case AUTO:
                 return minimizeDistanceUsingEnums(currentPose, Points.SOURCE_LEFT_INTAKE, Points.SOURCE_RIGHT_INTAKE, Points.AMP_SCORING, Points.SPEAKER_FRONT_CLOSE, Points.SPEAKER_FRONT_PODIUM);
-            case SPEAKER_AUTO:
+            case SHOOTER_AUTO:
                 return minimizeDistanceUsingEnums(
                     currentPose, 
                     Points.SPEAKER_FRONT_CLOSE, 
-                    Points.SPEAKER_FRONT_PODIUM
+                    Points.SPEAKER_FRONT_PODIUM,
+                    Points.AMP_SCORING
                 );
             case SPEAKER_CLOSE:
                 return Points.SPEAKER_FRONT_CLOSE.point.getPose(currentPose);
