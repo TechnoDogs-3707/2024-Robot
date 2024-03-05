@@ -14,13 +14,31 @@
         {
           "type": "named",
           "data": {
-            "name": "Indexer Set Score"
+            "name": "Flywheels Set Shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Flywheels Set Shoot"
+            "name": "Flywheels Set Speed To 60"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Tilt Set Close"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
           }
         },
         {
