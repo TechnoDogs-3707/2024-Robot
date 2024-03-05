@@ -102,6 +102,13 @@ public class Flywheels extends SubsystemBase{
         return Commands.waitUntil(() -> mStateMachine.getSystemState().equals(state.get()));
     }
 
+    public Command setSpeedCommand(Supplier<Double> speed) {
+        return runOnce(() -> {
+            setSetpointSpeedBottom(speed.get());
+            setSetpointSpeedTop(speed.get());
+        } );
+    }
+
     public void setSetpointSpeedTop(double setpointRPS) {
         mSetpointSpeedLeft = setpointRPS;
     }
