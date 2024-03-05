@@ -29,7 +29,11 @@ public class IntakeNoteGroundToIndexer extends SequentialCommandGroup {
             ).finallyDo(() -> {
                 arm.setGoalState(GoalState.STOW);
                 intake.setWantedAction(IntakeWantedAction.OFF);
-                indexer.setWantedAction(IndexerWantedAction.OFF);
+                if (indexer.hasNote()) {
+                    indexer.setWantedAction(IndexerWantedAction.INTAKE);
+                } else {
+                    indexer.setWantedAction(IndexerWantedAction.OFF);
+                }
                 objective.setMasterObjective(MasterObjective.NONE);
             })
         );

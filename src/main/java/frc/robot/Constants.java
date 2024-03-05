@@ -377,21 +377,23 @@ public final class Constants {
 
             public static final boolean invertMaster = false;
             
+            public static final double kG = 0.2;
+
             public static final double kS = 0.0;
-            public static final double kV = 0.0;
+            public static final double kV = 4.0;
             public static final double kA = 0.0;
-            public static final double kP = 0.0;
+            public static final double kP = 14.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 
-            public static final double kMagicVel = 1.5;
-            public static final double kMagicAccel = 3.0;
+            public static final double kMagicVel = 1.0;
+            public static final double kMagicAccel = 5.0;
             public static final double kMagicJerk = 0.0;
 
-            public static final double kLiberalAllowableError = 0.05;
-            public static final double kConservativeAllowableError = 0.01;
+            public static final double kLiberalAllowableError = 0.06;
+            public static final double kConservativeAllowableError = 0.04;
 
-            public static final double kHomePosition = 0.4;
+            public static final double kHomePosition = 0.375;
             public static final double kMinTargetPosition = 0.0;
             public static final double kMaxTargetPosition = 0.0;
 
@@ -465,9 +467,9 @@ public final class Constants {
 
         public static final double kHomePosition = 0.0;
         public static final double kMinTargetPosition = 0.0;
-        public static final double kMaxTargetPosition = 0.1;
+        public static final double kMaxTargetPosition = 0.08;
 
-        public static final double kAbsoluteMaxPosition = 0.1;
+        public static final double kAbsoluteMaxPosition = 0.8;
         public static final double kAbsoluteMinPosition = 0.0;
     }
 

@@ -33,7 +33,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 
         mIntakeControlMaster = new DutyCycleOut(0, false, false, false, false);
 
-        mIntakeSensor = new DigitalInput(0);
+        mIntakeSensor = new DigitalInput(5);
 
         intakeMasterVelocity = mIntakeMotorMaster.getVelocity();
         intakeMasterSuppliedCurrent = mIntakeMotorMaster.getSupplyCurrent();

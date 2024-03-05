@@ -39,8 +39,8 @@ public class IndexerIOTalonFX implements IndexerIO {
 
         mOutputControl = new DutyCycleOut(0, false, false, false, false);
 
-        mFirstBanner = new DigitalInput(1);
-        mSecondBanner = new DigitalInput(2);
+        mFirstBanner = new DigitalInput(0);
+        mSecondBanner = new DigitalInput(1);
 
         indexerSpeed = mMotor.getVelocity();
         indexerCurrent = mMotor.getSupplyCurrent();

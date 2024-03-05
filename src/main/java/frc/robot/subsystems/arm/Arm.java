@@ -23,6 +23,8 @@ import frc.robot.Constants;
 import frc.robot.RobotStateTracker;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
+import frc.robot.Constants.ArmSubsystem.J2;
+import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.drive.AutoAlignPointSelector;
 import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.leds.LEDState;
@@ -34,7 +36,7 @@ import frc.robot.subsystems.leds.LED;
 public class Arm extends SubsystemBase {
 
     public enum GoalState {
-        STOW(ArmState.withConservativeConstraints(0, 0.4, ArmSend.LOW)),
+        STOW(ArmState.withConservativeConstraints(0, 0.3, ArmSend.LOW)),
         INTAKE_GROUND(ArmState.withConservativeConstraints(0, -0.1, ArmSend.LOW)),
         INTAKE_SOURCE(ArmState.withConservativeConstraints(0.24, 0, ArmSend.LOW)),
         SCORE_AMP(ArmState.withConservativeConstraints(0.27, 0.0, ArmSend.LOW)),
@@ -55,6 +57,9 @@ public class Arm extends SubsystemBase {
     private GoalState mGoalState = GoalState.STOW;
     private GoalState mLastGoalState = GoalState.STOW;
     private boolean mResetMotionPlanner = false;
+
+    private double wristKf = J2.kG;
+    private final LoggedTunableNumber mTunableWristFeedforward = new LoggedTunableNumber("Arm/Wrist/Feedforward", wristKf);
 
     private boolean mForceFailure = false;
 
@@ -147,6 +152,8 @@ public class Arm extends SubsystemBase {
         var currentPose = RobotStateTracker.getInstance().getCurrentRobotPose();
         RobotStateTracker.getInstance().setAutoAlignReady(AutoAlignPointSelector.getAlignTarget(currentPose, getRequestedAlignment()).isPresent());
 
+        mTunableWristFeedforward.ifChanged(hashCode(), (v) -> wristKf = v);
+
         if (mResetMotionPlanner) {
             mMotionPlanner.reset();
         }
@@ -221,7 +228,7 @@ public class Arm extends SubsystemBase {
     }
 
     private double calcJ2FeedForward() {
-        return 0; // TODO: J2 feedforward
+        return Rotation2d.fromDegrees(mArmInputs.wristRotations).getCos() * wristKf;
     }
 
     public RequestedAlignment getRequestedAlignment() {

@@ -61,6 +61,8 @@ public class ArmIOTalonFX implements ArmIO {
     private final LoggedTunableNumber mTunableWristKP = new LoggedTunableNumber("Arm/Wrist/kP", J2.kP);
     private final LoggedTunableNumber mTunableWristKI = new LoggedTunableNumber("Arm/Wrist/kI", J2.kI);
     private final LoggedTunableNumber mTunableWristKD = new LoggedTunableNumber("Arm/Wrist/kD", J2.kD);
+    private final LoggedTunableNumber mTunableWristMagicVel = new LoggedTunableNumber("Arm/Wrist/MagicVel", J2.kMagicVel);
+    private final LoggedTunableNumber mTunableWristMagicAccel = new LoggedTunableNumber("Arm/Wrist/MagicAccel", J2.kMagicAccel);
 
     ///////// STATUS SIGNALS \\\\\\\\\\
     private StatusSignal<Double> tiltMasterPosition;
@@ -232,6 +234,8 @@ public class ArmIOTalonFX implements ArmIO {
         mTunableWristKP.ifChanged(hashCode(), mFeedbackHelperWrist::setKP);
         mTunableWristKI.ifChanged(hashCode(), mFeedbackHelperWrist::setKI);
         mTunableWristKD.ifChanged(hashCode(), mFeedbackHelperWrist::setKD);
+        mTunableWristMagicVel.ifChanged(hashCode(), mFeedbackHelperWrist::setMagicVelocity);
+        mTunableWristMagicAccel.ifChanged(hashCode(), mFeedbackHelperWrist::setMagicAcceleration);
     }
 
     @Override

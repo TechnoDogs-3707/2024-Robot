@@ -14,6 +14,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -21,9 +22,10 @@ import frc.robot.Constants.Mode;
 import frc.robot.commands.ArmCommandFactory;
 import frc.robot.commands.ArmStow;
 import frc.robot.commands.AutoScoreAmp;
-import frc.robot.commands.AutoScoreSpeaker;
-import frc.robot.commands.AutoScoreSpeakerPodium;
-import frc.robot.commands.AutoScoreSpeakerSubwoofer;
+import frc.robot.commands.AutoScoreShooter;
+import frc.robot.commands.AutoScoreShooterAmp;
+import frc.robot.commands.AutoScoreShooterPodium;
+import frc.robot.commands.AutoScoreShooterSubwoofer;
 import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveAlignClosestCommand;
 import frc.robot.commands.DriveAutoAlignCommand;
@@ -107,12 +109,16 @@ public class RobotContainer {
 
     private final Trigger driverSlowMode = driver.L1();
     private final Trigger driverXMode = driver.cross();
-    private final Trigger driverGyroReset = driver.create().debounce(1, DebounceType.kRising); // delay gyro reset for 1 second
-    private final Trigger driverAutoAlignPreferred = driver.R2();
-    private final Trigger driverAutoAlignClosest = driver.L2();
-    private final Trigger driverSnapAutoAlignAngle = driver.square();
-    private final Trigger driverSnapAngleIgnoringPreference = driver.triangle();
-    private final Trigger driverAutoAim = driver.circle();
+    private final Trigger driverGyroReset = driver.create().debounce(0.5, DebounceType.kRising); // delay gyro reset for 1 second
+    private final Trigger driverAutoAlignPreferred = driver.square();
+    private final Trigger driverJamClear = driver.povDown();
+    // private final Trigger driverAutoAlignClosest = driver.L2();
+    // private final Trigger driverAutoAlignClosest = driver.PS();
+    private final Trigger driverDeployIntake = driver.L2();
+    private final Trigger driverSnapAutoAlignAngle = driver.triangle();
+    // private final Trigger driverSnapAngleIgnoringPreference = driver.circle();
+    private final Trigger driverCancelAction = driver.circle();
+    private final Trigger driverAutoShoot = driver.R2();
     // private final Trigger driverSnapOppositeCardinal = driver.leftTrigger(0.2);
     private final Trigger driverTempDisableFieldOriented = driver.R1();
 
@@ -120,6 +126,7 @@ public class RobotContainer {
     private final CommandPS5Controller operator = new CommandPS5Controller(1);
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
+    private final Trigger operatorResetMotionPlanner = operator.create().debounce(0.5, DebounceType.kRising);
     private final Trigger operatorIntakeGroundToIndexer = operator.R2();
     private final Trigger operatorIntakeGroundToHold = operator.L2();
     private final Trigger operatorIntakeSourceToHold = operator.cross();
@@ -138,7 +145,7 @@ public class RobotContainer {
 
     // private final Trigger driverResetAngle = overrides.driverSwitch(0).debounce(1, DebounceType.kRising); // Reset gyro angle to forwards
     private final Trigger driverGyroFail = overrides.driverSwitch(0); // Ingore sensor readings from gyro
-    private final Trigger driverReseedPosition = overrides.driverSwitch(1).debounce(1, DebounceType.kRising); // Gather avereage position from vision and update
+    private final Trigger driverReseedPosition = overrides.driverSwitch(1).debounce(1, DebounceType.kRising); // Gather average position from vision and update
     private final Trigger driverAssistFail = overrides.driverSwitch(2); // disable all drive assists
 
     // private final Trigger armForceEnable = overrides.operatorSwitch(0); // bypass arm sanity checks and force manual control
@@ -170,13 +177,13 @@ public class RobotContainer {
                         new SwerveIOTalonFX(2, "canivore"), 
                         new SwerveIOTalonFX(3, "canivore")
                     );
-                    arm = new Arm(new ArmIOSimV1());
-                    intake = new Intake(new IntakeIOSim());
+                    arm = new Arm(new ArmIOTalonFX());
+                    intake = new Intake(new IntakeIOTalonFX());
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
                     tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
-                    //vision
+                    vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
                     break;
                 // case ROBOT_2024_HARD_ROCK:
                 //     drive = new Drive(
@@ -342,7 +349,7 @@ public class RobotContainer {
                 driverSlowMode::getAsBoolean, 
                 driverNoFieldOriented::getAsBoolean, 
                 driverSnapAutoAlignAngle::getAsBoolean,
-                driverSnapAngleIgnoringPreference::getAsBoolean
+                () -> false
             )
         );
 
@@ -356,7 +363,7 @@ public class RobotContainer {
         // Drive button bindings
         driverXMode.whileTrue(new XModeDriveCommand(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
-        driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> true));
+        // driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> true));
         driverAutoAlignPreferred.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
 
         // Driver override switches
@@ -365,21 +372,22 @@ public class RobotContainer {
         driverGyroFail.onFalse(DriveUtilityCommandFactory.unFailGyro(drive));
         driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
+        driverCancelAction.onTrue(new ArmStow(arm, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
 
         //Operator button bindings
-        operatorIntakeGroundToIndexer.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
+        operatorIntakeGroundToIndexer.or(driverDeployIntake).onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
         operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
-        operatorSubwoofer.onTrue(new AutoScoreSpeakerSubwoofer(drive, indexer, tilt, flywheels, objective, operatorOverrideScore::getAsBoolean));
-        operatorPodium.toggleOnTrue(new AutoScoreSpeakerPodium(drive, indexer, tilt, flywheels, objective, operatorOverrideScore::getAsBoolean));
-        operatorJamClear.whileTrue(new IndexerJamClearing(arm, intake, indexer));
+        operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
+        operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
+        operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(arm, intake, indexer));
         operatorStowArm.onTrue(new ArmStow(arm, intake));
         operatorResetIndexer.onTrue(new IndexerReset(indexer, tilt, flywheels));
         operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
-        operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore::getAsBoolean));
+        // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
+        operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, flywheels, objective));
-        
-        // operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
-        // operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
+        operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
+        operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 
         // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
 
