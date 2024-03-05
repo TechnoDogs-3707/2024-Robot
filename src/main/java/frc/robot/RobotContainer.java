@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -42,6 +44,10 @@ import frc.robot.commands.ShooterPrepare;
 import frc.robot.commands.ShooterScorePodiumCommand;
 import frc.robot.commands.ShooterScoreSubwooferCommand;
 import frc.robot.commands.XModeDriveCommand;
+import frc.robot.commands.climb.ClimbAutoRaise;
+import frc.robot.commands.climb.ClimbManualOverride;
+import frc.robot.commands.climb.ClimbPoweredRetract;
+import frc.robot.commands.climb.ClimbReset;
 import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
@@ -51,6 +57,9 @@ import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
 import frc.robot.subsystems.arm.ArmIOTalonFX;
 import frc.robot.subsystems.arm.Arm.GoalState;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIO;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveIOTalonFX;
@@ -96,6 +105,7 @@ public class RobotContainer {
     private Flywheels flywheels;
     private Tilt tilt;
     private Indexer indexer;
+    private Climb climb;
     private LED leds;
     private Localizer vision;
     private ObjectiveTracker objective;
@@ -110,12 +120,12 @@ public class RobotContainer {
     private final Trigger driverSlowMode = driver.L1();
     private final Trigger driverXMode = driver.cross();
     private final Trigger driverGyroReset = driver.create().debounce(0.5, DebounceType.kRising); // delay gyro reset for 1 second
-    private final Trigger driverAutoAlignPreferred = driver.square();
+    private final Trigger driverAutoAlignPreferred = driver.triangle();
     private final Trigger driverJamClear = driver.povDown();
     // private final Trigger driverAutoAlignClosest = driver.L2();
     // private final Trigger driverAutoAlignClosest = driver.PS();
     private final Trigger driverDeployIntake = driver.L2();
-    private final Trigger driverSnapAutoAlignAngle = driver.triangle();
+    private final Trigger driverSnapAutoAlignAngle = driver.square();
     // private final Trigger driverSnapAngleIgnoringPreference = driver.circle();
     private final Trigger driverCancelAction = driver.circle();
     private final Trigger driverAutoShoot = driver.R2();
@@ -127,18 +137,23 @@ public class RobotContainer {
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
     private final Trigger operatorResetMotionPlanner = operator.create().debounce(0.5, DebounceType.kRising);
-    private final Trigger operatorIntakeGroundToIndexer = operator.R2();
+
     private final Trigger operatorIntakeGroundToHold = operator.L2();
-    private final Trigger operatorIntakeSourceToHold = operator.cross();
-    private final Trigger operatorStowArm = operator.R1();
-    private final Trigger operatorResetIndexer = operator.L1();
-    private final Trigger operatorOverrideScore = operator.circle();
-    private final Trigger operatorSubwoofer = operator.povRight();
-    private final Trigger operatorPodium = operator.povLeft();
-    private final Trigger operatorAmp = operator.povUp();
-    private final Trigger operatorJamClear = operator.povDown();
-    private final Trigger operatorResetArmAndIndexer = operator.create();
-    private final Trigger operatorHandoffToIndexer = operator.triangle();
+    private final Trigger operatorCancelAction = operator.R1();
+
+    private final Trigger operatorClimbShift = operator.L1();
+
+    private final Trigger operatorSubwoofer = operatorClimbShift.negate().and(operator.povRight());
+    private final Trigger operatorPodium = operatorClimbShift.negate().and(operator.povLeft());
+    private final Trigger operatorAmp = operatorClimbShift.negate().and(operator.povUp());
+    private final Trigger operatorJamClear = operatorClimbShift.negate().and(operator.povDown());
+
+    private final Trigger operatorClimbRaise = operatorClimbShift.and(operator.povUp());
+    private final Trigger operatorClimbPull = operatorClimbShift.and(operator.povDown());
+    private final Trigger operatorClimbReset = operatorClimbShift.and(operator.povLeft());
+    private final Trigger operatorClimbManual = operatorClimbShift.and(operator.povRight());
+
+    private final Supplier<Double> operatorClimbThrottle = operator::getLeftY;
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -182,6 +197,7 @@ public class RobotContainer {
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
                     tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
+                    climb = new Climb(new ClimbIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
                     vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
                     break;
@@ -288,6 +304,12 @@ public class RobotContainer {
             });
         }
 
+        if (climb == null) {
+            indexer = new Indexer(new IndexerIO() {
+                
+            });
+        }
+
         if (leds == null) {
             leds = new LED(new LEDIO() {
                 
@@ -373,20 +395,24 @@ public class RobotContainer {
         driverGyroFail.onFalse(DriveUtilityCommandFactory.unFailGyro(drive));
         driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
-        driverCancelAction.onTrue(new ArmStow(arm, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
+
+        driverCancelAction.or(operatorCancelAction).onTrue(new ArmStow(arm, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
+        driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
 
         //Operator button bindings
-        operatorIntakeGroundToIndexer.or(driverDeployIntake).onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
-        operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
+        // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(arm, intake, indexer));
-        operatorStowArm.onTrue(new ArmStow(arm, intake));
-        operatorResetIndexer.onTrue(new IndexerReset(indexer, tilt, flywheels));
         operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
         operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
-        operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, flywheels, objective));
+
+        operatorClimbRaise.onTrue(new ClimbAutoRaise(climb, objective));
+        operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
+        operatorClimbReset.onTrue(new ClimbReset(climb, objective));
+        operatorClimbManual.onTrue(new ClimbManualOverride(climb, objective, operatorClimbThrottle));
+
         operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -471,6 +472,38 @@ public final class Constants {
 
         public static final double kAbsoluteMaxPosition = 0.8;
         public static final double kAbsoluteMinPosition = 0.0;
+    }
+
+    public static final class Climb {
+        public static final int kLeftMotorID = 50;
+        public static final int kRightMotorID = 51;
+        public static final String kMotorBus = "canivore";
+
+        public static final InvertedValue leftMotorPolarity = InvertedValue.CounterClockwise_Positive;
+        public static final InvertedValue rightMotorPolarity = InvertedValue.CounterClockwise_Positive;
+
+        public static final double kG = 0.0;
+        public static final double kS = 0.0;
+        public static final double kV = 0.0;
+        public static final double kA = 0.0;
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+
+        public static final double kMagicVel = 0.0;
+        public static final double kMagicAccel = 0.0;
+        
+        public static final double kPIDAllowableError = 0.0;
+
+        public static final double kMotorHomePosition = 0.0;
+
+        public static final double kReverseSoftLimitValue = 0.0;
+        public static final double kForwardSoftLimitValue = 0.0;
+
+        public static final double kClimbingThrottle = 0.0;
+
+        public static final double kFullExtensionPosition = 0.0;
+        public static final double kFullRetractionPosition = 0.0;
     }
 
     public static final int kMaxLEDCount = 127;
