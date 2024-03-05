@@ -1,0 +1,85 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8169287814713255,
+      "y": 4.398375411623188
+    },
+    "rotation": -60.25511870305779
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "FillerScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartGet3-3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FillerIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FillerScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MovementA"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FillerIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FillerScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Get3-5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FillerIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Return3-5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FillerScore"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
