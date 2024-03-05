@@ -17,32 +17,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.ArmCommandFactory;
 import frc.robot.commands.ArmStow;
-import frc.robot.commands.AutoScoreAmp;
-import frc.robot.commands.AutoScoreShooter;
 import frc.robot.commands.AutoScoreShooterAmp;
 import frc.robot.commands.AutoScoreShooterPodium;
 import frc.robot.commands.AutoScoreShooterSubwoofer;
 import frc.robot.commands.AutonXModeCommand;
-import frc.robot.commands.DriveAlignClosestCommand;
 import frc.robot.commands.DriveAutoAlignCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.IndexerJamClearing;
 import frc.robot.commands.IndexerReset;
-import frc.robot.commands.IntakeHandoffToIndexer;
 import frc.robot.commands.IntakeNoteGroundHold;
 import frc.robot.commands.IntakeNoteGroundToIndexer;
-import frc.robot.commands.IntakeNoteSource;
-import frc.robot.commands.ShooterIdleCommand;
 import frc.robot.commands.ShooterPrepare;
-import frc.robot.commands.ShooterScorePodiumCommand;
-import frc.robot.commands.ShooterScoreSubwooferCommand;
 import frc.robot.commands.XModeDriveCommand;
 import frc.robot.commands.climb.ClimbAutoRaise;
 import frc.robot.commands.climb.ClimbManualOverride;
@@ -58,7 +48,6 @@ import frc.robot.subsystems.arm.ArmIOSimV1;
 import frc.robot.subsystems.arm.ArmIOTalonFX;
 import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
@@ -87,7 +76,6 @@ import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
 import frc.robot.subsystems.leds.LEDIOSim;
-import frc.robot.subsystems.leds.LED.WantedAction;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
 import frc.robot.subsystems.localizer.LocalizerIOLL3;
@@ -167,11 +155,10 @@ public class RobotContainer {
     // private final Trigger armHomingSequence = overrides.operatorSwitch(1).debounce(1, DebounceType.kRising); // run the arm calibration sequence
     // private final Trigger overrideArmSafety = overrides.operatorSwitch(2); // run arm at full speed even off FMS
     // private final Trigger overrideLedBrightness = overrides.operatorSwitch(3); // full led brightness when off FMS
-    private final Trigger ledsIndicateFailed = overrides.operatorSwitch(4); // indicate arm failed on LEDS
+    // private final Trigger ledsIndicateFailed = overrides.operatorSwitch(4); // indicate arm failed on LEDS
 
     // Virtual Triggers
     private final Trigger driverNoFieldOriented = driverTempDisableFieldOriented.or(driverGyroFail);
-    private final Trigger robotTeleopEnabled = new Trigger(DriverStation::isTeleopEnabled);
     
     public final LoggedDashboardNumber endgameAlert1 = new LoggedDashboardNumber("Endgame Alert #1", 30.0);
     public final LoggedDashboardNumber endgameAlert2 = new LoggedDashboardNumber("Endgame Alert #2", 15.0);
@@ -422,7 +409,6 @@ public class RobotContainer {
         // armForceEnable
         // armHomingSequence
         // overrideArmSafety
-        ledsIndicateFailed.whileTrue(ArmCommandFactory.armFailureSwitch(arm));
     }
 
     public Command getAutonomousCommand() {

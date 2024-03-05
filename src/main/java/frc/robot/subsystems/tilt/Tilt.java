@@ -11,7 +11,6 @@ import frc.robot.Robot;
 import frc.robot.Constants.Mode;
 import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.util.Util;
-import frc.robot.subsystems.tilt.TiltIOInputsAutoLogged;
 
 import static frc.robot.Constants.ShooterTilt.*;
 

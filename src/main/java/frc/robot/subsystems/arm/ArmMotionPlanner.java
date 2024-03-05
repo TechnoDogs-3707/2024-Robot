@@ -4,12 +4,6 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import frc.robot.lib.util.Util;
-import frc.robot.subsystems.arm.Arm.GoalState;
-import frc.robot.subsystems.arm.ArmState.ArmSend;
-
-import static frc.robot.Constants.ArmSubsystem.*;
-
 public class ArmMotionPlanner {
     private static final double kMaxJ1ForFullJ2Travel = 0.05;
     private static final double kMaxJ2ForFullJ1Travel = 0.25;

@@ -1,7 +1,5 @@
 package frc.robot.subsystems.indexer;
 
-import edu.wpi.first.wpilibj.Timer;
-
 import static frc.robot.Constants.Indexer.*;
 
 public class IndexerStateMachine {
@@ -65,12 +63,12 @@ public class IndexerStateMachine {
 
     private IndexerWantedAction mWantedAction = IndexerWantedAction.OFF;
     private IndexerSystemState mSystemState = IndexerSystemState.OFF_EMPTY;
-    private double mStateStartTime = Timer.getFPGATimestamp();
+    // private double mStateStartTime = Timer.getFPGATimestamp();
 
     public void setWantedAction(IndexerWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
-            mStateStartTime = Timer.getFPGATimestamp();
+            // mStateStartTime = Timer.getFPGATimestamp();
         }
     }
 
@@ -79,7 +77,7 @@ public class IndexerStateMachine {
     }
 
     protected double update(boolean firstBannerTriggered, boolean secondBannerTriggered) {
-        double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
+        // double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
 
         double desiredThrottle = 0;
 

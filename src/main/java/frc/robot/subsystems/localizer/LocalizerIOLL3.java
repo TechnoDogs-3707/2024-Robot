@@ -9,9 +9,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.lib.LimelightHelpers;
 import frc.robot.lib.LimelightHelpers.Results;
 
@@ -33,14 +31,10 @@ public class LocalizerIOLL3 implements LocalizerIO {
     @Override
     public void updateInputs(LocalizerIOInputs inputs) {
         // use the assumption that recent NT data means that limelight is connected
-        double lastNTTimestampSeconds = kLLLatencySub.getAtomic().timestamp / 1_000_000.0;
-        double NTLatencySeconds = Timer.getFPGATimestamp() - lastNTTimestampSeconds;
-        // inputs.visionConnected = !(NTLatencySeconds >= kNetworkTablesLatencyThreshold);
-        inputs.visionConnected = true;
+        inputs.visionConnected = true; // TODO: make sure we can detect if we are connected or not
 
         if (inputs.visionConnected) {
             Results results = LimelightHelpers.getLatestResults("limelight").targetingResults;
-            var botpose = results.botpose;
 
             inputs.position = results.botpose_wpiblue;
             inputs.stddevs = getStdDevs(results).getData();

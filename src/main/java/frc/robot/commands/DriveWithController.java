@@ -16,7 +16,6 @@ import frc.robot.lib.dashboard.LoggedTunableBoolean;
 import frc.robot.lib.drive.AutoAlignPointSelector;
 import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.lib.drive.SwerveHeadingController;
-import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.drive.SwerveHeadingController.HeadingControllerState;
 import frc.robot.lib.util.TimeDelayedBoolean;
 import frc.robot.lib.util.Util;
@@ -156,7 +155,7 @@ public class DriveWithController extends Command {
         return false;
     }
 
-    private double getClosestCardinal(double robotAngle) {
-        return Math.round(robotAngle/180.0) * 180;
-    }
+    // private double getClosestCardinal(double robotAngle) {
+    //     return Math.round(robotAngle/180.0) * 180;
+    // }
 }
