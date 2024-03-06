@@ -1,16 +1,11 @@
 package frc.robot.subsystems.arm;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -27,11 +22,7 @@ import frc.robot.Constants.ArmSubsystem.J2;
 import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.drive.AutoAlignPointSelector;
 import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
-import frc.robot.lib.leds.LEDState;
-import frc.robot.lib.leds.TimedLEDState;
-import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.ArmState.ArmSend;
-import frc.robot.subsystems.leds.LED;
 
 public class Arm extends SubsystemBase {
 
@@ -60,8 +51,6 @@ public class Arm extends SubsystemBase {
 
     private double wristKf = J2.kG;
     private final LoggedTunableNumber mTunableWristFeedforward = new LoggedTunableNumber("Arm/Wrist/Feedforward", wristKf);
-
-    private boolean mForceFailure = false;
 
     // TODO: Update Feedforwards and constants
     public static final double kJ1BaseLength = Units.inchesToMeters(19); // distance from J1 pivot to J2 pivot
@@ -98,11 +87,11 @@ public class Arm extends SubsystemBase {
         mArmIO.updateInputs(mArmInputs);
         Logger.processInputs("Arm", mArmInputs);
 
-        double timestamp = Timer.getFPGATimestamp();
+        // double timestamp = Timer.getFPGATimestamp();
 
         //TODO: led states
 
-        Optional<TimedLEDState> ledState = handleLEDs(timestamp);
+        // Optional<TimedLEDState> ledState = handleLEDs(timestamp);
         // if (DriverStation.isEnabled()) {
         //     if (ledState.isPresent()) {
         //         if (DriverStation.isAutonomous()) {
@@ -215,14 +204,6 @@ public class Arm extends SubsystemBase {
             .andThen(Commands.waitUntil(this::atGoal));
     }
 
-    public void setForceFailure(boolean forceFailure) {
-        mForceFailure = forceFailure;
-    }
-
-    private Rotation2d calcJ2RefAngle() {
-        return Rotation2d.fromRotations(mArmInputs.wristRotations).minus(Rotation2d.fromRotations(mArmInputs.tiltRotations));
-    }
-
     private double calcJ1Feedforward() {
         return 0; // TODO: J1 feedforward
     }
@@ -233,42 +214,5 @@ public class Arm extends SubsystemBase {
 
     public RequestedAlignment getRequestedAlignment() {
         return RequestedAlignment.AUTO; // TODO: calculate requested alignment
-    }
-
-    private synchronized Optional<TimedLEDState> handleLEDs(double timestamp) {
-        Optional<TimedLEDState> state = handleScoringAlignmentLEDs(timestamp);
-        return state;
-    }
-
-    private synchronized Optional<TimedLEDState> handleScoringAlignmentLEDs(double timestamp) {
-        LEDState pieceColor = LEDState.kOrange;
-        // double maxError = 0.56 / 2.0; // m (distance between low goals)
-        double maxError = 2;
-
-        // Pose2d fieldToVehicle = RobotState.getInstance().getFieldToVehicleAbsolute(timestamp);
-        Pose2d fieldToVehicle = RobotStateTracker.getInstance().getCurrentRobotPose();
-        Optional<Pose2d> targetPoint = AutoAlignPointSelector.getAlignTarget(fieldToVehicle, getRequestedAlignment());
-
-        if (targetPoint.isEmpty()) {
-            // the target point will be empty if we are too far away from alignment, and we shouldn't hint alignment
-            return Optional.empty();
-        } else {
-            Translation2d error = targetPoint.get().getTranslation().plus(fieldToVehicle.getTranslation().unaryMinus());
-            double errorMagnitude = Math.abs(error.getNorm());
-            boolean auto_align_active = RobotStateTracker.getInstance().getAutoAlignActive();
-            boolean auto_align_on_target = RobotStateTracker.getInstance().getAutoAlignComplete();
-            if ((errorMagnitude < Constants.kLEDClosenessDeadbandMeters && !auto_align_active) || (auto_align_active && auto_align_on_target)) {
-                if (atGoal()) {
-                    return Optional.of(TimedLEDState.StaticLEDState.kAutoAlignScoringComplete);
-                }
-                return Optional.of(TimedLEDState.BlinkingLEDState.kAutoAimScoring);
-            } else {
-                if (errorMagnitude <= Constants.kLEDClosenessDeadbandMeters) {
-                    errorMagnitude = 0.0;
-                }
-                double percentage = Util.limit((maxError - errorMagnitude) / maxError, 0.0, 1.0);
-                return Optional.of(new TimedLEDState.PercentFullLEDState(percentage, pieceColor));
-            }
-        }
     }
 }

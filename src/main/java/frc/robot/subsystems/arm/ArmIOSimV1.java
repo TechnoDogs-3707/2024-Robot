@@ -5,7 +5,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.*;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmSubsystem.J1;
 import frc.robot.Constants.ArmSubsystem.J2;
-import frc.robot.lib.dashboard.DashboardToggleSwitch;
 
 public class ArmIOSimV1 implements ArmIO {
     private final TrapezoidProfile.Constraints kJ1Constraints;

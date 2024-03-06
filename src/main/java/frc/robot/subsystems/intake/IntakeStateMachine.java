@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.wpilibj.Timer;
-
 import static frc.robot.Constants.Intake.*;
 
 public class IntakeStateMachine {
@@ -25,12 +23,12 @@ public class IntakeStateMachine {
 
     private IntakeWantedAction mWantedAction = IntakeWantedAction.OFF;
     private IntakeSystemState mSystemState = IntakeSystemState.OFF;
-    private double mStateStartTime = Timer.getFPGATimestamp();
+    // private double mStateStartTime = Timer.getFPGATimestamp();
 
     public void setWantedAction(IntakeWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
-            mStateStartTime = Timer.getFPGATimestamp();
+            // mStateStartTime = Timer.getFPGATimestamp();
         }
     }
 
@@ -43,7 +41,7 @@ public class IntakeStateMachine {
     }
 
     public double update(boolean intakeBeamBreakTriggered) {
-        double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
+        // double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
 
         double desiredThrottle = 0;
 

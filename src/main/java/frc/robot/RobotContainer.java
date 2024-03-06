@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -15,42 +17,37 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.ArmCommandFactory;
 import frc.robot.commands.ArmStow;
-import frc.robot.commands.AutoScoreAmp;
-import frc.robot.commands.AutoScoreShooter;
 import frc.robot.commands.AutoScoreShooterAmp;
 import frc.robot.commands.AutoScoreShooterPodium;
 import frc.robot.commands.AutoScoreShooterSubwoofer;
 import frc.robot.commands.AutonXModeCommand;
-import frc.robot.commands.DriveAlignClosestCommand;
-import frc.robot.commands.DriveAutoAlignCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.IndexerJamClearing;
 import frc.robot.commands.IndexerReset;
-import frc.robot.commands.IntakeHandoffToIndexer;
-import frc.robot.commands.IntakeNoteGroundHold;
 import frc.robot.commands.IntakeNoteGroundToIndexer;
-import frc.robot.commands.IntakeNoteSource;
-import frc.robot.commands.ShooterIdleCommand;
 import frc.robot.commands.ShooterPrepare;
-import frc.robot.commands.ShooterScorePodiumCommand;
-import frc.robot.commands.ShooterScoreSubwooferCommand;
 import frc.robot.commands.XModeDriveCommand;
+import frc.robot.commands.climb.ClimbAutoRaise;
+import frc.robot.commands.climb.ClimbManualOverride;
+import frc.robot.commands.climb.ClimbPoweredRetract;
+import frc.robot.commands.climb.ClimbReset;
 import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
+import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
 import frc.robot.subsystems.arm.ArmIOTalonFX;
 import frc.robot.subsystems.arm.Arm.GoalState;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveIOTalonFX;
@@ -78,7 +75,6 @@ import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
 import frc.robot.subsystems.leds.LEDIOSim;
-import frc.robot.subsystems.leds.LED.WantedAction;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
 import frc.robot.subsystems.localizer.LocalizerIOLL3;
@@ -96,6 +92,7 @@ public class RobotContainer {
     private Flywheels flywheels;
     private Tilt tilt;
     private Indexer indexer;
+    private Climb climb;
     private LED leds;
     private Localizer vision;
     private ObjectiveTracker objective;
@@ -110,12 +107,12 @@ public class RobotContainer {
     private final Trigger driverSlowMode = driver.L1();
     private final Trigger driverXMode = driver.cross();
     private final Trigger driverGyroReset = driver.create().debounce(0.5, DebounceType.kRising); // delay gyro reset for 1 second
-    private final Trigger driverAutoAlignPreferred = driver.square();
+    private final Trigger driverAlignAmp = driver.triangle();
     private final Trigger driverJamClear = driver.povDown();
     // private final Trigger driverAutoAlignClosest = driver.L2();
     // private final Trigger driverAutoAlignClosest = driver.PS();
     private final Trigger driverDeployIntake = driver.L2();
-    private final Trigger driverSnapAutoAlignAngle = driver.triangle();
+    private final Trigger driverAlignPodium = driver.square();
     // private final Trigger driverSnapAngleIgnoringPreference = driver.circle();
     private final Trigger driverCancelAction = driver.circle();
     private final Trigger driverAutoShoot = driver.R2();
@@ -127,18 +124,20 @@ public class RobotContainer {
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
     private final Trigger operatorResetMotionPlanner = operator.create().debounce(0.5, DebounceType.kRising);
-    private final Trigger operatorIntakeGroundToIndexer = operator.R2();
-    private final Trigger operatorIntakeGroundToHold = operator.L2();
-    private final Trigger operatorIntakeSourceToHold = operator.cross();
-    private final Trigger operatorStowArm = operator.R1();
-    private final Trigger operatorResetIndexer = operator.L1();
-    private final Trigger operatorOverrideScore = operator.circle();
-    private final Trigger operatorSubwoofer = operator.povRight();
-    private final Trigger operatorPodium = operator.povLeft();
-    private final Trigger operatorAmp = operator.povUp();
-    private final Trigger operatorJamClear = operator.povDown();
-    private final Trigger operatorResetArmAndIndexer = operator.create();
-    private final Trigger operatorHandoffToIndexer = operator.triangle();
+    private final Trigger operatorCancelAction = operator.R1();
+    private final Trigger operatorClimbShift = operator.L1();
+
+    private final Trigger operatorSubwoofer = operatorClimbShift.negate().and(operator.povRight());
+    private final Trigger operatorPodium = operatorClimbShift.negate().and(operator.povLeft());
+    private final Trigger operatorAmp = operatorClimbShift.negate().and(operator.povUp());
+    private final Trigger operatorJamClear = operatorClimbShift.negate().and(operator.povDown());
+
+    private final Trigger operatorClimbRaise = operatorClimbShift.and(operator.povUp());
+    private final Trigger operatorClimbPull = operatorClimbShift.and(operator.povDown());
+    private final Trigger operatorClimbReset = operatorClimbShift.and(operator.povLeft());
+    private final Trigger operatorClimbManual = operatorClimbShift.and(operator.povRight());
+
+    private final Supplier<Double> operatorClimbThrottle = () -> -Util.handleDeadband(operator.getLeftY(), 0.05);
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -152,11 +151,10 @@ public class RobotContainer {
     // private final Trigger armHomingSequence = overrides.operatorSwitch(1).debounce(1, DebounceType.kRising); // run the arm calibration sequence
     // private final Trigger overrideArmSafety = overrides.operatorSwitch(2); // run arm at full speed even off FMS
     // private final Trigger overrideLedBrightness = overrides.operatorSwitch(3); // full led brightness when off FMS
-    private final Trigger ledsIndicateFailed = overrides.operatorSwitch(4); // indicate arm failed on LEDS
+    // private final Trigger ledsIndicateFailed = overrides.operatorSwitch(4); // indicate arm failed on LEDS
 
     // Virtual Triggers
     private final Trigger driverNoFieldOriented = driverTempDisableFieldOriented.or(driverGyroFail);
-    private final Trigger robotTeleopEnabled = new Trigger(DriverStation::isTeleopEnabled);
     
     public final LoggedDashboardNumber endgameAlert1 = new LoggedDashboardNumber("Endgame Alert #1", 30.0);
     public final LoggedDashboardNumber endgameAlert2 = new LoggedDashboardNumber("Endgame Alert #2", 15.0);
@@ -182,6 +180,7 @@ public class RobotContainer {
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
                     tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
+                    climb = new Climb(new ClimbIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
                     vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
                     break;
@@ -288,6 +287,12 @@ public class RobotContainer {
             });
         }
 
+        if (climb == null) {
+            indexer = new Indexer(new IndexerIO() {
+                
+            });
+        }
+
         if (leds == null) {
             leds = new LED(new LEDIO() {
                 
@@ -344,13 +349,12 @@ public class RobotContainer {
     private void setDefaultCommands() {
         drive.setDefaultCommand(
             new DriveWithController(
-                drive, 
-                objective,
+                drive,
                 this::getDriveInputs, 
-                driverSlowMode::getAsBoolean, 
-                driverNoFieldOriented::getAsBoolean, 
-                driverSnapAutoAlignAngle::getAsBoolean,
-                () -> false
+                driverSlowMode, 
+                driverNoFieldOriented, 
+                driverAlignPodium,
+                driverAlignAmp
             )
         );
 
@@ -365,7 +369,7 @@ public class RobotContainer {
         driverXMode.whileTrue(new XModeDriveCommand(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
         // driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> true));
-        driverAutoAlignPreferred.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
+        // driverAlignAmp.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
 
         // Driver override switches
         driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));
@@ -373,20 +377,24 @@ public class RobotContainer {
         driverGyroFail.onFalse(DriveUtilityCommandFactory.unFailGyro(drive));
         driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
-        driverCancelAction.onTrue(new ArmStow(arm, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
+
+        driverCancelAction.or(operatorCancelAction).onTrue(new ArmStow(arm, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
+        driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
 
         //Operator button bindings
-        operatorIntakeGroundToIndexer.or(driverDeployIntake).onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
-        operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
+        // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(arm, intake, indexer));
-        operatorStowArm.onTrue(new ArmStow(arm, intake));
-        operatorResetIndexer.onTrue(new IndexerReset(indexer, tilt, flywheels));
-        operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
+        // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
         operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
-        operatorHandoffToIndexer.onTrue(new IntakeHandoffToIndexer(arm, intake, indexer, flywheels, objective));
+
+        operatorClimbRaise.onTrue(new ClimbAutoRaise(climb, objective));
+        operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
+        operatorClimbReset.onTrue(new ClimbReset(climb, objective));
+        operatorClimbManual.onTrue(new ClimbManualOverride(climb, objective, operatorClimbThrottle));
+
         operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
         operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 
@@ -396,7 +404,6 @@ public class RobotContainer {
         // armForceEnable
         // armHomingSequence
         // overrideArmSafety
-        ledsIndicateFailed.whileTrue(ArmCommandFactory.armFailureSwitch(arm));
     }
 
     public Command getAutonomousCommand() {

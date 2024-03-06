@@ -77,6 +77,12 @@ public class TalonFXFeedbackControlHelper {
         PhoenixProUtil.checkErrorAndRetry(() -> mConfigurator.apply(mMagicConfigs, timeout));
     }
 
+    public void setKG(double kG) {
+        refreshConfigs();
+        mPIDConfigs.kG = kG;
+        applyConfigs();
+    }
+
     public void setKS(double kS) {
         refreshConfigs();
         mPIDConfigs.kS = kS;
@@ -129,6 +135,11 @@ public class TalonFXFeedbackControlHelper {
         refreshConfigs();
         mMagicConfigs.MotionMagicJerk = magicJerk;
         applyConfigs();
+    }
+
+    public double getKG() {
+        refreshConfigs();
+        return mPIDConfigs.kG;
     }
 
     public double getKS() {

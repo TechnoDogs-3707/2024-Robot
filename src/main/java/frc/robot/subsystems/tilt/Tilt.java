@@ -11,7 +11,6 @@ import frc.robot.Robot;
 import frc.robot.Constants.Mode;
 import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.util.Util;
-import frc.robot.subsystems.tilt.TiltIOInputsAutoLogged;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
@@ -19,11 +18,11 @@ import java.util.function.Supplier;
 
 public class Tilt extends SubsystemBase {
     public enum TiltGoalState {
-        STOW(new TiltState(0.01, false, false)),
-        CLOSE(new TiltState(0.075, false, true)),
-        PODIUM(new TiltState(0.055, false, true)),
-        AMP(new TiltState(0.07, false, true)),
-        AUTO_AIM(new TiltState(0.03, true, true));
+        STOW(new TiltState(0.007, false, false)),
+        CLOSE(new TiltState(0.078, false, true)),
+        PODIUM(new TiltState(0.007, false, true)),
+        AMP(new TiltState(0.073, false, true)),
+        AUTO_AIM(new TiltState(0.033, true, true));
 
         public TiltState state;
 

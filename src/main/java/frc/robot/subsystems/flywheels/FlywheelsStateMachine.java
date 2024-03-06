@@ -1,6 +1,6 @@
 package frc.robot.subsystems.flywheels;
 
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Timer;
 import frc.robot.lib.util.Util;
 
 import static frc.robot.Constants.ShooterFlywheels.*;
@@ -57,12 +57,12 @@ public class FlywheelsStateMachine {
 
     private FlywheelsSystemState mSystemState = FlywheelsSystemState.OFF;
     private FlywheelsWantedAction mWantedAction = FlywheelsWantedAction.OFF;
-    private double mStateStartTime = Timer.getFPGATimestamp();
+    // private double mStateStartTime = Timer.getFPGATimestamp();
 
     public void setWantedAction(FlywheelsWantedAction wantedAction) {
         if (wantedAction != mWantedAction) {
             mWantedAction = wantedAction;
-            mStateStartTime = Timer.getFPGATimestamp();
+            // mStateStartTime = Timer.getFPGATimestamp();
         }
     }
 
@@ -71,7 +71,7 @@ public class FlywheelsStateMachine {
     }
 
     protected FlywheelsState update(double leftMotorRPS, double rightMotorRPS, double leftSetpointRPS, double rightSetpointRPS) {
-        double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
+        // double timeInState = Timer.getFPGATimestamp() - mStateStartTime;
 
         boolean shouldEnableFlywheel = false;
         boolean shouldSlowIdle = false;

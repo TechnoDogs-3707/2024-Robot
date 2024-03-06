@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -30,7 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotStateTracker;
@@ -43,7 +40,6 @@ import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.AutoAlignMotionPlanner;
 import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
-import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
 import frc.robot.subsystems.localizer.VisionPose;
 
@@ -104,10 +100,6 @@ public class Drive extends SubsystemBase {
 
     private final Alert mAlertSteerNeutralMode = new Alert(
             "Swerve Steering Neutral Mode Enabled! Performance may be reduced, as driving in this mode is not intended.",
-            AlertType.WARNING);
-    
-    private final Alert mAlertOffsetsNotSafe = new Alert(
-            "Swerve offset safety not enabled! Module offsets could be updated by accident", 
             AlertType.WARNING);
 
     private final Alert mPathPlannerNotConfigured = new Alert("PathPlanner has not been configured yet! Autonomous Programs and Path Finding will not function, and may crash the robot code.", AlertType.ERROR);
@@ -454,11 +446,6 @@ public class Drive extends SubsystemBase {
         );
     }
 
-    // public Command autoAlignAndWaitCommand(Pose2d targetPoint) {
-    //     return runOnce(() -> this.setSnapToPoint(targetPoint))
-    //     .alongWith(Commands.waitUntil(this::autoAlignAtTarget));
-    // }
-
     public Pose2d getTargetPoint() {
         return mTargetPoint;
     }
@@ -593,6 +580,7 @@ public class Drive extends SubsystemBase {
             return mLastRobotPose;
         } else {
             return new Pose2d(); // TODO: get initial robot pose from autonomous trajectory
+            
         }
     }
 }
