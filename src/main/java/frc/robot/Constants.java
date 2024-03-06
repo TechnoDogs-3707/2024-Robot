@@ -67,7 +67,7 @@ public final class Constants {
     }
     
     public static final Map<RobotType, String> logFolders =
-    Map.of(RobotType.ROBOT_2023_FLAPJACK, "/home/lvuser", RobotType.ROBOT_2023_HEAVYMETAL, "/home/lvuser"); // log to internal storage
+    Map.of(RobotType.ROBOT_2023_FLAPJACK, "/home/lvuser", RobotType.ROBOT_2024_HARD_ROCK, "/home/lvuser"); // log to internal storage
     // Map.of(RobotType.ROBOT_2023_CN1, "/media/sda2", RobotType.ROBOT_2023_CN2, "/media/sda2/"); // log to sd card
     
     public static enum RobotType {
@@ -201,34 +201,15 @@ public final class Constants {
     public static final SwerveDriveKinematics kKinematics = new SwerveDriveKinematics(
         kWheelPositions
     );
-
-    // TODO rename these to be steer/drive
-    public static final double kMk4AziMMKp = 6.000; //0.505
-    public static final double kMk4AziMMKi = 0;
-    public static final double kMk4AziMMKd = 0;//0.0004; //0.2 / 500
-    public static final double kMk4AziMMKs = 0.8;
-    public static final double kMk4AziKv = 0.1224;
-
-    public static final double kMk4AziMMCruiseVelocity = 98.0;
-    public static final double kMk4AziMMAccel = 1000.0;
-
-
-    public static final double kMk4AziPositionKp = 1.0005; //0.505
-    public static final double kMk4AziPositionKi = 0;
-    public static final double kMk4AziPositionKd = 0.0004; //0.2 / 500
-
-    public static final double kMk4DriveVelocityKp = 0.02 * 12;
-    public static final double kMk4DriveVelocityKi = 0.0;
-    public static final double kMk4DriveVelocityKd = 0.000002 * 12; //0.01
-    public static final double kMk4DriveVelocityKv = 1 / 101.98 * 12;// (kMaxVelocityMetersPerSecond / (Math.PI * Constants.kDriveWheelDiameter * Constants.kDriveReduction));
-    public static final double kMk4DriveVelocityKs = 0.8;
-
     public static final double kMaxAngularSpeedRadiansPerSecond = kMaxVelocityMetersPerSecond /
             Math.hypot(kDriveTrackwidthMeters / 2.0, kDriveWheelbaseMeters / 2.0);
+
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = kMaxAccelerationMetersPerSecondSquared /
             Math.hypot(kDriveTrackwidthMeters / 2.0, kDriveWheelbaseMeters / 2.0);
+
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+
     public static final TrapezoidProfile.Constraints kPositionControllerConstraints =
             new TrapezoidProfile.Constraints(kMaxVelocityMetersPerSecond, kMaxVelocityMetersPerSecond);
 
@@ -274,13 +255,6 @@ public final class Constants {
     public static final double kMaintainRadiusKp = 1.5;
     public static final double kMaintainRadiusKi = 0.0;
     public static final double kMaintainRadiusKd = 0.0;
-    
-    //Pure Pursuit Constants
-    public static final double kPathLookaheadTime = 0.25; // From 1323 (2019)
-    public static final double kPathMinLookaheadDistance = 12.0; //From 1323 (2019)
-    public static final double kAdaptivePathMinLookaheadDistance = 6.0;
-    public static final double kAdaptivePathMaxLookaheadDistance = 24.0;
-    public static final double kAdaptiveErrorLookaheadCoefficient = 0.01;
 
     //Auton Driving
     public static final HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(
@@ -293,10 +267,6 @@ public final class Constants {
 
     //Auto-Align
     public static final double kAutoAlignAllowableDistance = 2.0; //Meters
-
-
-    //Heading Controller Drive
-    public static final double kFeedforwardScaleFactor = 2.0;
 
     public static final class DriveSubsystem {
         public static final Slot0Configs kDrivePIDConfig = new Slot0Configs();
@@ -381,20 +351,20 @@ public final class Constants {
             public static final double kG = 0.2;
 
             public static final double kS = 0.0;
-            public static final double kV = 4.0;
+            public static final double kV = 5.0;
             public static final double kA = 0.0;
             public static final double kP = 14.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 
             public static final double kMagicVel = 1.0;
-            public static final double kMagicAccel = 5.0;
+            public static final double kMagicAccel = 10.0;
             public static final double kMagicJerk = 0.0;
 
             public static final double kLiberalAllowableError = 0.06;
             public static final double kConservativeAllowableError = 0.04;
 
-            public static final double kHomePosition = 0.375;
+            public static final double kHomePosition = 0.38;
             public static final double kMinTargetPosition = 0.0;
             public static final double kMaxTargetPosition = 0.0;
 
@@ -404,17 +374,17 @@ public final class Constants {
     }
 
     public static final class Intake {
-            public static final int kMasterMotorID = 33;
-            public static final String kMotorBus = "canivore";
+        public static final int kMasterMotorID = 33;
+        public static final String kMotorBus = "canivore";
 
-            public static final boolean invertMaster = false;
+        public static final boolean invertMaster = false;
 
-            public static final double kIdleThrottle = 0.0;
-            public static final double kPartialIntakeThrottle = 0.5;
-            public static final double kHandoffThrottle = 0.7;
-            public static final double kConstantThrottle = 0.7;
-            public static final double kReverseThrottle = -0.33;
-        }
+        public static final double kIdleThrottle = 0.0;
+        public static final double kPartialIntakeThrottle = 0.5;
+        public static final double kHandoffThrottle = 0.7;
+        public static final double kConstantThrottle = 0.7;
+        public static final double kReverseThrottle = -0.33;
+    }
 
     public static final class Indexer {
         public static final int kMotorID = 40;
@@ -479,7 +449,7 @@ public final class Constants {
         public static final int kRightMotorID = 51;
         public static final String kMotorBus = "canivore";
 
-        public static final InvertedValue leftMotorPolarity = InvertedValue.CounterClockwise_Positive;
+        public static final InvertedValue leftMotorPolarity = InvertedValue.Clockwise_Positive;
         public static final InvertedValue rightMotorPolarity = InvertedValue.CounterClockwise_Positive;
 
         public static final double kG = 0.0;
@@ -495,14 +465,14 @@ public final class Constants {
         
         public static final double kPIDAllowableError = 0.0;
 
-        public static final double kMotorHomePosition = 0.0;
+        public static final double kMotorHomePosition = -2.0;
 
         public static final double kReverseSoftLimitValue = 0.0;
-        public static final double kForwardSoftLimitValue = 0.0;
+        public static final double kForwardSoftLimitValue = 60.0;
 
         public static final double kClimbingThrottle = 0.0;
 
-        public static final double kFullExtensionPosition = 0.0;
+        public static final double kFullExtensionPosition = 60.0;
         public static final double kFullRetractionPosition = 0.0;
     }
 

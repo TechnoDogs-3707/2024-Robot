@@ -11,6 +11,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,9 +42,11 @@ import frc.robot.commands.climb.ClimbManualOverride;
 import frc.robot.commands.climb.ClimbPoweredRetract;
 import frc.robot.commands.climb.ClimbReset;
 import frc.robot.lib.OverrideSwitches;
+import frc.robot.lib.Utility;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
+import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
@@ -141,7 +146,7 @@ public class RobotContainer {
     private final Trigger operatorClimbReset = operatorClimbShift.and(operator.povLeft());
     private final Trigger operatorClimbManual = operatorClimbShift.and(operator.povRight());
 
-    private final Supplier<Double> operatorClimbThrottle = operator::getLeftY;
+    private final Supplier<Double> operatorClimbThrottle = () -> -Util.handleDeadband(operator.getLeftY(), 0.05);
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);
@@ -391,7 +396,7 @@ public class RobotContainer {
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(arm, intake, indexer));
-        operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
+        // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
         operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
 

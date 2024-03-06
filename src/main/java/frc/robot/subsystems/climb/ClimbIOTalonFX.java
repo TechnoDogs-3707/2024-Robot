@@ -57,6 +57,10 @@ public class ClimbIOTalonFX implements ClimbIO {
         mLeftMotorConfig.Slot0.kD = kD;
         mLeftMotorConfig.MotionMagic.MotionMagicCruiseVelocity = kMagicVel;
         mLeftMotorConfig.MotionMagic.MotionMagicAcceleration = kMagicAccel;
+        mLeftMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        mLeftMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = kForwardSoftLimitValue;
+        mLeftMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        mLeftMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = kReverseSoftLimitValue;
 
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mLeftMotorConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.setPosition(kMotorHomePosition));
@@ -73,6 +77,10 @@ public class ClimbIOTalonFX implements ClimbIO {
         mRightMotorConfig.Slot0.kD = kD;
         mRightMotorConfig.MotionMagic.MotionMagicCruiseVelocity = kMagicVel;
         mRightMotorConfig.MotionMagic.MotionMagicAcceleration = kMagicAccel;
+        mRightMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        mRightMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = kForwardSoftLimitValue;
+        mRightMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        mRightMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = kReverseSoftLimitValue;
 
         PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mRightMotorConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.setPosition(kMotorHomePosition));
