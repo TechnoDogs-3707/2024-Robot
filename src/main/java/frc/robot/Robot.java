@@ -104,7 +104,7 @@ public class Robot extends LoggedRobot {
             case REAL:
             String folder = Constants.logFolders.get(Constants.getRobot());
             if (folder != null) {
-                Logger.addDataReceiver(new WPILOGWriter(folder));
+                // Logger.addDataReceiver(new WPILOGWriter(folder)); TODO: fix this
             } else {
                 logNoFileAlert.set(true);
             }

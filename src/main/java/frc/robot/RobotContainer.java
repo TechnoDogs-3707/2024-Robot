@@ -11,9 +11,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,12 +25,10 @@ import frc.robot.commands.AutoScoreShooterAmp;
 import frc.robot.commands.AutoScoreShooterPodium;
 import frc.robot.commands.AutoScoreShooterSubwoofer;
 import frc.robot.commands.AutonXModeCommand;
-import frc.robot.commands.DriveAutoAlignCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
 import frc.robot.commands.IndexerJamClearing;
 import frc.robot.commands.IndexerReset;
-import frc.robot.commands.IntakeNoteGroundHold;
 import frc.robot.commands.IntakeNoteGroundToIndexer;
 import frc.robot.commands.ShooterPrepare;
 import frc.robot.commands.XModeDriveCommand;
@@ -42,7 +37,6 @@ import frc.robot.commands.climb.ClimbManualOverride;
 import frc.robot.commands.climb.ClimbPoweredRetract;
 import frc.robot.commands.climb.ClimbReset;
 import frc.robot.lib.OverrideSwitches;
-import frc.robot.lib.Utility;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
@@ -113,12 +107,12 @@ public class RobotContainer {
     private final Trigger driverSlowMode = driver.L1();
     private final Trigger driverXMode = driver.cross();
     private final Trigger driverGyroReset = driver.create().debounce(0.5, DebounceType.kRising); // delay gyro reset for 1 second
-    private final Trigger driverAutoAlignPreferred = driver.triangle();
+    private final Trigger driverAlignAmp = driver.triangle();
     private final Trigger driverJamClear = driver.povDown();
     // private final Trigger driverAutoAlignClosest = driver.L2();
     // private final Trigger driverAutoAlignClosest = driver.PS();
     private final Trigger driverDeployIntake = driver.L2();
-    private final Trigger driverSnapAutoAlignAngle = driver.square();
+    private final Trigger driverAlignPodium = driver.square();
     // private final Trigger driverSnapAngleIgnoringPreference = driver.circle();
     private final Trigger driverCancelAction = driver.circle();
     private final Trigger driverAutoShoot = driver.R2();
@@ -130,10 +124,7 @@ public class RobotContainer {
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
     private final Trigger operatorResetMotionPlanner = operator.create().debounce(0.5, DebounceType.kRising);
-
-    private final Trigger operatorIntakeGroundToHold = operator.L2();
     private final Trigger operatorCancelAction = operator.R1();
-
     private final Trigger operatorClimbShift = operator.L1();
 
     private final Trigger operatorSubwoofer = operatorClimbShift.negate().and(operator.povRight());
@@ -358,13 +349,12 @@ public class RobotContainer {
     private void setDefaultCommands() {
         drive.setDefaultCommand(
             new DriveWithController(
-                drive, 
-                objective,
+                drive,
                 this::getDriveInputs, 
-                driverSlowMode::getAsBoolean, 
-                driverNoFieldOriented::getAsBoolean, 
-                driverSnapAutoAlignAngle::getAsBoolean,
-                () -> false
+                driverSlowMode, 
+                driverNoFieldOriented, 
+                driverAlignPodium,
+                driverAlignAmp
             )
         );
 
@@ -379,7 +369,7 @@ public class RobotContainer {
         driverXMode.whileTrue(new XModeDriveCommand(drive));
         driverGyroReset.onTrue(DriveUtilityCommandFactory.resetGyro(drive));
         // driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> true));
-        driverAutoAlignPreferred.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
+        // driverAlignAmp.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
 
         // Driver override switches
         driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));

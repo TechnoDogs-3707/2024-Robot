@@ -43,7 +43,7 @@ public final class Constants {
                     .set(true);
                     invalidRobotAlertSent = true;
                 }
-                return RobotType.ROBOT_2023_HEAVYMETAL;
+                return RobotType.ROBOT_2024_HARD_ROCK;
             } else {
                 return robot;
             }
@@ -67,7 +67,9 @@ public final class Constants {
     }
     
     public static final Map<RobotType, String> logFolders =
-    Map.of(RobotType.ROBOT_2023_FLAPJACK, "/home/lvuser", RobotType.ROBOT_2024_HARD_ROCK, "/home/lvuser"); // log to internal storage
+        Map.of(
+            RobotType.ROBOT_2024_HARD_ROCK, "/media/sda2"
+        ); // log to internal storage
     // Map.of(RobotType.ROBOT_2023_CN1, "/media/sda2", RobotType.ROBOT_2023_CN2, "/media/sda2/"); // log to sd card
     
     public static enum RobotType {
@@ -452,16 +454,16 @@ public final class Constants {
         public static final InvertedValue leftMotorPolarity = InvertedValue.Clockwise_Positive;
         public static final InvertedValue rightMotorPolarity = InvertedValue.CounterClockwise_Positive;
 
-        public static final double kG = 0.0;
+        public static final double kG = 0.04;
         public static final double kS = 0.0;
-        public static final double kV = 0.0;
+        public static final double kV = 0.5;
         public static final double kA = 0.0;
         public static final double kP = 0.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
 
-        public static final double kMagicVel = 0.0;
-        public static final double kMagicAccel = 0.0;
+        public static final double kMagicVel = 20.0;
+        public static final double kMagicAccel = 150.0;
         
         public static final double kPIDAllowableError = 0.0;
 

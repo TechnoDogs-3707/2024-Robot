@@ -6,8 +6,11 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+
+import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
+import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 
 import static frc.robot.Constants.Climb.*;
 
@@ -38,6 +41,20 @@ public class ClimbIOTalonFX implements ClimbIO {
     private final StatusSignal<Boolean> rightMotorForwardsSoftLimit;
 
     private final ArrayList<StatusSignal<?>> mStatusSignals;
+
+    private final LoggedTunableNumber mTunableKG = new LoggedTunableNumber("Climb/kG", kG);
+    private final LoggedTunableNumber mTunableKS = new LoggedTunableNumber("Climb/kS", kS);
+    private final LoggedTunableNumber mTunableKV = new LoggedTunableNumber("Climb/kV", kV);
+    private final LoggedTunableNumber mTunableKA = new LoggedTunableNumber("Climb/kA", kA);
+    private final LoggedTunableNumber mTunableKP = new LoggedTunableNumber("Climb/kP", kP);
+    private final LoggedTunableNumber mTunableKI = new LoggedTunableNumber("Climb/kI", kI);
+    private final LoggedTunableNumber mTunableKD = new LoggedTunableNumber("Climb/kD", kD);
+    
+    private final LoggedTunableNumber mTunableMagicVel = new LoggedTunableNumber("Climb/MagicVelocity", kMagicVel);
+    private final LoggedTunableNumber mTunableMagicAccel = new LoggedTunableNumber("Climb/MagicAcceleration", kMagicAccel);
+
+    private final TalonFXFeedbackControlHelper mFeedbackHelperLeft;
+    private final TalonFXFeedbackControlHelper mFeedbackHelperRight;
 
     private boolean mEnablePID = false;
 
@@ -117,6 +134,9 @@ public class ClimbIOTalonFX implements ClimbIO {
         mStatusSignals.add(rightMotorTemperature);
         mStatusSignals.add(rightMotorReverseSoftLimit);
         mStatusSignals.add(rightMotorForwardsSoftLimit);
+
+        mFeedbackHelperLeft = new TalonFXFeedbackControlHelper(mLeftMotor, mLeftMotorConfig.Slot0, mLeftMotorConfig.MotionMagic);
+        mFeedbackHelperRight = new TalonFXFeedbackControlHelper(mRightMotor, mRightMotorConfig.Slot0, mRightMotorConfig.MotionMagic);
     }
 
     @Override
@@ -136,6 +156,17 @@ public class ClimbIOTalonFX implements ClimbIO {
         inputs.rightMotorTempCelsius = rightMotorTemperature.getValue();
         inputs.rightMotorReverseSoftLimit = rightMotorReverseSoftLimit.getValue();
         inputs.rightMotorForwardSoftLimit = rightMotorForwardsSoftLimit.getValue();
+        
+        mTunableKG.ifChanged(hashCode(), mFeedbackHelperLeft::setKG, mFeedbackHelperRight::setKG);
+        mTunableKS.ifChanged(hashCode(), mFeedbackHelperLeft::setKS, mFeedbackHelperRight::setKS);
+        mTunableKV.ifChanged(hashCode(), mFeedbackHelperLeft::setKV, mFeedbackHelperRight::setKV);
+        mTunableKA.ifChanged(hashCode(), mFeedbackHelperLeft::setKA, mFeedbackHelperRight::setKA);
+        mTunableKP.ifChanged(hashCode(), mFeedbackHelperLeft::setKP, mFeedbackHelperRight::setKP);
+        mTunableKI.ifChanged(hashCode(), mFeedbackHelperLeft::setKI, mFeedbackHelperRight::setKI);
+        mTunableKD.ifChanged(hashCode(), mFeedbackHelperLeft::setKD, mFeedbackHelperRight::setKD);
+
+        mTunableMagicVel.ifChanged(hashCode(), mFeedbackHelperLeft::setMagicVelocity, mFeedbackHelperRight::setMagicVelocity);
+        mTunableMagicAccel.ifChanged(hashCode(), mFeedbackHelperLeft::setMagicAcceleration, mFeedbackHelperRight::setMagicAcceleration);
     }
 
     @Override
