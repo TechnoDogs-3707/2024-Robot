@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3676672858340169,
-      "y": 5.527389345566705
+      "x": 0.7434969808896333,
+      "y": 6.729835080091914
     },
-    "rotation": 0
+    "rotation": 60.25511870305774
   },
   "command": {
     "type": "sequential",
@@ -56,7 +56,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 1.0
           }
         },
         {
@@ -74,13 +74,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note-path1"
+            "pathName": "TGet1-3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note-path2"
+            "pathName": "TReturn1-3"
           }
         },
         {
@@ -106,40 +106,10 @@
           "data": {
             "name": "Indexer Set Intake"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2 Note-path3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2 Note-path4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Indexer Set Score"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
-          }
         }
       ]
     }
   },
-  "folder": "Test+Misc",
+  "folder": "Top",
   "choreoAuto": false
 }

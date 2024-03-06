@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6149913298716719,
+      "y": 2.241316269535979
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C-RUSH"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C-UP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C-IN-A"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Center",
+  "choreoAuto": false
+}

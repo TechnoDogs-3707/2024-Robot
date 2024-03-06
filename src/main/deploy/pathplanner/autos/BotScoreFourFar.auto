@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3676672858340169,
-      "y": 5.527389345566705
+      "x": 0.7159600556714989,
+      "y": 4.370838486405053
     },
-    "rotation": 0
+    "rotation": -60.10109816138547
   },
   "command": {
     "type": "sequential",
@@ -74,13 +74,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note-path1"
+            "pathName": "BGet3-3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note-path2"
+            "pathName": "BReturn3-3"
           }
         },
         {
@@ -110,13 +110,49 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note-path3"
+            "pathName": "BGet5-5"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note-path4"
+            "pathName": "BReturn5-5"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BGet4-5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BReturn4-5"
           }
         },
         {
@@ -136,10 +172,16 @@
           "data": {
             "waitTime": 1.5
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Intake"
+          }
         }
       ]
     }
   },
-  "folder": "Test+Misc",
+  "folder": "Bottom",
   "choreoAuto": false
 }
