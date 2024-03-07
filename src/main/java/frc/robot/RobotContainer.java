@@ -47,6 +47,7 @@ import frc.robot.subsystems.arm.ArmIOSimV1;
 import frc.robot.subsystems.arm.ArmIOTalonFX;
 import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
@@ -167,7 +168,7 @@ public class RobotContainer {
     public RobotContainer(Robot robot) {
         if (Constants.getMode() != Mode.REPLAY) {
             switch (Constants.getRobot()) {
-                case ROBOT_2024_HARD_ROCK:
+                case ROBOT_2024_SONIC:
                     drive = new Drive(
                         new GyroPigeonIO(9, "canivore"), 
                         new SwerveIOTalonFX(0, "canivore"), 
@@ -288,7 +289,7 @@ public class RobotContainer {
         }
 
         if (climb == null) {
-            indexer = new Indexer(new IndexerIO() {
+            climb = new Climb(new ClimbIO() {
                 
             });
         }
