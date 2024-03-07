@@ -66,9 +66,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Set Run"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "CScoreOne"
+            "pathName": "CScoreOne-Pickup-P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CScoreOne-Pickup-P2"
           }
         },
         {
@@ -86,6 +98,6 @@
       ]
     }
   },
-  "folder": "Center",
+  "folder": "Scorched Earth",
   "choreoAuto": false
 }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7343180058169219,
-      "y": 4.370838486405053
+      "x": 0.7526759559623448,
+      "y": 4.2882277107506495
     },
-    "rotation": -57.20046872738085
+    "rotation": -60.10109816138547
   },
   "command": {
     "type": "sequential",
@@ -38,7 +38,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.25
+            "waitTime": 0.5
           }
         },
         {
@@ -56,7 +56,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 0.5
           }
         },
         {
@@ -74,30 +74,66 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CScoreOne-Pickup-P1"
+            "pathName": "BGet5-5"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CScoreOne-Pickup-P2"
+            "pathName": "BReturn5-5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "C-UP"
+            "pathName": "BGet4-5"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "C-IN-A"
+            "pathName": "BReturn4-5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Intake"
           }
         }
       ]
     }
   },
-  "folder": "Center",
+  "folder": "Bottom",
   "choreoAuto": false
 }
