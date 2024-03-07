@@ -469,12 +469,12 @@ public final class Constants {
 
         public static final double kMotorHomePosition = -2.0;
 
-        public static final double kReverseSoftLimitValue = 0.0;
+        public static final double kReverseSoftLimitValue = 1.0;
         public static final double kForwardSoftLimitValue = 60.0;
 
         public static final double kClimbingThrottle = 0.0;
 
-        public static final double kFullExtensionPosition = 60.0;
+        public static final double kFullExtensionPosition = 59.0;
         public static final double kFullRetractionPosition = 0.0;
     }
 

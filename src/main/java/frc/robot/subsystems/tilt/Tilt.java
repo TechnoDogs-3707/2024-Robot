@@ -20,8 +20,8 @@ public class Tilt extends SubsystemBase {
     public enum TiltGoalState {
         STOW(new TiltState(0.007, false, false)),
         CLOSE(new TiltState(0.078, false, true)),
-        PODIUM(new TiltState(0.007, false, true)),
-        AMP(new TiltState(0.073, false, true)),
+        PODIUM(new TiltState(0.008, false, true)),
+        AMP(new TiltState(0.075, false, true)),
         AUTO_AIM(new TiltState(0.033, true, true));
 
         public TiltState state;
