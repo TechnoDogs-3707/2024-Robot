@@ -38,7 +38,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.25
+            "waitTime": 0.5
           }
         },
         {
@@ -56,7 +56,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -74,19 +74,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TGet1-3"
+            "pathName": "TGet1-3 P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TGet1-3 P2"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "TReturn1-3"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
           }
         },
         {
@@ -98,7 +98,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 0.5
           }
         },
         {
