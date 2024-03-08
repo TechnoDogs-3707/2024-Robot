@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7067810805987872,
-      "y": 4.380017461477765
+      "x": 0.771033906107768,
+      "y": 6.784908930528183
     },
-    "rotation": -59.42077312751098
+    "rotation": 60.832386620422156
   },
   "command": {
     "type": "sequential",
@@ -30,12 +30,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Indexer Set Score"
@@ -44,13 +38,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BottomMoveOut"
+            "pathName": "TopMoveOut"
           }
         }
       ]
