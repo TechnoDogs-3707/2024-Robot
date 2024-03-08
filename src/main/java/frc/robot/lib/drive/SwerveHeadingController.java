@@ -2,6 +2,10 @@ package frc.robot.lib.drive;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.RobotStateTracker;
 import frc.robot.lib.Utility;
@@ -24,6 +28,9 @@ public class SwerveHeadingController {
     }
 
     public Pose2d centerOfGoal;
+
+    private final Pose2d kSpeakerLocationRed = new Pose2d(16.75, 5.56, Rotation2d.fromDegrees(180));
+    private final Pose2d kSpeakerLocationBlue = new Pose2d(0, 5.56, Utility.R2D_IDENTITY);
 
     public enum HeadingControllerState {
         OFF, SNAP, // for snapping to specific headings
@@ -83,6 +90,15 @@ public class SwerveHeadingController {
             return -angle;
         }
         return angle;
+    }
+
+    public double calculateAngleToSpeaker(Pose2d current_pose) {
+        // Pose2d speakerLocation = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red ? kSpeakerLocationRed : kSpeakerLocationBlue;
+        // return current_pose.relativeTo(speakerLocation).getRotation().unaryMinus().getDegrees();
+
+        Pose2d speakerLocation = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red ? kSpeakerLocationRed : kSpeakerLocationBlue;
+
+        return current_pose.relativeTo(speakerLocation).getTranslation().getAngle().getDegrees();
     }
 
     /**

@@ -451,8 +451,13 @@ public class Drive extends SubsystemBase {
     }
 
     public void reseedRotation() {
-        mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, new Pose2d(mLastRobotPose.getTranslation(), new Rotation2d()));
+        boolean flip = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+        mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, new Pose2d(mLastRobotPose.getTranslation(), flip ? Rotation2d.fromRotations(0.5) : new Rotation2d()));
     }
+
+    // public void reseedRotation() {
+    //     mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, new Pose2d(mLastRobotPose.getTranslation(), new Rotation2d()));
+    // }
     
     public void stop() {
         setVelocityClosedLoop(new ChassisSpeeds());

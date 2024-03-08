@@ -29,7 +29,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_2024_HARD_ROCK;
+    private static final RobotType robot = RobotType.ROBOT_2024_SONIC;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -43,7 +43,7 @@ public final class Constants {
                     .set(true);
                     invalidRobotAlertSent = true;
                 }
-                return RobotType.ROBOT_2024_HARD_ROCK;
+                return RobotType.ROBOT_2024_SONIC;
             } else {
                 return robot;
             }
@@ -56,6 +56,7 @@ public final class Constants {
         switch (getRobot()) {
             case ROBOT_2023_HEAVYMETAL:
             case ROBOT_2023_FLAPJACK:
+            case ROBOT_2024_SONIC:
             return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
             
             case ROBOT_SIMBOT:
@@ -68,12 +69,12 @@ public final class Constants {
     
     public static final Map<RobotType, String> logFolders =
         Map.of(
-            RobotType.ROBOT_2024_HARD_ROCK, "/media/sda2"
+            RobotType.ROBOT_2024_SONIC, "/media/sda2"
         ); // log to internal storage
     // Map.of(RobotType.ROBOT_2023_CN1, "/media/sda2", RobotType.ROBOT_2023_CN2, "/media/sda2/"); // log to sd card
     
     public static enum RobotType {
-        ROBOT_2024_HARD_ROCK,
+        ROBOT_2024_SONIC,
         /**
          * 2023 "Heavy Metal" Chassis
          */
@@ -469,12 +470,12 @@ public final class Constants {
 
         public static final double kMotorHomePosition = -2.0;
 
-        public static final double kReverseSoftLimitValue = 0.0;
+        public static final double kReverseSoftLimitValue = 1.0;
         public static final double kForwardSoftLimitValue = 60.0;
 
         public static final double kClimbingThrottle = 0.0;
 
-        public static final double kFullExtensionPosition = 60.0;
+        public static final double kFullExtensionPosition = 59.0;
         public static final double kFullRetractionPosition = 0.0;
     }
 

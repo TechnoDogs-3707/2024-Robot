@@ -9,6 +9,8 @@ package frc.robot.lib.dashboard;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
+
 import frc.robot.Constants;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
@@ -91,5 +93,14 @@ public class LoggedTunableBoolean {
         }
         
         return false;
+    }
+
+    @SafeVarargs
+    public final void ifChanged(int id, Consumer<Boolean>... consumer) {
+        if (hasChanged(id)) {
+            for (Consumer<Boolean> c : consumer) {
+                c.accept(get());
+            }
+        }
     }
 }
