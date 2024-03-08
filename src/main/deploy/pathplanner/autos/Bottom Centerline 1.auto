@@ -74,7 +74,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BGet4-5"
+            "pathName": "BGet4-5 P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BGet4-5 P2"
           }
         },
         {

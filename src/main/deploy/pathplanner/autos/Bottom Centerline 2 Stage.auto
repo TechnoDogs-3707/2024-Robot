@@ -36,12 +36,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Indexer Set Score"
@@ -74,7 +68,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BGet4-5"
+            "pathName": "BGet4-5 P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BGet4-5 P2"
           }
         },
         {
