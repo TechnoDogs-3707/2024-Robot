@@ -76,6 +76,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
         System.out.println("Starting TechnoDogs 3707 Robot Code (2024, Codename Skynyrd)");
+        System.out.println("---------> COMMIT SHA: " + BuildConstants.GIT_SHA + " <----------");
         
         // Record metadata
         Logger.recordMetadata("Robot", Constants.getRobot().toString());

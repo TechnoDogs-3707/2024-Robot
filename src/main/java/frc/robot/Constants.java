@@ -31,7 +31,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public final class Constants {
     private static final RobotType robot = RobotType.ROBOT_2024_SONIC;
     public static final double loopPeriodSecs = 0.02;
-    public static final boolean tuningMode = true;
+    public static final boolean tuningMode = false;
     
     public static boolean invalidRobotAlertSent = false;
     
@@ -367,7 +367,7 @@ public final class Constants {
             public static final double kLiberalAllowableError = 0.06;
             public static final double kConservativeAllowableError = 0.04;
 
-            public static final double kHomePosition = 0.38;
+            public static final double kHomePosition = 0.42;
             public static final double kMinTargetPosition = 0.0;
             public static final double kMaxTargetPosition = 0.0;
 
