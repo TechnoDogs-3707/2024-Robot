@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7518994781213513,
-      "y": 4.2978770123018135
+      "x": 0.857297007033385,
+      "y": 4.414985377759629
     },
     "rotation": -60.10109816138547
   },
@@ -33,6 +33,12 @@
           "type": "named",
           "data": {
             "name": "Tilt Set Close"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -102,9 +108,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Set Off"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "BGet3-5"
+            "pathName": "BGet3-5 P1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Deploy Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Set Run"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BGet3-5 P2"
           }
         },
         {

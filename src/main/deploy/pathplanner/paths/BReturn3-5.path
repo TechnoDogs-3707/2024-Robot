@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 0.787031987758696,
-        "y": 4.2978770123018135
+        "x": 0.8221644973960404,
+        "y": 4.450117887396973
       },
       "prevControl": {
-        "x": 1.1174750903763107,
-        "y": 3.5176641311213337
+        "x": 1.152607600013655,
+        "y": 3.6699050062164935
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,7 +62,31 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.25,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Set Off"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Stow Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.5,
