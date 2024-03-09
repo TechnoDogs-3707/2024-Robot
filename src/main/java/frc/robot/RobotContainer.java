@@ -170,7 +170,7 @@ public class RobotContainer {
             switch (Constants.getRobot()) {
                 case ROBOT_2024_SONIC:
                     drive = new Drive(
-                        new GyroPigeonIO(9, "canivore"), 
+                        new GyroPigeonIO(9, "rio"), 
                         new SwerveIOTalonFX(0, "canivore"), 
                         new SwerveIOTalonFX(1, "canivore"), 
                         new SwerveIOTalonFX(2, "canivore"), 
