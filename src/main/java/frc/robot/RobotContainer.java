@@ -128,6 +128,8 @@ public class RobotContainer {
     private final Trigger operatorCancelAction = operator.R1();
     private final Trigger operatorClimbShift = operator.L1();
 
+    private final Trigger operatorScoreOverride = operator.circle();
+
     private final Trigger operatorSubwoofer = operatorClimbShift.negate().and(operator.povRight());
     private final Trigger operatorPodium = operatorClimbShift.negate().and(operator.povLeft());
     private final Trigger operatorAmp = operatorClimbShift.negate().and(operator.povUp());
@@ -183,7 +185,7 @@ public class RobotContainer {
                     indexer = new Indexer(new IndexerIOTalonFX());
                     climb = new Climb(new ClimbIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
-                    vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
+                    // vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
                     break;
                 // case ROBOT_2024_HARD_ROCK:
                 //     drive = new Drive(
@@ -384,12 +386,12 @@ public class RobotContainer {
 
         //Operator button bindings
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
-        operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
-        operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
+        operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(arm, intake, indexer));
         // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
-        operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
+        operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
 
         operatorClimbRaise.onTrue(new ClimbAutoRaise(climb, objective));
         operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
