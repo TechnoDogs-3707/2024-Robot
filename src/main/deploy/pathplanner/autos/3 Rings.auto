@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.395506739616394,
-      "y": 5.543531894683838
+      "x": 1.369219422340393,
+      "y": 5.55738639831543
     },
     "rotation": 0.0
   },
@@ -12,19 +12,25 @@
     "data": {
       "commands": [
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Deploy Intake"
+                  "pathName": "Score 3 Close.1"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Speed To 60"
                 }
               },
               {
@@ -36,34 +42,34 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Close"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.75
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
+                  "name": "Deploy Intake"
                 }
               }
             ]
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score 3 Close.2"
+                }
+              },
               {
                 "type": "named",
                 "data": {
@@ -75,49 +81,36 @@
                 "data": {
                   "name": "Indexer Set Intake"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Set Off"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Simple 3 Ring Center.1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Off"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
+                  "pathName": "Score 3 Close.3"
                 }
               },
               {
@@ -127,47 +120,40 @@
                 }
               },
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Simple 3 Ring Center.2"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Off"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Set Off"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Score 3 Close.4"
                 }
               },
               {
@@ -177,37 +163,48 @@
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Simple 3 Ring Center.3"
+                  "name": "Indexer Set Intake"
                 }
               }
             ]
           }
         },
         {
-          "type": "sequential",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Off"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Set Off"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Score 3 Close.5"
           }
         }
       ]
