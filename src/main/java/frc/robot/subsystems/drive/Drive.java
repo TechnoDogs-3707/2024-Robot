@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,8 +34,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotState;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.RobotType;
+import frc.robot.RobotState.OdometryObservation;
 import frc.robot.lib.Utility;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
@@ -44,7 +47,7 @@ import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
-import frc.robot.subsystems.localizer.VisionPose;
+import frc.robot.util.GeomUtil;
 
 /** Add your docs here. */
 public class Drive extends SubsystemBase {
@@ -139,8 +142,7 @@ public class Drive extends SubsystemBase {
     private final int kRearLeftID = 2;
     private final int kRearRightID = 3;
 
-    SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(Constants.kWheelPositions);
-    SwerveSetpointGenerator mGenerator = new SwerveSetpointGenerator(mKinematics);
+    SwerveSetpointGenerator mGenerator = new SwerveSetpointGenerator(Constants.kKinematics);
 
     private ChassisSpeeds mSetpoint = new ChassisSpeeds();
     private ChassisSpeeds mMeasuredSpeeds = new ChassisSpeeds();
@@ -164,8 +166,6 @@ public class Drive extends SubsystemBase {
     private Rotation3d mLastRotation3d = new Rotation3d();
     private Rotation2d mLastGyroYawPerSecond = new Rotation2d();
 
-    private SwerveDrivePoseEstimator mPoseEstimator;
-
     private Rotation2d mAutonRotationTarget;
 
     public Drive(GyroIO gyroIO, SwerveModuleIO frontLeftIO, SwerveModuleIO frontRightIO, SwerveModuleIO rearLeftIO,
@@ -179,8 +179,6 @@ public class Drive extends SubsystemBase {
         mModules[kRearLeftID] = new SwerveModule(rearLeftIO, kRearLeftID);
         mModules[kRearRightID] = new SwerveModule(rearRightIO, kRearRightID);
 
-        mPoseEstimator = new SwerveDrivePoseEstimator(mKinematics, mLastGyroYaw, mLastSwervePositions, new Pose2d());
-
         mAutonRotationTarget = new Rotation2d();
 
         mLastMovementTimer.reset();
@@ -189,8 +187,8 @@ public class Drive extends SubsystemBase {
     // PathPlanner setup has to be done after named commands are configured, which happens in RobotContainer.
     public void setupPathPlanner() {
         AutoBuilder.configureHolonomic(
-            this::getPose, // Robot pose supplier
-            this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            RobotState.getInstance()::getEstimatedPose, // Robot pose supplier
+            RobotState.getInstance()::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getMeasuredSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::setPathFollowing, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kPathFollowerConfig,
@@ -214,6 +212,8 @@ public class Drive extends SubsystemBase {
         // Update subsystem inputs - this should always be the first thing in periodic()
         mGyroIO.updateInputs(mGyroInputs);
         Logger.processInputs("Drive/Gyro", mGyroInputs);
+
+        double now = Timer.getFPGATimestamp();
 
         mLastGyroYawPerSecond = Rotation2d.fromRotations(mGyroInputs.yawVelocityRotationsPerSecond);
 
@@ -354,7 +354,7 @@ public class Drive extends SubsystemBase {
         }
 
         // Calculate robot velocity from measured chassis speeds
-        var inverseSpeeds = mKinematics.toChassisSpeeds(measuredStates);
+        var inverseSpeeds = Constants.kKinematics.toChassisSpeeds(measuredStates);
         mMeasuredSpeeds = inverseSpeeds;
 
         // Update gyro angle
@@ -370,7 +370,20 @@ public class Drive extends SubsystemBase {
         }
 
         // Update odometry
-        mLastRobotPose = mPoseEstimator.update(mLastGyroYaw, mLastSwervePositions);
+        // mLastRobotPose = mPoseEstimator.update(mLastGyroYaw, mLastSwervePositions);
+        OdometryObservation observation = new OdometryObservation(
+            new SwerveDriveWheelPositions(mLastSwervePositions), 
+            mLastGyroYaw, 
+            now
+        );
+        RobotState.getInstance().addOdometryObservation(observation);
+
+        ChassisSpeeds robotRelativeVelocity = mMeasuredSpeeds;
+        robotRelativeVelocity.omegaRadiansPerSecond = 
+            mGyroInputs.connected
+                ? mGyroInputs.yawVelocityRotationsPerSecond * 2.0 * Math.PI
+                : robotRelativeVelocity.omegaRadiansPerSecond;
+        RobotState.getInstance().addVelocityData(GeomUtil.toTwist2d(robotRelativeVelocity));
 
         // Update Field2d Widget
         if (mPoseWidgetUsePreview.getAsBoolean()) {
@@ -378,13 +391,6 @@ public class Drive extends SubsystemBase {
         } else {
             mPosePreviewSource.setRobotPose(mLastRobotPose);
         }
-
-        // poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
-        Logger.recordOutput("Drive/Odometry/Robot", getPose());
-
-        Logger.recordOutput("Drive/Odometry/RawPose2d/x", getPose().getX());
-        Logger.recordOutput("Drive/Odometry/RawPose2d/y", getPose().getY());
-        Logger.recordOutput("Drive/Odometry/RawPose2d/theta", getPose().getRotation().getRotations());
 
         // Log 3D odometry pose
         var robotTranslation3d = new Translation3d(
@@ -492,7 +498,8 @@ public class Drive extends SubsystemBase {
 
     public void reseedRotation() {
         boolean flip = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
-        mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, new Pose2d(mLastRobotPose.getTranslation(), flip ? Rotation2d.fromRotations(0.5) : new Rotation2d()));
+        RobotState.getInstance().resetPose(new Pose2d(RobotState.getInstance().getEstimatedPose().getTranslation(), flip ? Rotation2d.fromRotations(0.5) : new Rotation2d()));
+        // mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, new Pose2d(mLastRobotPose.getTranslation(), flip ? Rotation2d.fromRotations(0.5) : new Rotation2d()));
     }
 
     // public void reseedRotation() {
@@ -507,32 +514,8 @@ public class Drive extends SubsystemBase {
         mControlState = DriveControlState.X_MODE;
     }
 
-    public Pose2d getPose() {
-        return mLastRobotPose;
-    }
-
     public Rotation3d getGyroAngle() {
         return mLastRotation3d;
-    }
-
-    public Rotation3d getFieldOrientation() {
-        return mLastRotation3d.minus(new Rotation3d(0, 0, getGyroAngle().getZ()));
-    }
-
-    public Rotation2d getAutonRotationTarget() {
-        return mAutonRotationTarget;
-    }
-
-    public void setAutonRotationTarget(Rotation2d autonTarget) {
-        this.mAutonRotationTarget = autonTarget;
-    }
-
-    public void setPose(Pose2d pose) {
-        mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, pose);
-    }
-
-    public void addVisionPose(VisionPose pose) {
-        mPoseEstimator.addVisionMeasurement(pose.pose.toPose2d(), pose.timestampSeconds, pose.stddevs);
     }
 
     public double getLastEncoderPosition(int module) {
@@ -579,7 +562,7 @@ public class Drive extends SubsystemBase {
         }
 
         final double now = Timer.getFPGATimestamp();
-        var position = getPose();
+        var position = RobotState.getInstance().getEstimatedPose();
         var velocity = Utility.getTwist2dFromChassisSpeeds(getMeasuredSpeeds());
 
         ChassisSpeeds output = mAutoAlignPlanner.updateAutoAlign(now, position, velocity);
@@ -592,7 +575,7 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean autoAlignAtTarget() {
-        return getPose().relativeTo(getTargetPoint()).getTranslation().getNorm() <= Constants.kLEDClosenessDeadbandMeters 
+        return RobotState.getInstance().getEstimatedPose().relativeTo(getTargetPoint()).getTranslation().getNorm() <= Constants.kLEDClosenessDeadbandMeters 
             && (mControlState == DriveControlState.AUTO_ALIGN || mControlState == DriveControlState.AUTO_ALIGN_Y_THETA);
     }
 

@@ -59,7 +59,7 @@ public class SwerveHeadingController {
     /**
      * @param goal_pos pos in degrees
      */
-    public void setGoal(double goal_pos) {
+    public void setGoal(Double goal_pos) {
         mSetpoint = goal_pos;
     }
 

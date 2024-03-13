@@ -185,7 +185,7 @@ public class RobotContainer {
                     indexer = new Indexer(new IndexerIOTalonFX());
                     climb = new Climb(new ClimbIOTalonFX());
                     leds = new LED(new LEDIOSim(127));
-                    // vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
+                    vision = new Localizer(new LocalizerIOLL3(), RobotState.getInstance()::addVisionObservation);
                     break;
                 // case ROBOT_2024_HARD_ROCK:
                 //     drive = new Drive(

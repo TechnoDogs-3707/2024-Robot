@@ -45,7 +45,7 @@ public class RobotState {
       new LoggedTunableNumber("RobotState/lookaheadS", 0.0);
   private static final double poseBufferSizeSeconds = 2.0;
 
-  /** Arm angle look up table key: meters, values: radians */
+  /** Arm angle look up table key: meters, values: rotations */
   private static final InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
 
   static {
@@ -227,7 +227,7 @@ public class RobotState {
     latestParameters =
         new AimingParameters(
             targetVehicleDirection,
-            Rotation2d.fromRadians(
+            Rotation2d.fromRotations(
                 armAngleMap.get(targetDistance) + Units.degreesToRadians(shotCompensationDegrees)),
             targetDistance,
             feedVelocity);

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotState;
 import frc.robot.Constants.Mode;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.poofsUtils.PoofsUtil;
@@ -22,7 +23,7 @@ public class Tilt extends SubsystemBase {
         CLOSE(new TiltState(0.078, false, true)),
         PODIUM(new TiltState(0.017, false, true)),
         AMP(new TiltState(0.075, false, true)),
-        AUTO_AIM(new TiltState(0.033, true, true));
+        AUTO_AIM(new TiltState(0.037, true, true));
 
         public TiltState state;
 
@@ -72,7 +73,7 @@ public class Tilt extends SubsystemBase {
         // calculate auto-aim angle if needed, and determine if within tolerance of target (also record outputs)
         double finalPositionTarget = goal.state.defaultPosition;
         if (goal.state.autoAim) {
-            finalPositionTarget = 0.0; // TODO: auto-aim lookup table or formula
+            finalPositionTarget = RobotState.getInstance().getAimingParameters().armAngle().getRotations();
         }
         boolean withinTolerance = PoofsUtil.epsilonEquals(
             goal.state.defaultPosition, 

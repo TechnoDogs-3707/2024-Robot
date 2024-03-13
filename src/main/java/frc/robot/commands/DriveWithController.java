@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.RobotState;
 import frc.robot.lib.Utility;
 import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.lib.drive.SwerveHeadingController;
@@ -29,9 +30,6 @@ public class DriveWithController extends Command {
 
     // these are set for blue alliance, since it is the default. We only flip if the DS reports red.
     private final Rotation2d kAmpAlignAngle = Rotation2d.fromRotations(-0.25);
-    private final Rotation2d kSpeakerAlignAngle = Rotation2d.fromRotations(-0.040);
-
-    private final Rotation2d kFlipAmount = Rotation2d.fromDegrees(180);
 
     private final Drive drive;
     private final Supplier<ControllerDriveInputs> driveInputSupplier;
@@ -94,7 +92,7 @@ public class DriveWithController extends Command {
         mUseOpenLoopDrive.ifChanged(hashCode(), (v) -> mUseOpenLoop = v);
         boolean flipAngles = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
-        Pose2d currentPose = drive.getPose();
+        Pose2d currentPose = RobotState.getInstance().getEstimatedPose();
 
         var linearSpeedFactor = linearSpeedLimitChooser.getSelected();
         var angularSpeedFactor = angularSpeedLimitChooser.getSelected();
@@ -115,11 +113,11 @@ public class DriveWithController extends Command {
 
         if (shouldSnapPodium) {
             // mHeadingGoal = Optional.of(flipAngles ? kSpeakerAlignAngle.unaryMinus().getDegrees() : kSpeakerAlignAngle.getDegrees());
-            mHeadingGoal = Optional.of(mSwerveHeadingController.calculateAngleToSpeaker(currentPose));
+            mHeadingGoal = Optional.of(RobotState.getInstance().getAimingParameters().driveHeading().getDegrees());
         } else if (shouldSnapAmp) {
             mHeadingGoal = Optional.of(kAmpAlignAngle.getDegrees());
         } else if (!autoMaintain) {
-            mHeadingGoal = Optional.of(drive.getPose().getRotation().getDegrees());
+            mHeadingGoal = Optional.of(RobotState.getInstance().getEstimatedPose().getRotation().getDegrees());
         }
 
         if (autoMaintain || shouldSnapPodium || shouldSnapAmp) {
