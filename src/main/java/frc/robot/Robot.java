@@ -72,6 +72,9 @@ public class Robot extends LoggedRobot {
     public Robot() {
         super(Constants.loopPeriodSecs);
     }
+
+    // Leave this here because advantagekit needs a reference to this class to start autologging
+    private RobotState mRobotState = RobotState.getInstance();
     
     @Override
     public void robotInit() {
