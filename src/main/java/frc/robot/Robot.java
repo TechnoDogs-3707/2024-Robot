@@ -114,6 +114,8 @@ public class Robot extends LoggedRobot {
                 case ROBOT_2023_HEAVYMETAL:
                     LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
                     break;
+                case ROBOT_2024_SONIC:
+                    LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
                 default:
                     break;
             }
