@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.lib.Utility;
-import frc.robot.lib.dashboard.LoggedTunableBoolean;
 import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.lib.drive.SwerveHeadingController;
 import frc.robot.lib.drive.SwerveHeadingController.HeadingControllerState;
-import frc.robot.lib.util.TimeDelayedBoolean;
-import frc.robot.lib.util.Util;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.LoggedTunableBoolean;
+import frc.robot.util.poofsUtils.PoofsUtil;
+import frc.robot.util.poofsUtils.TimeDelayedBoolean;
 
 public class DriveWithController extends Command {
     private static final LoggedTunableBoolean mUseOpenLoopDrive = new LoggedTunableBoolean("/Drive/UseOpenLoop", Constants.kDriveUseOpenLoop);
@@ -106,7 +106,7 @@ public class DriveWithController extends Command {
         var controllerInputs = driveInputSupplier.get()
         .times(linearSpeedFactor, angularSpeedFactor);
 
-        boolean drive_turning = !Util.epsilonEquals(controllerInputs.getRotation(), 0);
+        boolean drive_turning = !PoofsUtil.epsilonEquals(controllerInputs.getRotation(), 0);
         boolean drive_translating = Utility.getSpeedAsScalar(drive.getMeasuredSpeeds()) >= 0.1;
 
         boolean shouldSnapPodium = snapPodium.getAsBoolean();

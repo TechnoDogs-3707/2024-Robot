@@ -8,11 +8,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
+import frc.robot.util.LoggedTunableNumber;
 
 import static frc.robot.Constants.ShooterFlywheels.*;
 import java.util.ArrayList;

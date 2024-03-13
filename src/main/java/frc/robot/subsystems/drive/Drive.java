@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.RobotStateTracker;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.RobotType;
 import frc.robot.lib.Utility;
@@ -301,12 +300,6 @@ public class Drive extends SubsystemBase {
                     optimizedStates[i] = mModules[i].setStateClosedLoop(setpointStates[i]);
                 }
             }
-
-            RobotStateTracker.getInstance().setCurrentRobotPose(mLastRobotPose);
-            RobotStateTracker.getInstance().setCurrentRobotPosition(mLastRobotPose.getTranslation());
-            RobotStateTracker.getInstance().setCurrentRobotVelocity(mMeasuredSpeeds);
-            RobotStateTracker.getInstance().setAutoAlignActive(mControlState == DriveControlState.AUTO_ALIGN || mControlState == DriveControlState.AUTO_ALIGN_Y_THETA);
-            RobotStateTracker.getInstance().setAutoAlignComplete(autoAlignAtTarget());
 
             // Log setpoint states
             Logger.recordOutput("Drive/SwerveStates/Setpoints", setpointStates);

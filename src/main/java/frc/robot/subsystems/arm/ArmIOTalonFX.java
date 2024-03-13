@@ -15,10 +15,10 @@ import com.ctre.phoenix6.signals.ReverseLimitValue;
 import frc.robot.Constants;
 import static frc.robot.Constants.ArmSubsystem.*;
 
-import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
+import frc.robot.util.LoggedTunableNumber;
 
 // TODO: account for the virtual four-bar created by the fact that the J2 drive chain is coaxial to the J1 axis.
 

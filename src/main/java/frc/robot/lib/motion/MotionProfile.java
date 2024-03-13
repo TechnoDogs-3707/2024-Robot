@@ -5,8 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import frc.robot.util.poofsUtils.PoofsUtil;
+
 import static frc.robot.lib.motion.MotionUtil.kEpsilon;
-import frc.robot.lib.util.Util;
 
 /**
  * A motion profile specifies a 1D time-parameterized trajectory. The trajectory is composed of successively coincident
@@ -118,7 +119,7 @@ public class MotionProfile {
     public Optional<MotionState> firstStateByPos(double pos) {
         for (MotionSegment s : mSegments) {
             if (s.containsPos(pos)) {
-                if (Util.epsilonEquals(s.end().pos(), pos, kEpsilon)) {
+                if (PoofsUtil.epsilonEquals(s.end().pos(), pos, kEpsilon)) {
                     return Optional.of(s.end());
                 }
                 final double t = Math.min(s.start().nextTimeAtPos(pos), s.end().t());

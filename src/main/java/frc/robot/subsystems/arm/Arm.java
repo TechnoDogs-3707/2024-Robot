@@ -15,14 +15,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotStateTracker;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.ArmSubsystem.J2;
-import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.drive.AutoAlignPointSelector;
 import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.subsystems.arm.ArmState.ArmSend;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Arm extends SubsystemBase {
 
@@ -138,8 +137,8 @@ public class Arm extends SubsystemBase {
         Logger.recordOutput("Arm/MotionPlanner/AtGoal", atGoal());
         Logger.recordOutput("Arm/MotionPlanner/StatesRemaining", mMotionPlanner.getRemainingStates());
 
-        var currentPose = RobotStateTracker.getInstance().getCurrentRobotPose();
-        RobotStateTracker.getInstance().setAutoAlignReady(AutoAlignPointSelector.getAlignTarget(currentPose, getRequestedAlignment()).isPresent());
+        // var currentPose = RobotStateTracker.getInstance().getCurrentRobotPose();
+        // RobotStateTracker.getInstance().setAutoAlignReady(AutoAlignPointSelector.getAlignTarget(currentPose, getRequestedAlignment()).isPresent());
 
         mTunableWristFeedforward.ifChanged(hashCode(), (v) -> wristKf = v);
 

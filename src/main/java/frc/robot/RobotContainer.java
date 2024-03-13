@@ -40,7 +40,6 @@ import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
-import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSimV1;
@@ -85,6 +84,7 @@ import frc.robot.subsystems.tilt.TiltIO;
 import frc.robot.subsystems.tilt.TiltIOSim;
 import frc.robot.subsystems.tilt.TiltIOTalonFX;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class RobotContainer {
     private Drive drive;
@@ -140,7 +140,7 @@ public class RobotContainer {
     private final Trigger operatorClimbReset = operatorClimbShift.and(operator.povLeft());
     private final Trigger operatorClimbManual = operatorClimbShift.and(operator.povRight());
 
-    private final Supplier<Double> operatorClimbThrottle = () -> -Util.handleDeadband(operator.getLeftY(), 0.05);
+    private final Supplier<Double> operatorClimbThrottle = () -> -PoofsUtil.handleDeadband(operator.getLeftY(), 0.05);
 
     // OVERRIDE SWITCHES
     private final OverrideSwitches overrides = new OverrideSwitches(5);

@@ -34,9 +34,9 @@ import frc.robot.Constants.Mode;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.SupplierWidget;
 import frc.robot.lib.dashboard.Alert.AlertType;
-import frc.robot.lib.util.VirtualSubsystem;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LED.WantedAction;
+import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 public class Robot extends LoggedRobot {
     private static final double canErrorTimeThreshold = 0.5; // Seconds to disable alert

@@ -18,7 +18,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
-import frc.robot.lib.util.VirtualSubsystem;
+import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 /** Add your docs here. */
 public class Localizer extends VirtualSubsystem {

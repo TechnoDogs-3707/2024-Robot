@@ -2,15 +2,14 @@ package frc.robot.subsystems.controllerFeedback;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
-import frc.robot.RobotStateTracker;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
 import frc.robot.lib.feedback.PS5ControllerFeedbackHelper;
 import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.ConstantFeedback;
 import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.FeedbackPattern;
 import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.SinglePulseFeedback;
 import frc.robot.lib.feedback.PS5ControllerFeedbackHelper.TimedFeedback;
-import frc.robot.lib.util.TimeDelayedBoolean;
-import frc.robot.lib.util.VirtualSubsystem;
+import frc.robot.util.poofsUtils.TimeDelayedBoolean;
+import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 public class ControllerFeedback extends VirtualSubsystem {
     private final PS5ControllerFeedbackHelper mDriver;
@@ -35,30 +34,11 @@ public class ControllerFeedback extends VirtualSubsystem {
     public void periodic() {
         boolean endgame1 = false;
         boolean endgame2 = false;
-        boolean autoAlignOnTarget = RobotStateTracker.getInstance().getAutoAlignComplete();
-        boolean autoAlignRunning = RobotStateTracker.getInstance().getAutoAlignActive();
-        boolean autoAlignAvailable = RobotStateTracker.getInstance().getAutoAlignReady();
 
         if (DriverStation.isTeleopEnabled() && (DriverStation.isFMSAttached() || mEnableVibrationOffFMS.getAsBoolean())) {
             if (endgame2 && !mEndgame1Timer.update(endgame2, 1)) {
                 mDriver.setPattern(TimedFeedback.kEndgameWarning2);
                 mOperator.setPattern(TimedFeedback.kEndgameWarning2);
-            }
-            else if (endgame1 && !mEndgame2Timer.update(endgame1, 1)) {
-                mDriver.setPattern(TimedFeedback.kEndgameWarning1);
-                mOperator.setPattern(TimedFeedback.kEndgameWarning2);
-            }
-            else if (autoAlignOnTarget) {
-                mDriver.setPattern(SinglePulseFeedback.kAlignmentOnTarget);
-                mOperator.setPattern(ConstantFeedback.kNone);
-            }
-            else if (autoAlignRunning) {
-                mDriver.setPattern(ConstantFeedback.kAlignmentRunning);
-                mOperator.setPattern(ConstantFeedback.kNone);
-            }
-            else if (autoAlignAvailable) {
-                mDriver.setPattern(TimedFeedback.kAlignmentReady);
-                mOperator.setPattern(ConstantFeedback.kNone);
             } else {
                 mDriver.setPattern(ConstantFeedback.kNone);
                 mOperator.setPattern(ConstantFeedback.kNone);

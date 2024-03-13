@@ -1,8 +1,8 @@
 package frc.robot.subsystems.arm;
 
-import frc.robot.lib.util.Util;
-
 import static frc.robot.Constants.ArmSubsystem.*;
+
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class ArmState {
     public double j1 = J1.kHomePosition;
@@ -55,11 +55,11 @@ public class ArmState {
     }
 
     public double getJ1() {
-        return Util.limit(j1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+        return PoofsUtil.limit(j1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     }
 
     public double getJ2() {
-        return Util.limit(j2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+        return PoofsUtil.limit(j2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     }
 
     public boolean isInRange(ArmState other) {
@@ -67,8 +67,8 @@ public class ArmState {
     }
 
     public boolean isInRange(ArmState other, double tiltAllowableError, double wristAllowableError) {
-        return Util.epsilonEquals(this.getJ1(), other.getJ1(), tiltAllowableError)
-                && Util.epsilonEquals(this.getJ2(), other.getJ2(), wristAllowableError);
+        return PoofsUtil.epsilonEquals(this.getJ1(), other.getJ1(), tiltAllowableError)
+                && PoofsUtil.epsilonEquals(this.getJ2(), other.getJ2(), wristAllowableError);
     }
 
     public String toString() {

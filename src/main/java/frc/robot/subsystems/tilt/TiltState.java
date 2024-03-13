@@ -2,7 +2,7 @@ package frc.robot.subsystems.tilt;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class TiltState {
     public double defaultPosition = kHomePosition;
@@ -19,7 +19,7 @@ public class TiltState {
 
     public boolean isInRange(TiltState other) {
         return 
-            Util.epsilonEquals(
+            PoofsUtil.epsilonEquals(
                 defaultPosition, 
                 other.defaultPosition, 
                 this.strictPositionTolerance || other.strictPositionTolerance ? kConservativeAllowableError : kLiberalAllowableError

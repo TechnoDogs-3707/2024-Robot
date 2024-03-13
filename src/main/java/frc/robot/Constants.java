@@ -268,6 +268,11 @@ public final class Constants {
         new ReplanningConfig()
     );
 
+    public static final Matrix<N3, N1> kOdometryStateStdDevs =
+      switch (Constants.getRobot()) {
+        default -> new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.0002));
+      };
+
     //Auto-Align
     public static final double kAutoAlignAllowableDistance = 2.0; //Meters
 

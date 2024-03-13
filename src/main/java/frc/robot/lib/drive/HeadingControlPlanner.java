@@ -9,8 +9,8 @@ import frc.robot.Constants;
 import frc.robot.lib.motion.MotionProfileGoal;
 import frc.robot.lib.motion.MotionState;
 import frc.robot.lib.motion.ProfileFollower;
-import frc.robot.lib.util.TimeDelayedBoolean;
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
+import frc.robot.util.poofsUtils.TimeDelayedBoolean;
 
 public class HeadingControlPlanner {
     private Optional<MotionProfileGoal> yaw_goal_ = Optional.empty();
@@ -62,7 +62,7 @@ public class HeadingControlPlanner {
     }
 
     public void setYawGoal(Rotation2d goal) {
-        if (yaw_goal_.isPresent() && !Util.epsilonEquals(goal.getRadians(), yaw_goal_.get().pos())) {
+        if (yaw_goal_.isPresent() && !PoofsUtil.epsilonEquals(goal.getRadians(), yaw_goal_.get().pos())) {
             // If we get a changed yaw goal, reset the profile
             reset();
         }

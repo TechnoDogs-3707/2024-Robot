@@ -1,6 +1,6 @@
 package frc.robot.lib.motion;
 
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /**
  * A controller for tracking a profile generated to attain a MotionProfileGoal. The controller uses feedforward on
@@ -140,7 +140,7 @@ public class ProfileFollower {
         double output = mKp * mLatestPosError + mKv * mLatestVelError + mKffv * mLatestSetpoint.motion_state.vel()
                 + (Double.isNaN(mLatestSetpoint.motion_state.acc()) ? 0.0 : mKffa * mLatestSetpoint.motion_state.acc());
 
-        if (!Util.epsilonEquals(output, 0.0)) {
+        if (!PoofsUtil.epsilonEquals(output, 0.0)) {
             output += mKs * Math.signum(output);
         }
 

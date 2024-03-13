@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.lib.dashboard.LoggedTunableNumber;
-import frc.robot.lib.util.Util;
+import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 import static frc.robot.Constants.ShooterTilt.*;
 
@@ -74,7 +74,7 @@ public class Tilt extends SubsystemBase {
         if (goal.state.autoAim) {
             finalPositionTarget = 0.0; // TODO: auto-aim lookup table or formula
         }
-        boolean withinTolerance = Util.epsilonEquals(
+        boolean withinTolerance = PoofsUtil.epsilonEquals(
             goal.state.defaultPosition, 
             mInputs.tiltRotations, 
             goal.state.strictPositionTolerance ? kConservativeAllowableError : kLiberalAllowableError

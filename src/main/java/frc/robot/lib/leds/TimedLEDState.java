@@ -3,7 +3,7 @@ package frc.robot.lib.leds;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 public interface TimedLEDState {
     void getCurrentLEDState(LEDStateContainer desiredState, double timestamp);
@@ -65,7 +65,7 @@ public interface TimedLEDState {
         public PercentFullLEDState(double percentFull, LEDState fullColor) {
             LEDState[] pixels = new LEDState[Constants.kMaxLEDCount / 2];
             for (int i = 0; i < pixels.length; i++) {
-                if (i < pixels.length * Util.limit(percentFull, 0.0, 1.0)) {
+                if (i < pixels.length * PoofsUtil.limit(percentFull, 0.0, 1.0)) {
                     pixels[i] = fullColor;
                 }
             }

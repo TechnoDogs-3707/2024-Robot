@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants;
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /**
  * Takes a prior setpoint (ChassisSpeeds), a desired setpoint (from a driver, or from a path follower), and outputs a new setpoint
@@ -73,7 +73,7 @@ public class SwerveSetpointGenerator {
      * @return The parameter value 's' that interpolating between 0 and 1 that corresponds to the (approximate) root.
      */
     private double findRoot(Function2d func, double x_0, double y_0, double f_0, double x_1, double y_1, double f_1, int iterations_left) {
-        if (iterations_left < 0 || Util.epsilonEquals(f_0, f_1)) {
+        if (iterations_left < 0 || PoofsUtil.epsilonEquals(f_0, f_1)) {
             return 1.0;
         }
         var s_guess = Math.max(0.0, Math.min(1.0, -f_0 / (f_1 - f_0)));
@@ -159,7 +159,7 @@ public class SwerveSetpointGenerator {
 
         // Special case: desiredState is a complete stop. In this case, module angle is arbitrary, so just use the previous angle.
         boolean need_to_steer = true;
-        if (Util.epsilonEquals(Util.toTwist2d(desiredState), new Twist2d(), Util.kEpsilon) && !forceSteering) { // replace with twist2d identity
+        if (PoofsUtil.epsilonEquals(PoofsUtil.toTwist2d(desiredState), new Twist2d(), PoofsUtil.kEpsilon) && !forceSteering) { // replace with twist2d identity
             need_to_steer = false;
             for (int i = 0; i < modules.length; ++i) {
                 desiredModuleState[i].angle = prevSetpoint.mModuleStates[i].angle;
@@ -180,24 +180,24 @@ public class SwerveSetpointGenerator {
             prev_vy[i] = prevSetpoint.mModuleStates[i].angle.getSin() * prevSetpoint.mModuleStates[i].speedMetersPerSecond;
             prev_heading[i] = prevSetpoint.mModuleStates[i].angle;
             if (prevSetpoint.mModuleStates[i].speedMetersPerSecond < 0.0) {
-                prev_heading[i] = Util.rotationFlip(prev_heading[i]);
+                prev_heading[i] = PoofsUtil.rotationFlip(prev_heading[i]);
             }
             desired_vx[i] = desiredModuleState[i].angle.getCos() * desiredModuleState[i].speedMetersPerSecond;
             desired_vy[i] = desiredModuleState[i].angle.getSin() * desiredModuleState[i].speedMetersPerSecond;
             desired_heading[i] = desiredModuleState[i].angle;
             if (desiredModuleState[i].speedMetersPerSecond < 0.0) {
-                desired_heading[i] = Util.rotationFlip(desired_heading[i]);
+                desired_heading[i] = PoofsUtil.rotationFlip(desired_heading[i]);
             }
             if (all_modules_should_flip) {
-                double required_rotation_rad = Math.abs(Util.rotationInverse(prev_heading[i]).rotateBy(desired_heading[i]).getRadians());
+                double required_rotation_rad = Math.abs(PoofsUtil.rotationInverse(prev_heading[i]).rotateBy(desired_heading[i]).getRadians());
                 if (required_rotation_rad < Math.PI / 2.0) {
                     all_modules_should_flip = false;
                 }
             }
         }
         if (all_modules_should_flip &&
-            !(Util.epsilonEquals(Util.toTwist2d(prevSetpoint.mChassisSpeeds), new Twist2d(), Util.kEpsilon)) &&
-            !Util.epsilonEquals(Util.toTwist2d(desiredState), new Twist2d(), Util.kEpsilon)) {
+            !(PoofsUtil.epsilonEquals(PoofsUtil.toTwist2d(prevSetpoint.mChassisSpeeds), new Twist2d(), PoofsUtil.kEpsilon)) &&
+            !PoofsUtil.epsilonEquals(PoofsUtil.toTwist2d(desiredState), new Twist2d(), PoofsUtil.kEpsilon)) {
             // It will (likely) be faster to stop the robot, rotate the modules in place to the complement of the desired
             // angle, and accelerate again.
             return generateSetpoint(limits, prevSetpoint, new ChassisSpeeds(), forceSteering, overrideDesiredState, dt);
@@ -225,16 +225,16 @@ public class SwerveSetpointGenerator {
                 continue;
             }
             overrideSteering.add(Optional.empty());
-            if (Util.epsilonEquals(prevSetpoint.mModuleStates[i].speedMetersPerSecond, 0.0)) {
+            if (PoofsUtil.epsilonEquals(prevSetpoint.mModuleStates[i].speedMetersPerSecond, 0.0)) {
                 // If module is stopped, we know that we will need to move straight to the final steering angle, so limit based
                 // purely on rotation in place.
-                if (Util.epsilonEquals(desiredModuleState[i].speedMetersPerSecond, 0.0)) {
+                if (PoofsUtil.epsilonEquals(desiredModuleState[i].speedMetersPerSecond, 0.0)) {
                     // Goal angle doesn't matter. Just leave module at its current angle.
                     overrideSteering.set(i, Optional.of(prevSetpoint.mModuleStates[i].angle));
                     continue;
                 }
 
-                var necessaryRotation = Util.rotationInverse(prevSetpoint.mModuleStates[i].angle).rotateBy(
+                var necessaryRotation = PoofsUtil.rotationInverse(prevSetpoint.mModuleStates[i].angle).rotateBy(
                     desiredModuleState[i].angle);
                 if (flipHeading(necessaryRotation)) {
                     necessaryRotation = necessaryRotation.rotateBy(new Rotation2d(Math.PI));
@@ -296,14 +296,14 @@ public class SwerveSetpointGenerator {
             final var maybeOverride = overrideSteering.get(i);
             if (maybeOverride.isPresent()) {
                 var override = maybeOverride.get();
-                if (flipHeading(Util.rotationInverse(retStates[i].angle).rotateBy(override))) {
+                if (flipHeading(PoofsUtil.rotationInverse(retStates[i].angle).rotateBy(override))) {
                     retStates[i].speedMetersPerSecond *= -1.0;
                 }
                 retStates[i].angle = override;
             }
-            final var deltaRotation = Util.rotationInverse(prevSetpoint.mModuleStates[i].angle).rotateBy(retStates[i].angle);
+            final var deltaRotation = PoofsUtil.rotationInverse(prevSetpoint.mModuleStates[i].angle).rotateBy(retStates[i].angle);
             if (flipHeading(deltaRotation)) {
-                retStates[i].angle = Util.rotationFlip(retStates[i].angle);
+                retStates[i].angle = PoofsUtil.rotationFlip(retStates[i].angle);
                 retStates[i].speedMetersPerSecond *= -1.0;
             }
         }

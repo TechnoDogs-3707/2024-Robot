@@ -4,10 +4,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.leds.TimedLEDState;
-import frc.robot.lib.util.VirtualSubsystem;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.LED;
+import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 public class ObjectiveTracker extends VirtualSubsystem {
     private final Intake mIntake;

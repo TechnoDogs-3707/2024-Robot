@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
-import frc.robot.RobotStateTracker;
+import frc.robot.RobotState;
 import frc.robot.lib.Utility;
 
 /**
@@ -115,7 +115,7 @@ public class SwerveHeadingController {
         }
 
         // var current_translational_velocity = RobotState.getInstance().getMeasuredVelocity().norm();
-        var current_translational_velocity = Utility.getSpeedAsScalar(RobotStateTracker.getInstance().getCurrentRobotSpeeds());
+        var current_translational_velocity = RobotState.getInstance().linearVelocity().getNorm();
         final double kMinTranslationalVelocity = 0.2;
         if (current_translational_velocity < kMinTranslationalVelocity) {
             current_translational_velocity = kMinTranslationalVelocity;

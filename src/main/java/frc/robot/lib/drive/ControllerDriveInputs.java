@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.lib.Utility;
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /**
  * A class that processes drivetrain inputs from a joystick/controller.
@@ -169,7 +169,7 @@ public class ControllerDriveInputs {
         var magnitude = translation.getNorm();
 
         // limit magnitude to 0..1
-        magnitude = Util.limit(magnitude, 1);
+        magnitude = PoofsUtil.limit(magnitude, 1);
         magnitude = Math.pow(magnitude, power);
 
         // convert back to cartesian coords

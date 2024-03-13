@@ -1,7 +1,8 @@
 package frc.robot.lib.motion;
 
 import static frc.robot.lib.motion.MotionUtil.kEpsilon;
-import frc.robot.lib.util.Util;
+
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /**
  * A MotionState is a completely specified state of 1D motion through time.
@@ -77,14 +78,14 @@ public class MotionState {
      * @return The time when we are next at pos() if we are extrapolating with a positive dt. NaN if we never reach pos.
      */
     public double nextTimeAtPos(double pos) {
-        if (Util.epsilonEquals(pos, this.pos, kEpsilon)) {
+        if (PoofsUtil.epsilonEquals(pos, this.pos, kEpsilon)) {
             // Already at pos.
             return t;
         }
-        if (Util.epsilonEquals(acc, 0.0, kEpsilon)) {
+        if (PoofsUtil.epsilonEquals(acc, 0.0, kEpsilon)) {
             // Zero acceleration case.
             final double delta_pos = pos - this.pos;
-            if (!Util.epsilonEquals(vel, 0.0, kEpsilon) && Math.signum(delta_pos) == Math.signum(vel)) {
+            if (!PoofsUtil.epsilonEquals(vel, 0.0, kEpsilon) && Math.signum(delta_pos) == Math.signum(vel)) {
                 // Constant velocity heading towards pos.
                 return delta_pos / vel + t;
             }
@@ -132,7 +133,7 @@ public class MotionState {
      * Checks if two MotionStates are epsilon-equals (all fields are equal within a specified tolerance).
      */
     public boolean equals(MotionState other, double epsilon) {
-        return coincident(other, epsilon) && Util.epsilonEquals(acc, other.acc, epsilon);
+        return coincident(other, epsilon) && PoofsUtil.epsilonEquals(acc, other.acc, epsilon);
     }
 
     /**
@@ -148,8 +149,8 @@ public class MotionState {
      * acceleration may be different).
      */
     public boolean coincident(MotionState other, double epsilon) {
-        return Util.epsilonEquals(t, other.t, epsilon) && Util.epsilonEquals(pos, other.pos, epsilon)
-                && Util.epsilonEquals(vel, other.vel, epsilon);
+        return PoofsUtil.epsilonEquals(t, other.t, epsilon) && PoofsUtil.epsilonEquals(pos, other.pos, epsilon)
+                && PoofsUtil.epsilonEquals(vel, other.vel, epsilon);
     }
 
     /**
