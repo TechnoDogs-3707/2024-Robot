@@ -6,8 +6,8 @@ import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeStateMachine.IntakeWantedAction;
 
-public class ArmStow extends SequentialCommandGroup {
-    public ArmStow(Arm arm, Intake intake) {
+public class IntakeStow extends SequentialCommandGroup {
+    public IntakeStow(Arm arm, Intake intake) {
         addCommands(
             arm.setGoalCommand(GoalState.STOW)
             .alongWith(

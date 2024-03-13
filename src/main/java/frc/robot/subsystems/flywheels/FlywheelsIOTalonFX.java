@@ -14,7 +14,8 @@ import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
-import static frc.robot.Constants.ShooterFlywheels.*;
+import static frc.robot.subsystems.flywheels.FlywheelsConstants.*;
+
 import java.util.ArrayList;
 
 public class FlywheelsIOTalonFX implements FlywheelsIO {

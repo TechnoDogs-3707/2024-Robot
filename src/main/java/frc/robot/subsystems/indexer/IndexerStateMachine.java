@@ -1,6 +1,6 @@
 package frc.robot.subsystems.indexer;
 
-import static frc.robot.Constants.Indexer.*;
+import static frc.robot.subsystems.indexer.IndexerConstants.*;
 
 public class IndexerStateMachine {
     public enum IndexerWantedAction {

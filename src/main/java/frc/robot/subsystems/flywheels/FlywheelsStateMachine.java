@@ -1,9 +1,9 @@
 package frc.robot.subsystems.flywheels;
 
+import static frc.robot.subsystems.flywheels.FlywheelsConstants.*;
+
 // import edu.wpi.first.wpilibj.Timer;
 import frc.robot.lib.util.Util;
-
-import static frc.robot.Constants.ShooterFlywheels.*;
 
 public class FlywheelsStateMachine {
     public enum FlywheelsWantedAction {

@@ -9,7 +9,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.Mode;
 import frc.robot.lib.util.Util;
 
-import static frc.robot.Constants.Climb.*;
+import static frc.robot.subsystems.climb.ClimbConstants.*;
 
 import java.util.function.Supplier;
 

@@ -11,7 +11,6 @@ import frc.robot.lib.dashboard.SupplierWidget;
 import frc.robot.lib.dashboard.WidgetConfig;
 import frc.robot.lib.dashboard.SendableWidget;
 import frc.robot.lib.dashboard.Alert.SendableAlerts;
-import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -19,6 +18,7 @@ import frc.robot.subsystems.drive.Drive.DriveControlState;
 import frc.robot.subsystems.flywheels.Flywheels;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
@@ -83,7 +83,7 @@ public class Dashboard {
 
     // public final SendableWidget<SendableChooser<String>> testing_preloadSimGripper;
     
-    public Dashboard(Robot robot, RobotContainer container, Drive drive, Arm arm, Intake intake, Flywheels flywheels, Tilt tilt, Indexer indexer,  LED led, Localizer vision, ObjectiveTracker objective, ControllerFeedback controllerFeedback) {
+    public Dashboard(Robot robot, RobotContainer container, Drive drive, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, Tilt tilt, Indexer indexer,  LED led, Localizer vision, ObjectiveTracker objective, ControllerFeedback controllerFeedback) {
         // Drive Tab
         drive_linearSpeedChooser = new SendableWidget<SendableChooser<Double>>(driveTabName, "Linear Speed Limit",
         DriveWithController.linearSpeedLimitChooser,
