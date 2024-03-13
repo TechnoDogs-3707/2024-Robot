@@ -6,6 +6,8 @@ package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+
 /** Add your docs here. */
 public interface SwerveModuleIO {
     @AutoLog
@@ -70,6 +72,8 @@ public interface SwerveModuleIO {
     public default double getEncoderOffset() {return 0.0;};
 
     public default double getEncoderRawPosition() {return 0.0;}
+
+    public default void setCurrentLimit(double limit) {}
 
     public default void stop() {}
 }

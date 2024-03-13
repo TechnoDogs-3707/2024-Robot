@@ -175,4 +175,8 @@ public class SwerveModule {
     public double getEncoderRawPosition() {
         return io.getEncoderRawPosition();
     }
+
+    public void setCurrentLimit(double amps) {
+        io.setCurrentLimit(amps);
+    }
 }

@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -22,6 +24,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -41,6 +44,7 @@ import frc.robot.lib.drive.AutoAlignMotionPlanner;
 import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
+import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.subsystems.localizer.VisionPose;
 
 /** Add your docs here. */
@@ -64,6 +68,23 @@ public class Drive extends SubsystemBase {
             this.title = title;
         }
     }
+
+    public enum DriveCurrentLimitState {
+        TELEOP_CONSERVATIVE(40),
+        TELEOP_AGGRESSIVE(50),
+        AUTON_AGGRESSIVE(60),
+        BROWNOUT_PROTECT(10);
+
+        public double currentLimitAmps;
+
+        DriveCurrentLimitState(double limit) {
+            currentLimitAmps = limit;
+        }
+    }
+
+    private DriveCurrentLimitState mCurrentLimitState = DriveCurrentLimitState.TELEOP_CONSERVATIVE;
+    private boolean mCurrentLimitStateHasChanged = true;
+    private Timer mBrownoutTimer = new Timer();
 
     private DriveControlState mControlState = DriveControlState.VELOCITY_CONTROL;
     private boolean mAllowDriveAssists = true;
@@ -174,7 +195,7 @@ public class Drive extends SubsystemBase {
             this::getMeasuredSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::setPathFollowing, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kPathFollowerConfig,
-            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Flip paths if alliance is red TODO: make sure this works
+            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Flip paths if alliance is red
             this // Reference to this subsystem to set requirements
         );
         PathPlannerLogging.setLogActivePathCallback(
@@ -296,6 +317,32 @@ public class Drive extends SubsystemBase {
             Logger.recordOutput("Drive/AutoAlign/AtTarget", autoAlignAtTarget());
             Logger.recordOutput("Drive/AutoAlign/Override", mAlignStateOverride);
             Logger.recordOutput("Drive/AutoAlign/ReadyToScore", readyToScore());
+        }
+
+        if (RobotController.isBrownedOut()) {
+            mBrownoutTimer.restart();
+        } else if (mBrownoutTimer.hasElapsed(5)) {
+            mBrownoutTimer.stop();
+            mBrownoutTimer.reset();
+        }
+
+        if (mBrownoutTimer.get() > 0) {
+            setCurrentLimits(DriveCurrentLimitState.BROWNOUT_PROTECT);
+        } else if (DriverStation.isAutonomousEnabled()) {
+            setCurrentLimits(DriveCurrentLimitState.AUTON_AGGRESSIVE);
+        } else {
+            setCurrentLimits(DriveCurrentLimitState.TELEOP_CONSERVATIVE);
+        }
+
+        Logger.recordOutput("Drive/CurrentLimits/Mode", mCurrentLimitState);
+        Logger.recordOutput("Drive/CurrentLimits/Value", mCurrentLimitState.currentLimitAmps);
+
+        // Handle Current Limits
+        if (mCurrentLimitStateHasChanged) {
+            for (int i = 0; i < mModules.length; i++) {
+                mModules[i].setCurrentLimit(mCurrentLimitState.currentLimitAmps);
+            }
+            mCurrentLimitStateHasChanged = false;
         }
 
         // Log measured states
@@ -578,6 +625,13 @@ public class Drive extends SubsystemBase {
 
     public Rotation2d getGyroYawVelocity() {
         return mLastGyroYawPerSecond;
+    }
+
+    public void setCurrentLimits(DriveCurrentLimitState currentLimitState) {
+        if (mCurrentLimitState != currentLimitState) {
+            mCurrentLimitState = currentLimitState;
+            mCurrentLimitStateHasChanged = true;
+        }
     }
 
     public Pose2d getAutonInitialPose() {

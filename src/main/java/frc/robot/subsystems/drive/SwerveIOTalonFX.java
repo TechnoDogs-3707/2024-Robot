@@ -6,6 +6,7 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -24,6 +25,7 @@ import frc.robot.lib.phoenixpro.CANcoderLiveConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
+import frc.robot.lib.phoenixpro.TalonFXCurrentLimitHelper;
 import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
 /** Add your docs here. */
@@ -41,6 +43,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
 
     private final TalonFXConfiguration mDriveConfig;
     private final TalonFXFeedbackControlHelper mDriveFeedbackHelper;
+    private final TalonFXCurrentLimitHelper mDriveCurrentLimitHelper;
 
     private final TalonFXConfiguration mSteerConfig;
     private final TalonFXFeedbackControlHelper mSteerFeedbackHelper;
@@ -78,6 +81,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         PhoenixProUtil.checkErrorAndRetry(() -> mDriveMotor.getConfigurator().apply(mDriveConfig));
         mDriveFeedbackHelper = new TalonFXFeedbackControlHelper(mDriveMotor, mDriveConfig.Slot0);
         mDriveMotor.setPosition(0);
+        mDriveCurrentLimitHelper = new TalonFXCurrentLimitHelper(mDriveMotor, 40);
 
         mSteerControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mSteerControlOpenLoop = new VoltageOut(0, true, false, false, false);
@@ -288,6 +292,11 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
     @Override
     public double getEncoderRawPosition() {
         return mEncoder.getAbsolutePosition().getValue() - mEncoderOffsetCache;
+    }
+
+    @Override
+    public void setCurrentLimit(double limit) {
+        mDriveCurrentLimitHelper.setCurrentLimit(limit);
     }
 
     @Override

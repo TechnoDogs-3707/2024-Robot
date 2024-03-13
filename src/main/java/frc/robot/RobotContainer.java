@@ -417,10 +417,6 @@ public class RobotContainer {
         return new ControllerDriveInputs(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX()).applyDeadZone(0.03, 0.03, 0.03, 0.05).powerPolar(2);
     }
 
-    protected void onTeleopInit() {
-        drive.setAlignStateOverride(false);
-    }
-
     public boolean hasConfigErrors() {
         return false;
     }

@@ -45,6 +45,20 @@ public class TalonFXConfigHelper {
         return config;
     }
 
+    public static final CurrentLimitsConfigs getDriveBaseCurrentLimits() {
+        CurrentLimitsConfigs config = new CurrentLimitsConfigs();
+
+        config.StatorCurrentLimitEnable = true;
+        config.StatorCurrentLimit = 80;
+
+        config.SupplyCurrentLimitEnable = true;
+        config.SupplyCurrentThreshold = 0.0;
+        config.SupplyTimeThreshold = 0.0;
+        config.SupplyCurrentLimit = 40.0;
+
+        return config;
+    }
+
     public static final CurrentLimitsConfigs get20ACurrentLimits() {
         CurrentLimitsConfigs config = new CurrentLimitsConfigs();
 
