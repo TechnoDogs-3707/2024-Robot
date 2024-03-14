@@ -7,6 +7,7 @@ package frc.robot.subsystems.drive;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -161,6 +162,9 @@ public class Drive extends SubsystemBase {
     private Pose2d mLastRobotPose = new Pose2d();
     private Rotation3d mLastRotation3d = new Rotation3d();
     private Rotation2d mLastGyroYawPerSecond = new Rotation2d();
+
+    private boolean mSlowEnoughForAutoShoot = false;
+    private Timer autoShootDelayTimer = new Timer();
 
     public Drive(GyroIO gyroIO, SwerveModuleIO frontLeftIO, SwerveModuleIO frontRightIO, SwerveModuleIO rearLeftIO,
             SwerveModuleIO rearRightIO) {
@@ -424,6 +428,20 @@ public class Drive extends SubsystemBase {
             }
         }
 
+        if (mMeasuredSpeeds.vxMetersPerSecond < 0.25
+        && mMeasuredSpeeds.vyMetersPerSecond < 0.25
+        && mMeasuredSpeeds.omegaRadiansPerSecond < 1
+        ) {
+            autoShootDelayTimer.start();
+            if (autoShootDelayTimer.get() > 0.375) {
+                mSlowEnoughForAutoShoot = true;
+            }
+        } else {
+            mSlowEnoughForAutoShoot = false;
+            autoShootDelayTimer.stop();
+            autoShootDelayTimer.reset();
+        }
+
         // Run alert checks
         mAlertGyroNotConnected.set(!mGyroInputs.connected);
         mAlertGyroManualFail.set(mIgnoreGyro);
@@ -600,6 +618,11 @@ public class Drive extends SubsystemBase {
             mCurrentLimitState = currentLimitState;
             mCurrentLimitStateHasChanged = true;
         }
+    }
+
+    @AutoLogOutput(key = "Drive/CanAutoShoot")
+    public boolean isSlowEnoughForAutoShoot() {
+        return mSlowEnoughForAutoShoot;
     }
 
     public Pose2d getAutonInitialPose() {

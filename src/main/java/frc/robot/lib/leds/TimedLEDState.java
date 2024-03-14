@@ -87,7 +87,7 @@ public interface TimedLEDState {
         public static RSLBasedLEDState kClimbRaising = new RSLBasedLEDState(LEDState.kOff, LEDState.kBlue);
         public static RSLBasedLEDState kClimbManual = new RSLBasedLEDState(LEDState.kRed, LEDState.kYellow);
 
-        public static RSLBasedLEDState kTempAutoAligning = new RSLBasedLEDState(LEDState.kOff, LEDState.kGreen);
+        public static RSLBasedLEDState kAutoAimWaiting = new RSLBasedLEDState(LEDState.kOff, LEDState.kGreen);
 
         private final double mDurationIfSimulating = 0.2;
         LEDState mStateWhenOff = new LEDState(0, 0, 0);
