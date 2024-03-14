@@ -1,6 +1,6 @@
 package frc.robot.subsystems.intake;
 
-import static frc.robot.Constants.Intake.*;
+import static frc.robot.subsystems.intake.IntakeConstants.*;
 
 public class IntakeStateMachine {
     public enum IntakeWantedAction {

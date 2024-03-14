@@ -12,7 +12,7 @@ import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.util.LoggedTunableNumber;
 
-import static frc.robot.Constants.Climb.*;
+import static frc.robot.subsystems.climb.ClimbConstants.*;
 
 import java.util.ArrayList;
 

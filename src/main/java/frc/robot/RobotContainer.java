@@ -16,11 +16,10 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.ArmStow;
+import frc.robot.commands.IntakeStow;
 import frc.robot.commands.AutoScoreShooterAmp;
 import frc.robot.commands.AutoScoreShooterPodium;
 import frc.robot.commands.AutoScoreShooterSubwoofer;
@@ -40,11 +39,6 @@ import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmIO;
-import frc.robot.subsystems.arm.ArmIOSimV1;
-import frc.robot.subsystems.arm.ArmIOTalonFX;
-import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOTalonFX;
@@ -71,6 +65,10 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.intake.IntakeStateMachine.IntakeWantedAction;
+import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
+import frc.robot.subsystems.intakeDeploy.IntakeDeployIO;
+import frc.robot.subsystems.intakeDeploy.IntakeDeployIOSim;
+import frc.robot.subsystems.intakeDeploy.IntakeDeployIOTalonFX;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
@@ -88,7 +86,7 @@ import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class RobotContainer {
     private Drive drive;
-    private Arm arm;
+    private IntakeDeploy intakeDeploy;
     private Intake intake;
     private Flywheels flywheels;
     private Tilt tilt;
@@ -124,7 +122,6 @@ public class RobotContainer {
     private final CommandPS5Controller operator = new CommandPS5Controller(1);
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
-    private final Trigger operatorResetMotionPlanner = operator.create().debounce(0.5, DebounceType.kRising);
     private final Trigger operatorCancelAction = operator.R1();
     private final Trigger operatorClimbShift = operator.L1();
 
@@ -178,7 +175,7 @@ public class RobotContainer {
                         new SwerveIOTalonFX(2, "canivore"), 
                         new SwerveIOTalonFX(3, "canivore")
                     );
-                    arm = new Arm(new ArmIOTalonFX());
+                    intakeDeploy = new IntakeDeploy(new IntakeDeployIOTalonFX());
                     intake = new Intake(new IntakeIOTalonFX());
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
                     tilt = new Tilt(new TiltIOTalonFX());
@@ -213,7 +210,7 @@ public class RobotContainer {
                             new SwerveIOTalonFX(2, "canivore"),
                             new SwerveIOTalonFX(3, "canivore"));
                     // arm = new Arm(new ArmIOFalcons(), new GripperIOFalcon());
-                    arm = new Arm(new ArmIOSimV1());
+                    // arm = new Arm(new ArmIOSimV1());
                     leds = new LED(new LEDIOCANdle(8, "canivore"));
                     break;
                 case ROBOT_2023_FLAPJACK:
@@ -234,7 +231,7 @@ public class RobotContainer {
                             new SimSwerveIO(),
                             new SimSwerveIO(),
                             new SimSwerveIO());
-                    arm = new Arm(new ArmIOSimV1());
+                    intakeDeploy = new IntakeDeploy(new IntakeDeployIOSim());
                     intake = new Intake(new IntakeIOSim());
                     indexer = new Indexer(new IndexerIOSim());
                     flywheels = new Flywheels(new FlywheelsIOSim());
@@ -260,8 +257,8 @@ public class RobotContainer {
                     });
         }
 
-        if (arm == null) {
-            arm = new Arm(new ArmIO() {
+        if (intakeDeploy == null) {
+            intakeDeploy = new IntakeDeploy(new IntakeDeployIO() {
 
             });
         }
@@ -326,13 +323,14 @@ public class RobotContainer {
         NamedCommands.registerCommand("Tilt Set Stow", tilt.setGoalCommand(TiltGoalState.STOW));
         NamedCommands.registerCommand("Intake Set Run", intake.setActionCommand(IntakeWantedAction.INTAKE_CONSTANT));
         NamedCommands.registerCommand("Intake Set Off", intake.setActionCommand(IntakeWantedAction.OFF));
-        NamedCommands.registerCommand("Deploy Intake", arm.setGoalCommand(GoalState.INTAKE_GROUND));
-        NamedCommands.registerCommand("Stow Intake", arm.setGoalCommand(GoalState.STOW));
+        //TODO: fix these broken commands
+        // NamedCommands.registerCommand("Deploy Intake", arm.setGoalCommand(GoalState.INTAKE_GROUND));
+        // NamedCommands.registerCommand("Stow Intake", arm.setGoalCommand(GoalState.STOW));
         drive.setupPathPlanner();
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());
 
-        dashboard = new Dashboard(robot, this, drive, arm, intake, flywheels, tilt, indexer, leds, vision, objective, controllerFeedback);
+        dashboard = new Dashboard(robot, this, drive, intakeDeploy, intake, flywheels, tilt, indexer, leds, vision, objective, controllerFeedback);
         dashboard.resetWidgets();
 
         configureBindings();
@@ -381,14 +379,14 @@ public class RobotContainer {
         driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
-        driverCancelAction.or(operatorCancelAction).onTrue(new ArmStow(arm, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
-        driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
+        driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
+        driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(intakeDeploy, intake, indexer, flywheels, objective));
 
         //Operator button bindings
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
-        operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(arm, intake, indexer));
+        operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(intakeDeploy, intake, indexer));
         // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
         operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
@@ -397,9 +395,6 @@ public class RobotContainer {
         operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
         operatorClimbReset.onTrue(new ClimbReset(climb, objective));
         operatorClimbManual.onTrue(new ClimbManualOverride(climb, objective, operatorClimbThrottle));
-
-        operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
-        operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 
         // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
 

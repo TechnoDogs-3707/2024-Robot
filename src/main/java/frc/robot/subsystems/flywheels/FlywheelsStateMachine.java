@@ -1,6 +1,6 @@
 package frc.robot.subsystems.flywheels;
 
-import static frc.robot.Constants.ShooterFlywheels.*;
+import static frc.robot.subsystems.flywheels.FlywheelsConstants.*;
 
 import frc.robot.util.poofsUtils.PoofsUtil;
 

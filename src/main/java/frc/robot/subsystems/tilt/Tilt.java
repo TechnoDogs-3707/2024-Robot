@@ -13,7 +13,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.poofsUtils.PoofsUtil;
 
-import static frc.robot.Constants.ShooterTilt.*;
+import static frc.robot.subsystems.tilt.TiltConstants.*;
 
 import java.util.function.Supplier;
 

@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
-import frc.robot.Constants.Intake;
-
 public class IntakeIOTalonFX implements IntakeIO {
     private final TalonFX mIntakeMotorMaster;
 
@@ -26,7 +24,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     private final DigitalInput mIntakeSensor;
 
     public IntakeIOTalonFX() {
-        mIntakeMotorMaster = new TalonFX(Intake.kMasterMotorID, Intake.kMotorBus);
+        mIntakeMotorMaster = new TalonFX(IntakeConstants.kMasterMotorID, IntakeConstants.kMotorBus);
 
         mIntakeConfig = TalonFXConfigHelper.getBaseConfig(); //TODO: set up intake config
         mIntakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;

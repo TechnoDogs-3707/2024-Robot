@@ -1,5 +1,7 @@
 package frc.robot.subsystems.tilt;
 
+import static frc.robot.subsystems.tilt.TiltConstants.*;
+
 import java.util.ArrayList;
 
 import com.ctre.phoenix6.StatusSignal;
@@ -12,8 +14,6 @@ import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
-
-import static frc.robot.Constants.ShooterTilt.*;
 
 public class TiltIOTalonFX implements TiltIO {
     private final TalonFX mMotor;

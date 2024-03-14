@@ -1,6 +1,6 @@
 package frc.robot.subsystems.localizer;
 
-import static frc.robot.Constants.VisionSubsystem.*;
+import static frc.robot.subsystems.localizer.LocalizerConstants.*;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
