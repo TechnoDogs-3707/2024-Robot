@@ -83,7 +83,7 @@ public class Tilt extends SubsystemBase {
         // calculate auto-aim angle if needed, and determine if within tolerance of target (also record outputs)
         double finalPositionTarget = goal.state.defaultPosition;
         if (mEnableOverrideCache) {
-            finalPositionTarget = mTargetOverrideCache;
+            finalPositionTarget = PoofsUtil.limit(mTargetOverrideCache, kMinTargetPosition, kMaxTargetPosition);
         } else if (goal.state.autoAim) {
             finalPositionTarget = RobotState.getInstance().getAimingParameters().tiltAngle().getRotations();
         }

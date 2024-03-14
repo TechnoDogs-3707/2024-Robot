@@ -5,6 +5,8 @@ public final class TiltConstants {
     public static final String kMotorBus = "canivore";
 
     public static final boolean invertMaster = false;
+
+    public static final double kSensorToMechanismRatio = 50.67;
         
     public static final double kG = 0.35;
     public static final double kS = 2.5;
@@ -22,9 +24,9 @@ public final class TiltConstants {
     public static final double kConservativeAllowableError = 0.005;
 
     public static final double kHomePosition = 0.0;
-    public static final double kMinTargetPosition = 0.0;
+    public static final double kMinTargetPosition = 0.005;
     public static final double kMaxTargetPosition = 0.08;
 
+    public static final double kAbsoluteMinPosition = 0.002;
     public static final double kAbsoluteMaxPosition = 0.8;
-    public static final double kAbsoluteMinPosition = 0.0;
 }

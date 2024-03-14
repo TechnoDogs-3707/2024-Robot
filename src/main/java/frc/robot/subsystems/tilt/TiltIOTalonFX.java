@@ -53,10 +53,12 @@ public class TiltIOTalonFX implements TiltIO {
         mConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
         mConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.1;
+        mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = kAbsoluteMaxPosition;
         mConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-        mConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.0;
-        mConfig.Slot0.kG = 0.0; // we calculate our own feedforward within the subsystem
+        mConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = kAbsoluteMinPosition;
+        // We calculate our own feedforward within the subsystem. 
+        // This is not the best solution, but I don't want to recalibrate all of the shooter positions yet.
+        mConfig.Slot0.kG = 0.0;
         mConfig.Slot0.kS = kS;
         mConfig.Slot0.kV = kV;
         mConfig.Slot0.kA = kA;
@@ -68,7 +70,7 @@ public class TiltIOTalonFX implements TiltIO {
         mConfig.MotionMagic.MotionMagicAcceleration = kMagicAccel;
         mConfig.MotionMagic.MotionMagicJerk = kMagicJerk;
         
-        mConfig.Feedback.SensorToMechanismRatio = 50.67;
+        mConfig.Feedback.SensorToMechanismRatio = kSensorToMechanismRatio;
         
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
