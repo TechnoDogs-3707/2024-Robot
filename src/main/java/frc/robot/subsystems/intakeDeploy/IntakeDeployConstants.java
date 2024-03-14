@@ -1,10 +1,12 @@
 package frc.robot.subsystems.intakeDeploy;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+
 public final class IntakeDeployConstants {
-    public static final int kMasterMotorID = 32;
+    public static final int kMotorID = 32;
     public static final String kMotorBus = "canivore"; // Both motors must be on same bus to use follower mode
 
-    public static final boolean invertMaster = false;
+    public static final InvertedValue mInverted = InvertedValue.Clockwise_Positive;
     
     public static final double kG = 0.2;
 
@@ -26,6 +28,6 @@ public final class IntakeDeployConstants {
     public static final double kMinTargetPosition = 0.0;
     public static final double kMaxTargetPosition = 0.0;
 
-    public static final double kAbsoluteMaxPosition = 0.0;
-    public static final double kAbsoluteMinPosition = 0.0;
+    public static final double kAbsoluteMaxPosition = 0.42;
+    public static final double kAbsoluteMinPosition = -0.15;
 }

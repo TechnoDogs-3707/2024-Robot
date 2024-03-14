@@ -19,7 +19,7 @@ public class TalonFXCurrentLimitHelper {
     private final CurrentLimitsConfigs mNormalLimitConfig;
     private final TorqueCurrentConfigs mFOCLimitConfig;
 
-    public TalonFXCurrentLimitHelper(TalonFX motor, double defaultLimitAmps) {
+    public TalonFXCurrentLimitHelper(TalonFX motor, double defaultSupplyLimit, double defaultStatorLimit) {
         mMotor = motor;
         mConfigurator = mMotor.getConfigurator();
 
@@ -27,6 +27,17 @@ public class TalonFXCurrentLimitHelper {
         mFOCLimitConfig = new TorqueCurrentConfigs();
 
         refreshConfigs(1.0);
+
+        mNormalLimitConfig.StatorCurrentLimitEnable = true;
+        mNormalLimitConfig.StatorCurrentLimit = defaultStatorLimit;
+        mNormalLimitConfig.SupplyCurrentLimitEnable = true;
+        mNormalLimitConfig.SupplyCurrentThreshold = 0.0;
+        mNormalLimitConfig.SupplyTimeThreshold = 0.0;
+        mNormalLimitConfig.SupplyCurrentLimit = defaultSupplyLimit;
+        mFOCLimitConfig.PeakForwardTorqueCurrent = defaultStatorLimit;
+        mFOCLimitConfig.PeakReverseTorqueCurrent = -defaultStatorLimit;
+
+        applyConfigs(1.0);
     }
 
     private void refreshConfigs() {
@@ -47,13 +58,22 @@ public class TalonFXCurrentLimitHelper {
         PhoenixProUtil.checkErrorAndRetry(() -> mConfigurator.apply(mFOCLimitConfig, timeout));
     }
 
-    public void setCurrentLimit(double amps) {
+    public void setStatorCurrentLimit(double amps) {
         refreshConfigs();
         mNormalLimitConfig.StatorCurrentLimitEnable = true;
         mNormalLimitConfig.StatorCurrentLimit = amps;
 
         mFOCLimitConfig.PeakForwardTorqueCurrent = amps;
         mFOCLimitConfig.PeakReverseTorqueCurrent = -amps;
+        applyConfigs();
+    }
+
+    public void setInputCurrentLimit(double amps) {
+        refreshConfigs();
+        mNormalLimitConfig.SupplyCurrentLimitEnable = true;
+        mNormalLimitConfig.SupplyCurrentThreshold = 0.0;
+        mNormalLimitConfig.SupplyTimeThreshold = 0.0;
+        mNormalLimitConfig.SupplyCurrentLimit = amps;
         applyConfigs();
     }
 }

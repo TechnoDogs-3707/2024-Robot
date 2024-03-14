@@ -29,10 +29,6 @@ public class IntakeDeploy extends SubsystemBase {
 
     private boolean mWithinTolerance = false;
 
-    //TODO: move this to the IO TalonFX class.
-    private final LoggedTunableNumber kFeedforwardConstant = new LoggedTunableNumber("IntakeDeploy/Feedforward", IntakeDeployConstants.kG);
-    private double feedforward = IntakeDeployConstants.kG;
-
     public IntakeDeploy(IntakeDeployIO io) {
         mIO = io;
         mInputs = new IntakeDeployIOInputsAutoLogged();
@@ -44,7 +40,7 @@ public class IntakeDeploy extends SubsystemBase {
 
         // update sim current draw
 
-        // cache goal state and current limit, then record outputs
+        // cache goal state and current limit, then record outputs. Also check if we are at target
 
         // set targets and update outputs
     }
@@ -74,5 +70,9 @@ public class IntakeDeploy extends SubsystemBase {
 
     public Command setPositionCommand(Supplier<IntakePositionPreset> preset) {
         return runOnce(() -> setPositionBlockingCommand(preset.get()));
+    }
+
+    public double getMotorVelocity() {
+        return mInputs.velocityRotPerSec;
     }
 }

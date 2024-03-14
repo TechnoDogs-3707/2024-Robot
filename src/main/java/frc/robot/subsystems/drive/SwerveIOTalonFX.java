@@ -81,7 +81,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         PhoenixProUtil.checkErrorAndRetry(() -> mDriveMotor.getConfigurator().apply(mDriveConfig));
         mDriveFeedbackHelper = new TalonFXFeedbackControlHelper(mDriveMotor, mDriveConfig.Slot0);
         mDriveMotor.setPosition(0);
-        mDriveCurrentLimitHelper = new TalonFXCurrentLimitHelper(mDriveMotor, 40);
+        mDriveCurrentLimitHelper = new TalonFXCurrentLimitHelper(mDriveMotor, 40.0, 80.0);
 
         mSteerControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mSteerControlOpenLoop = new VoltageOut(0, true, false, false, false);
@@ -296,7 +296,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
 
     @Override
     public void setCurrentLimit(double limit) {
-        mDriveCurrentLimitHelper.setCurrentLimit(limit);
+        mDriveCurrentLimitHelper.setStatorCurrentLimit(limit);
     }
 
     @Override
