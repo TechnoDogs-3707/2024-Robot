@@ -16,7 +16,6 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -123,7 +122,6 @@ public class RobotContainer {
     private final CommandPS5Controller operator = new CommandPS5Controller(1);
 
     // private final Trigger operatorResetMotionPlanner = operator.back().debounce(1, DebounceType.kRising);
-    private final Trigger operatorResetMotionPlanner = operator.create().debounce(0.5, DebounceType.kRising);
     private final Trigger operatorCancelAction = operator.R1();
     private final Trigger operatorClimbShift = operator.L1();
 
@@ -381,14 +379,14 @@ public class RobotContainer {
         driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
-        driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(arm, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
-        driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(arm, intake, indexer, flywheels, objective));
+        driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
+        driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(intakeDeploy, intake, indexer, flywheels, objective));
 
         //Operator button bindings
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
-        operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(arm, intake, indexer));
+        operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(intakeDeploy, intake, indexer));
         // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
         operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
@@ -397,9 +395,6 @@ public class RobotContainer {
         operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
         operatorClimbReset.onTrue(new ClimbReset(climb, objective));
         operatorClimbManual.onTrue(new ClimbManualOverride(climb, objective, operatorClimbThrottle));
-
-        operatorResetMotionPlanner.onTrue(new InstantCommand(() -> arm.setResetMotionPlanner(true), arm));
-        operatorResetMotionPlanner.onFalse(new InstantCommand(() -> arm.setResetMotionPlanner(false), arm));
 
         // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
 

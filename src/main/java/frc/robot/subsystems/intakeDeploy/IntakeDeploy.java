@@ -10,6 +10,7 @@ import frc.robot.lib.dashboard.LoggedTunableNumber;
 public class IntakeDeploy extends SubsystemBase {
     public enum IntakePositionPreset {
         STOWED(0.3),
+        EJECT(0.1875),
         DEPLOYED(-0.05);
 
         public double position;
