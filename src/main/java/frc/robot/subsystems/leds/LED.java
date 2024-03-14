@@ -200,4 +200,8 @@ public class LED extends SubsystemBase {
     public void setBrightness(BrightnessState state) {
         mBrightnessState = state;
     }
+
+    public String getPreviewColor() {
+        return mDesiredLEDState.getFirstPixelColor();
+    }
 }

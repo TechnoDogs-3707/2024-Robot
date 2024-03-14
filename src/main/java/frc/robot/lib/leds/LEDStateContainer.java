@@ -35,4 +35,8 @@ public class LEDStateContainer implements ILEDDisplayable {
             this.staticState.writePixels(ledIO);
         }
     }
+
+    public String getFirstPixelColor() {
+        return String.format("#%02x%02x%02x", this.staticState.red, this.staticState.green, this.staticState.blue);
+    }
 }

@@ -1,10 +1,12 @@
 package frc.robot;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.DriveWithController;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.SupplierWidget;
@@ -61,16 +63,15 @@ public class Dashboard {
     public static final String matchTabName = "Match";
     
     public final SendableWidget<SendableAlerts> match_alerts;
-    public final SupplierWidget<Double> match_batterySoC;
-    public final SupplierWidget<Boolean> match_isFieldOriented;
+
+    public final SupplierWidget<String> match_ledColorPreview;
+
+    public final SupplierWidget<Double> match_boostTimer;
+    public final SupplierWidget<Boolean> match_boostActive;
+    public final SupplierWidget<Boolean> match_boostAvailable;
     
-    public final SupplierWidget<Double> match_FLTemp;
-    public final SupplierWidget<Double> match_FRTemp;
-    public final SupplierWidget<Double> match_RLTemp;
-    public final SupplierWidget<Double> match_RRTemp;
-    
-    public final SupplierWidget<Boolean> match_autoAlignFinished;
-    public final SupplierWidget<Boolean> match_autoAlignStarted;
+    public final SendableWidget<Command> match_homeIntake;
+    // public final SendableWidget<Command> match_homeTilt;
 
     // Testing Tab
     public static final String testingTabName = "Testing";
@@ -122,20 +123,14 @@ public class Dashboard {
 
         // Match Tab
         match_alerts = new SendableWidget<Alert.SendableAlerts>(matchTabName, "Alerts", Alert.getDefaultAlertGroup(), new WidgetConfig(0, 0, 4, 4, "Alerts"));
-        match_batterySoC = new SupplierWidget<Double>(matchTabName, "SoC", 0.0, () -> 0.0, new WidgetConfig(4, 0, 1, 3, BuiltInWidgets.kVoltageView));
-        match_isFieldOriented = new SupplierWidget<Boolean>(matchTabName, "FieldOriented", false, () -> false, new WidgetConfig(4, 3, 1, 1, BuiltInWidgets.kBooleanBox));
         
-        match_FLTemp = new SupplierWidget<Double>(matchTabName, "FL Temp", 0.0, () -> 0.0, new WidgetConfig(5, 0, 1, 1, BuiltInWidgets.kTextView));
-        match_FRTemp = new SupplierWidget<Double>(matchTabName, "FR Temp", 0.0, () -> 0.0, new WidgetConfig(5, 1, 1, 1, BuiltInWidgets.kTextView));
-        match_RLTemp = new SupplierWidget<Double>(matchTabName, "RL Temp", 0.0, () -> 0.0, new WidgetConfig(5, 2, 1, 1, BuiltInWidgets.kTextView));
-        match_RRTemp = new SupplierWidget<Double>(matchTabName, "RR Temp", 0.0, () -> 0.0, new WidgetConfig(5, 3, 1, 1, BuiltInWidgets.kTextView));
-        
-        Supplier<Boolean> driveIsAligning = () -> {
-            return drive.getControlState() == DriveControlState.AUTO_ALIGN || drive.getControlState() == DriveControlState.AUTO_ALIGN_Y_THETA;
-        };
-        
-        match_autoAlignFinished = new SupplierWidget<Boolean>(matchTabName, "Align Finished", false, drive::autoAlignAtTarget, new WidgetConfig(6, 0, 2, 1, BuiltInWidgets.kBooleanBox));
-        match_autoAlignStarted = new SupplierWidget<Boolean>(matchTabName, "Align Started", false, driveIsAligning, new WidgetConfig(6, 1, 2, 1, BuiltInWidgets.kBooleanBox));
+        match_ledColorPreview = new SupplierWidget<String>(matchTabName, "LED Preview", "#000000", led::getPreviewColor, new WidgetConfig(4, 0, 3, 1, "Single Color View"));
+
+        match_boostTimer = new SupplierWidget<Double>(matchTabName, "Boost Timer", 0.0, () -> 0.0, new WidgetConfig(7, 0, 3, 1, "Match Time", Map.of("time_display_mode", "Seconds Only")));
+        match_boostActive = new SupplierWidget<Boolean>(matchTabName, "Boost Active", false, () -> false, new WidgetConfig(6, 1, 2, 1, BuiltInWidgets.kBooleanBox));
+        match_boostAvailable = new SupplierWidget<Boolean>(matchTabName, "Boost Available", false, () -> false, new WidgetConfig(8, 1, 2, 1, BuiltInWidgets.kBooleanBox));
+
+        match_homeIntake = new SendableWidget<Command>(matchTabName, "Home Intake", intakeDeploy.homeEncoderCommand(), new WidgetConfig(6, 2, 2, 1, BuiltInWidgets.kCommand));
 
         //Testing Tab
         testing_alerts = new SendableWidget<Alert.SendableAlerts>(testingTabName, "Alerts", Alert.getDefaultAlertGroup(), new WidgetConfig(6, 0, 4, 4, "Alerts"));
