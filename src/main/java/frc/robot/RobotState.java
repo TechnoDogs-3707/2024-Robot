@@ -26,7 +26,6 @@ import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.LoggedTunableNumber;
 
-import frc.robot.FieldConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class RobotState {

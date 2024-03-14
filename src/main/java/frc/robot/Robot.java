@@ -74,6 +74,7 @@ public class Robot extends LoggedRobot {
     }
 
     // Leave this here because advantagekit needs a reference to this class to start autologging
+    @SuppressWarnings("unused")
     private RobotState mRobotState = RobotState.getInstance();
     
     @Override

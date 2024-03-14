@@ -9,18 +9,15 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -46,7 +43,6 @@ import frc.robot.lib.drive.AutoAlignMotionPlanner;
 import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
-import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.util.GeomUtil;
 
 /** Add your docs here. */
@@ -166,8 +162,6 @@ public class Drive extends SubsystemBase {
     private Rotation3d mLastRotation3d = new Rotation3d();
     private Rotation2d mLastGyroYawPerSecond = new Rotation2d();
 
-    private Rotation2d mAutonRotationTarget;
-
     public Drive(GyroIO gyroIO, SwerveModuleIO frontLeftIO, SwerveModuleIO frontRightIO, SwerveModuleIO rearLeftIO,
             SwerveModuleIO rearRightIO) {
         mGyroIO = gyroIO;
@@ -178,8 +172,6 @@ public class Drive extends SubsystemBase {
         mModules[kFrontRightID] = new SwerveModule(frontRightIO, kFrontRightID);
         mModules[kRearLeftID] = new SwerveModule(rearLeftIO, kRearLeftID);
         mModules[kRearRightID] = new SwerveModule(rearRightIO, kRearRightID);
-
-        mAutonRotationTarget = new Rotation2d();
 
         mLastMovementTimer.reset();
     }

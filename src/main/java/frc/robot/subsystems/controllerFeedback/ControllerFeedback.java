@@ -35,6 +35,8 @@ public class ControllerFeedback extends VirtualSubsystem {
         boolean endgame1 = false;
         boolean endgame2 = false;
 
+        //TODO: fix controller feedback (maybe use for boost function)
+
         if (DriverStation.isTeleopEnabled() && (DriverStation.isFMSAttached() || mEnableVibrationOffFMS.getAsBoolean())) {
             if (endgame2 && !mEndgame1Timer.update(endgame2, 1)) {
                 mDriver.setPattern(TimedFeedback.kEndgameWarning2);
