@@ -45,6 +45,7 @@ import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
 import frc.robot.util.GeomUtil;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /** Add your docs here. */
 public class Drive extends SubsystemBase {
@@ -428,12 +429,13 @@ public class Drive extends SubsystemBase {
             }
         }
 
-        if (mMeasuredSpeeds.vxMetersPerSecond < 0.25
-        && mMeasuredSpeeds.vyMetersPerSecond < 0.25
-        && mMeasuredSpeeds.omegaRadiansPerSecond < 1
+        if (
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vxMetersPerSecond, 0, 0.25) &&
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vyMetersPerSecond, 0, 0.25) &&
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.omegaRadiansPerSecond, 0, 0.5)
         ) {
             autoShootDelayTimer.start();
-            if (autoShootDelayTimer.get() > 0.375) {
+            if (autoShootDelayTimer.get() > 0.5625) {
                 mSlowEnoughForAutoShoot = true;
             }
         } else {

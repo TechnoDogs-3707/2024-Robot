@@ -6,8 +6,6 @@ package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-
 /** Add your docs here. */
 public interface SwerveModuleIO {
     @AutoLog

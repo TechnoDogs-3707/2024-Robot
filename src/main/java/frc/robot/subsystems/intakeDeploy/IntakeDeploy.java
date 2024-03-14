@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class IntakeDeploy extends SubsystemBase {

@@ -10,6 +10,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.Constants.Mode;
+import frc.robot.util.LoggedTunableBoolean;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.poofsUtils.PoofsUtil;
 
@@ -41,6 +42,11 @@ public class Tilt extends SubsystemBase {
     private final LoggedTunableNumber kFeedforwardConstant = new LoggedTunableNumber("Tilt/Feedforward", kG);
     private double feedforward = kG;
 
+    private final LoggedTunableBoolean kEnableTargetOverride = new LoggedTunableBoolean("Tilt/EnableOverride", false);
+    private final LoggedTunableNumber kTargetOverride = new LoggedTunableNumber("Tilt/TargetOverride", TiltGoalState.STOW.state.defaultPosition);
+    private boolean mEnableOverrideCache = false;
+    private double mTargetOverrideCache = TiltGoalState.STOW.state.defaultPosition;
+
     public Tilt(TiltIO io) {
         mIO = io;
         mInputs = new TiltIOInputsAutoLogged();
@@ -70,10 +76,16 @@ public class Tilt extends SubsystemBase {
         Logger.recordOutput("ShooterTilt/GoalState/AutoAim", goal.state.autoAim);
         Logger.recordOutput("ShooterTilt/GoalState/StrictTolerance", goal.state.strictPositionTolerance);
 
+        // get our tunable values from networktables
+        kEnableTargetOverride.ifChanged(hashCode(), (v) -> mEnableOverrideCache = v);
+        kTargetOverride.ifChanged(hashCode(), (v) -> mTargetOverrideCache = v);
+
         // calculate auto-aim angle if needed, and determine if within tolerance of target (also record outputs)
         double finalPositionTarget = goal.state.defaultPosition;
-        if (goal.state.autoAim) {
-            finalPositionTarget = RobotState.getInstance().getAimingParameters().armAngle().getRotations();
+        if (mEnableOverrideCache) {
+            finalPositionTarget = mTargetOverrideCache;
+        } else if (goal.state.autoAim) {
+            finalPositionTarget = RobotState.getInstance().getAimingParameters().tiltAngle().getRotations();
         }
         boolean withinTolerance = PoofsUtil.epsilonEquals(
             finalPositionTarget, 

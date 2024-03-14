@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotState;
@@ -17,8 +19,8 @@ import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class ShooterAutoAimCommand extends SequentialCommandGroup {
-    private static double kMaxShootingDistance = 5.0;
-    public ShooterAutoAimCommand(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective) {
+    private static double kMaxShootingDistance = 4.0;
+    public ShooterAutoAimCommand(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier dontShoot) {
         addCommands(
             Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.SCORE_SPEAKER_AUTOAIM))
             .andThen(Commands.runOnce(() -> objective.setAutoAimState(SpeakerAutoAimState.PREPARING_ROBOT)))
@@ -38,7 +40,8 @@ public class ShooterAutoAimCommand extends SequentialCommandGroup {
                     && drive.isSlowEnoughForAutoShoot() 
                     && flywheels.getSystemState().equals(FlywheelsSystemState.READY)
                     && SwerveHeadingController.getInstance().isAtGoal()
-                    && RobotState.getInstance().getAimingParameters().effectiveDistance() <= kMaxShootingDistance;
+                    && RobotState.getInstance().getAimingParameters().effectiveDistance() <= kMaxShootingDistance
+                    && !dontShoot.getAsBoolean();
                 }),
                 Commands.runOnce(() -> objective.setAutoAimState(SpeakerAutoAimState.SCORE_RUNNING)),
                 indexer.setActionCommand(IndexerWantedAction.SCORE),

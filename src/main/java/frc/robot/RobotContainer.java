@@ -70,6 +70,7 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.intakeDeploy.IntakeDeployIO;
 import frc.robot.subsystems.intakeDeploy.IntakeDeployIOSim;
 import frc.robot.subsystems.intakeDeploy.IntakeDeployIOTalonFX;
+import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDIO;
 import frc.robot.subsystems.leds.LEDIOCANdle;
@@ -321,12 +322,12 @@ public class RobotContainer {
         NamedCommands.registerCommand("Flywheels Set Shoot", flywheels.setActionCommand(FlywheelsWantedAction.SHOOT));
         NamedCommands.registerCommand("Flywheels Set Off", flywheels.setActionCommand(FlywheelsWantedAction.OFF));
         NamedCommands.registerCommand("Tilt Set Close", tilt.setGoalCommand(TiltGoalState.CLOSE));
+        NamedCommands.registerCommand("Tilt Set Auto", tilt.setGoalCommand(TiltGoalState.AUTO_AIM));
         NamedCommands.registerCommand("Tilt Set Stow", tilt.setGoalCommand(TiltGoalState.STOW));
         NamedCommands.registerCommand("Intake Set Run", intake.setActionCommand(IntakeWantedAction.INTAKE_CONSTANT));
         NamedCommands.registerCommand("Intake Set Off", intake.setActionCommand(IntakeWantedAction.OFF));
-        //TODO: fix these broken commands
-        // NamedCommands.registerCommand("Deploy Intake", arm.setGoalCommand(GoalState.INTAKE_GROUND));
-        // NamedCommands.registerCommand("Stow Intake", arm.setGoalCommand(GoalState.STOW));
+        NamedCommands.registerCommand("Deploy Intake", intakeDeploy.setPositionCommand(IntakePositionPreset.DEPLOYED));
+        NamedCommands.registerCommand("Stow Intake", intakeDeploy.setPositionCommand(IntakePositionPreset.STOWED));
         drive.setupPathPlanner();
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());
@@ -383,7 +384,7 @@ public class RobotContainer {
         driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
         driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(intakeDeploy, intake, indexer, flywheels, objective));
 
-        driverAlignPodium.whileTrue(new ShooterAutoAimCommand(drive, indexer, tilt, flywheels, objective));
+        driverAlignPodium.whileTrue(new ShooterAutoAimCommand(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         
         //Operator button bindings
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
