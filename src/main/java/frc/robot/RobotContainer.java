@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.IntakeStow;
+import frc.robot.commands.ShooterAutoAimCommand;
 import frc.robot.commands.AutoScoreShooterAmp;
 import frc.robot.commands.AutoScoreShooterPodium;
 import frc.robot.commands.AutoScoreShooterSubwoofer;
@@ -382,6 +383,8 @@ public class RobotContainer {
         driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
         driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(intakeDeploy, intake, indexer, flywheels, objective));
 
+        driverAlignPodium.whileTrue(new ShooterAutoAimCommand(drive, indexer, tilt, flywheels, objective));
+        
         //Operator button bindings
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));

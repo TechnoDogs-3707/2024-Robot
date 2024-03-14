@@ -47,19 +47,24 @@ public class RobotState {
   /** Arm angle look up table key: meters, values: rotations */
   private static final InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
 
+  // static {
+  //   armAngleMap.put(1.039, 0.890);
+  //   armAngleMap.put(1.258, 0.819);
+  //   armAngleMap.put(1.511, 0.749);
+  //   armAngleMap.put(1.745, 0.730);
+  //   armAngleMap.put(2.008, 0.678);
+  //   armAngleMap.put(2.266, 0.663);
+  //   armAngleMap.put(2.514, 0.592);
+  //   armAngleMap.put(2.749, 0.558);
+  //   armAngleMap.put(2.994, 0.528);
+  //   armAngleMap.put(3.260, 0.503);
+  //   armAngleMap.put(5.156, 0.408);
+  //   armAngleMap.put(1.229, 0.838);
+  // }
+
   static {
-    armAngleMap.put(1.039, 0.890);
-    armAngleMap.put(1.258, 0.819);
-    armAngleMap.put(1.511, 0.749);
-    armAngleMap.put(1.745, 0.730);
-    armAngleMap.put(2.008, 0.678);
-    armAngleMap.put(2.266, 0.663);
-    armAngleMap.put(2.514, 0.592);
-    armAngleMap.put(2.749, 0.558);
-    armAngleMap.put(2.994, 0.528);
-    armAngleMap.put(3.260, 0.503);
-    armAngleMap.put(5.156, 0.408);
-    armAngleMap.put(1.229, 0.838);
+    armAngleMap.put(1.039, 0.078);
+    armAngleMap.put(5.156, 0.007);
   }
 
   @AutoLogOutput @Setter @Getter private double shotCompensationDegrees = 0.0;
@@ -207,7 +212,7 @@ public class RobotState {
         );
     Pose2d fieldToPredictedVehicle = getPredictedPose(lookahead.get(), lookahead.get());
     Pose2d fieldToPredictedVehicleFixed =
-        new Pose2d(fieldToPredictedVehicle.getTranslation(), new Rotation2d());
+        new Pose2d(fieldToPredictedVehicle.getTranslation(), new Rotation2d(Math.PI));
 
     Translation2d predictedVehicleToTargetTranslation =
         GeomUtil.inverse(fieldToPredictedVehicle).transformBy(fieldToTarget).getTranslation();

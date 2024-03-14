@@ -76,7 +76,7 @@ public class Tilt extends SubsystemBase {
             finalPositionTarget = RobotState.getInstance().getAimingParameters().armAngle().getRotations();
         }
         boolean withinTolerance = PoofsUtil.epsilonEquals(
-            goal.state.defaultPosition, 
+            finalPositionTarget, 
             mInputs.tiltRotations, 
             goal.state.strictPositionTolerance ? kConservativeAllowableError : kLiberalAllowableError
         );
