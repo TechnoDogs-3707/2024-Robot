@@ -21,7 +21,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public final class Constants {
     private static final RobotType robot = RobotType.ROBOT_SIMBOT;
     public static final double loopPeriodSecs = 0.02;
-    public static final boolean tuningMode = false;
+    public static final boolean tuningMode = true;
     
     public static boolean invalidRobotAlertSent = false;
     
