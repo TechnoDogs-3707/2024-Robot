@@ -152,6 +152,11 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
     }
 
     @Override
+    public void zeroPositon() {
+        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(0));
+    }
+
+    @Override
     public void setTorqueLimit(double torqueLimitAmps) {
         mCurrentLimitHelper.setStatorCurrentLimit(torqueLimitAmps);
     }

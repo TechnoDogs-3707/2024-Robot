@@ -24,4 +24,6 @@ public interface IntakeDeployIO {
     public default void enableManualThrottle(boolean enable) {}
 
     public default void setTorqueLimit(double torqueLimitAmps) {}
+
+    public default void zeroPositon() {}
 }
