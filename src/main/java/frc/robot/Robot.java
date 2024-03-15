@@ -241,7 +241,9 @@ public class Robot extends LoggedRobot {
     }
     
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        robotContainer.stopDrive();
+    }
     
     @Override
     public void disabledPeriodic() {

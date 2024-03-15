@@ -24,6 +24,7 @@ import frc.robot.commands.ShooterAutoAimCommand;
 import frc.robot.commands.AutoScoreShooterAmp;
 import frc.robot.commands.AutoScoreShooterPodium;
 import frc.robot.commands.AutoScoreShooterSubwoofer;
+import frc.robot.commands.AutonDriveAimCommand;
 import frc.robot.commands.AutonXModeCommand;
 import frc.robot.commands.DriveUtilityCommandFactory;
 import frc.robot.commands.DriveWithController;
@@ -328,6 +329,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Set Off", intake.setActionCommand(IntakeWantedAction.OFF));
         NamedCommands.registerCommand("Deploy Intake", intakeDeploy.setPositionCommand(IntakePositionPreset.DEPLOYED));
         NamedCommands.registerCommand("Stow Intake", intakeDeploy.setPositionCommand(IntakePositionPreset.STOWED));
+        NamedCommands.registerCommand("Point to Speaker", new AutonDriveAimCommand(drive));
         drive.setupPathPlanner();
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());
@@ -418,5 +420,9 @@ public class RobotContainer {
 
     public boolean hasConfigErrors() {
         return false;
+    }
+
+    protected void stopDrive() {
+        drive.stop();
     }
 }

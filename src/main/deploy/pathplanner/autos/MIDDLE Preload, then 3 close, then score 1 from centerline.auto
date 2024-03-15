@@ -16,9 +16,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Score 3 Close.1"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Score 3 Close.1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point to Speaker"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -78,9 +91,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Score 3 Close.2"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Score 3 Close.2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point to Speaker"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -121,9 +147,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Score 3 Close.3"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Score 3 Close.3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point to Speaker"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -164,9 +203,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Score 3 Close.4"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Score 3 Close.4"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point to Speaker"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -269,9 +321,22 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Score 3 Close.6"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Score 3 Close.6"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Point to Speaker"
+                      }
+                    }
+                  ]
                 }
               },
               {
