@@ -81,7 +81,7 @@ public class IntakeDeploy extends SubsystemBase {
     public void setPositionPreset(IntakePositionPreset positionPreset) {
         mPositionPreset = positionPreset;
         mWithinTolerance = false;
-        mUseManualThrottle = true;
+        mUseManualThrottle = false;
         mManualThrottle = 0.0;
     }
 
