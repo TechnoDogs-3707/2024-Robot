@@ -23,7 +23,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_2024_SONIC;
+    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -263,9 +263,9 @@ public final class Constants {
     );
 
     public static final Matrix<N3, N1> kOdometryStateStdDevs =
-      switch (Constants.getRobot()) {
+      switch (robot) {
         default -> new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.0002));
-      };
+    };
 
     //Auto-Align
     public static final double kAutoAlignAllowableDistance = 2.0; //Meters
