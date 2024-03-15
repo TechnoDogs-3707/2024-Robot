@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
@@ -58,7 +59,8 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
 
         mConfig = TalonFXConfigHelper.getBaseConfig();
         mConfig.CurrentLimits = TalonFXConfigHelper.getDefaultCurrentLimits();
-        mConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        mConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        mConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = kAbsoluteMaxPosition;
         mConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -125,7 +127,7 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
     }
 
     @Override
-    public void udpateOutputs() {
+    public void updateOutputs() {
         mManualControl.Output = mIntakeManualThrottle;
         mPIDControl.Position = mIntakeTargetRotations;
 
