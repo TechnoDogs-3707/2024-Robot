@@ -273,11 +273,11 @@ public final class Constants {
     public static final class DriveSubsystem {
         public static final Slot0Configs kDrivePIDConfig = new Slot0Configs();
         static {
-            kDrivePIDConfig.kP = 0;//0.2 * 12; 
+            kDrivePIDConfig.kP = 0.02 * 12; 
             kDrivePIDConfig.kI = 0.0;
-            kDrivePIDConfig.kD = 0.0;//00002 * 12;
+            kDrivePIDConfig.kD = 0.000002 * 12;
             kDrivePIDConfig.kV = 0.117;// (kMaxVelocityMetersPerSecond / (Math.PI * Constants.kDriveWheelDiameter * Constants.kDriveReduction));;
-            kDrivePIDConfig.kS = 0.0;//8;
+            kDrivePIDConfig.kS = 0.8;//8;
         }
 
         public static final Slot0Configs kSteerPIDConfig = new Slot0Configs();
