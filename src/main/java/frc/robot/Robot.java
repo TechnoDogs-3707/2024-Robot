@@ -34,9 +34,9 @@ import frc.robot.Constants.Mode;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.SupplierWidget;
 import frc.robot.lib.dashboard.Alert.AlertType;
-import frc.robot.lib.util.VirtualSubsystem;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LED.WantedAction;
+import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 public class Robot extends LoggedRobot {
     private static final double canErrorTimeThreshold = 0.5; // Seconds to disable alert
@@ -72,6 +72,10 @@ public class Robot extends LoggedRobot {
     public Robot() {
         super(Constants.loopPeriodSecs);
     }
+
+    // Leave this here because advantagekit needs a reference to this class to start autologging
+    @SuppressWarnings("unused")
+    private RobotState mRobotState = RobotState.getInstance();
     
     @Override
     public void robotInit() {
@@ -114,6 +118,8 @@ public class Robot extends LoggedRobot {
                 case ROBOT_2023_HEAVYMETAL:
                     LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
                     break;
+                case ROBOT_2024_SONIC:
+                    LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
                 default:
                     break;
             }
@@ -274,7 +280,6 @@ public class Robot extends LoggedRobot {
             autoCommand.cancel();
         }
         LED.setWantedAction(WantedAction.DISPLAY_ARM);
-        robotContainer.onTeleopInit();
     }
     
     @Override

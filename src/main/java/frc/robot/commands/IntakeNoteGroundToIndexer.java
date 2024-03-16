@@ -2,22 +2,22 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.Arm.GoalState;
 import frc.robot.subsystems.flywheels.Flywheels;
 import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsWantedAction;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeStateMachine.IntakeWantedAction;
+import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
+import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.IntakeGroundState;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
 
 public class IntakeNoteGroundToIndexer extends SequentialCommandGroup {
-    public IntakeNoteGroundToIndexer(Arm arm, Intake intake, Indexer indexer, Flywheels flywheels, ObjectiveTracker objective) {
+    public IntakeNoteGroundToIndexer(IntakeDeploy intakeDeploy, Intake intake, Indexer indexer, Flywheels flywheels, ObjectiveTracker objective) {
         addCommands(
-            arm.setGoalCommand(GoalState.INTAKE_GROUND)
+            intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.DEPLOYED)
             .alongWith(
                 Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.INTAKE_GROUND)),
                 Commands.runOnce(() -> objective.setIntakeGroundState(IntakeGroundState.TO_INDEXER)),
@@ -26,7 +26,7 @@ public class IntakeNoteGroundToIndexer extends SequentialCommandGroup {
                 indexer.waitUntilNoteCommand(),
                 flywheels.setActionCommand(FlywheelsWantedAction.IDLE)
             ).finallyDo(() -> {
-                arm.setGoalState(GoalState.STOW);
+                intakeDeploy.setPositionPreset(IntakePositionPreset.STOWED);
                 intake.setWantedAction(IntakeWantedAction.OFF);
                 if (indexer.hasNote()) {
                     indexer.setWantedAction(IndexerWantedAction.INTAKE);

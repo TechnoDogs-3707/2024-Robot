@@ -14,7 +14,7 @@ public class TiltIOSim implements TiltIO {
     private TrapezoidProfile mEstimator;
 
     public TiltIOSim() {
-        kConstraints = new Constraints(Constants.ShooterTilt.kMagicVel, Constants.ShooterTilt.kMagicAccel);
+        kConstraints = new Constraints(TiltConstants.kMagicVel, TiltConstants.kMagicAccel);
         mLastState = new State();
         mGoalState = new State();
 

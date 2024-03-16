@@ -71,5 +71,7 @@ public interface SwerveModuleIO {
 
     public default double getEncoderRawPosition() {return 0.0;}
 
+    public default void setCurrentLimit(double limit) {}
+
     public default void stop() {}
 }

@@ -1,9 +1,8 @@
 package frc.robot.subsystems.flywheels;
 
-// import edu.wpi.first.wpilibj.Timer;
-import frc.robot.lib.util.Util;
+import static frc.robot.subsystems.flywheels.FlywheelsConstants.*;
 
-import static frc.robot.Constants.ShooterFlywheels.*;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class FlywheelsStateMachine {
     public enum FlywheelsWantedAction {
@@ -95,7 +94,7 @@ public class FlywheelsStateMachine {
                 }
                 break;
             case SHOOT:
-                if (Util.epsilonEquals(leftMotorRPS, leftSetpointRPS, kRPSTolerance) && Util.epsilonEquals(rightMotorRPS, rightSetpointRPS, kRPSTolerance)) {
+                if (PoofsUtil.epsilonEquals(leftMotorRPS, leftSetpointRPS, kRPSTolerance) && PoofsUtil.epsilonEquals(rightMotorRPS, rightSetpointRPS, kRPSTolerance)) {
                     mSystemState = FlywheelsSystemState.READY;
                 } else {
                     mSystemState = FlywheelsSystemState.SPINUP;

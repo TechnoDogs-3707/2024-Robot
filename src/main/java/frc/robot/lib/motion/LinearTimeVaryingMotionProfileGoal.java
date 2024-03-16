@@ -1,6 +1,6 @@
 package frc.robot.lib.motion;
 
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /**
  * A LinearTimeVaryingMotionProfileGoal defines a goal with a constant velocity whose position is a function of an
@@ -53,8 +53,8 @@ public class LinearTimeVaryingMotionProfileGoal implements IMotionProfileGoal {
 
     @Override
     public boolean atGoalState(MotionState state) {
-        return Util.epsilonEquals(state.pos(), pos(state.t()), mPosTolerance) &&
-               (Util.epsilonEquals(state.vel(), mGoalVel, mVelTolerance)
+        return PoofsUtil.epsilonEquals(state.pos(), pos(state.t()), mPosTolerance) &&
+               (PoofsUtil.epsilonEquals(state.vel(), mGoalVel, mVelTolerance)
                 || mCompletionBehavior == CompletionBehavior.VIOLATE_MAX_ABS_VEL);
     }
 
@@ -94,7 +94,7 @@ public class LinearTimeVaryingMotionProfileGoal implements IMotionProfileGoal {
 
     @Override
     public boolean atGoalPos(double pos) {
-        return Util.epsilonEquals(pos, pos(mT), mPosTolerance);
+        return PoofsUtil.epsilonEquals(pos, pos(mT), mPosTolerance);
     }
 
 }

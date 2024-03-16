@@ -5,7 +5,6 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotStateTracker;
 import frc.robot.lib.LimelightHelpers;
 import frc.robot.lib.LimelightHelpers.LimelightResults;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
@@ -150,12 +149,12 @@ public class LED extends SubsystemBase {
                 // TimedLEDState.BlinkingLEDState.kVisionPresent.getCurrentLEDState(mDesiredLEDState, timeInState);
             }
         } else {
-            // If we are in auto, show when limelight goes active.
-            if (!RobotStateTracker.getInstance().getAutoAlignActive()) {
-                TimedLEDState.StaticLEDState.kVisionDisabled.getCurrentLEDState(mDesiredLEDState, timeInState);
-            } else {
-                TimedLEDState.StaticLEDState.kStaticRobotZeroedWithGoodBattery.getCurrentLEDState(mDesiredLEDState, timeInState);
-            }
+            // // If we are in auto, show when limelight goes active.
+            // if (!RobotStateTracker.getInstance().getAutoAlignActive()) {
+            //     TimedLEDState.StaticLEDState.kVisionDisabled.getCurrentLEDState(mDesiredLEDState, timeInState);
+            // } else {
+            //     TimedLEDState.StaticLEDState.kStaticRobotZeroedWithGoodBattery.getCurrentLEDState(mDesiredLEDState, timeInState);
+            // }
         }
         TimedLEDState.StaticLEDState.kStaticRobotZeroedWithGoodBattery.getCurrentLEDState(mDesiredLEDState, timeInState);
     }
@@ -200,5 +199,9 @@ public class LED extends SubsystemBase {
 
     public void setBrightness(BrightnessState state) {
         mBrightnessState = state;
+    }
+
+    public String getPreviewColor() {
+        return mDesiredLEDState.getFirstPixelColor();
     }
 }

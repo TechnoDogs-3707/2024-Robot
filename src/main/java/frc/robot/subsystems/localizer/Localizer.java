@@ -16,16 +16,17 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.RobotState.VisionObservation;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
-import frc.robot.lib.util.VirtualSubsystem;
+import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 /** Add your docs here. */
 public class Localizer extends VirtualSubsystem {
     private final LocalizerIO mIO;
     private final LocalizerIOInputsAutoLogged mInputs;
 
-    private final Consumer<VisionPose> mConsumer;
+    private final Consumer<VisionObservation> mConsumer;
 
     public final SendableChooser<Boolean> mVisionEnableChooser = new SendableChooser<>();
 
@@ -36,7 +37,7 @@ public class Localizer extends VirtualSubsystem {
     private Alert mAlertVisionNotConnected = 
         new Alert("Vision Source Disconnected!", AlertType.WARNING);
 
-    public Localizer(LocalizerIO io, Consumer<VisionPose> consumer) {
+    public Localizer(LocalizerIO io, Consumer<VisionObservation> consumer) {
         this.mIO = io;
         this.mInputs = new LocalizerIOInputsAutoLogged();
         this.mConsumer = consumer;
@@ -72,7 +73,7 @@ public class Localizer extends VirtualSubsystem {
                 999999// mInputs.stddevs[2]
             );
 
-            mConsumer.accept(new VisionPose(pose, mInputs.lastUpdateTimestamp, stddevs));
+            mConsumer.accept(new VisionObservation(pose.toPose2d(), mInputs.lastUpdateTimestamp, stddevs));
         }
     }
 

@@ -1,13 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -23,15 +18,14 @@ import java.util.Map;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_2024_SONIC;
+    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
     public static final double loopPeriodSecs = 0.02;
-    public static final boolean tuningMode = false;
+    public static final boolean tuningMode = true;
     
     public static boolean invalidRobotAlertSent = false;
     
@@ -231,9 +225,9 @@ public final class Constants {
     public static final double kSwerveHeadingControllerErrorTolerance = 1.5; // degree error
     public static final double kSwerveHeadingControllerMaintainThreshold = 25.0; // at what error will the heading controller switch from snap mode to maintain mode
 
-    public static final double kSnapSwerveHeadingKp = 0.05;
+    public static final double kSnapSwerveHeadingKp = 0.025;
     public static final double kSnapSwerveHeadingKi = 0.0;
-    public static final double kSnapSwerveHeadingKd = 0.02;
+    public static final double kSnapSwerveHeadingKd = 0.0005;
 
     public static final double kMaintainSwerveHeadingKpHighVelocity = 0.0125; //0.0225
     public static final double kMaintainSwerveHeadingKiHighVelocity = 0.0;
@@ -268,6 +262,11 @@ public final class Constants {
         new ReplanningConfig()
     );
 
+    public static final Matrix<N3, N1> kOdometryStateStdDevs =
+      switch (Constants.getRobot()) {
+        default -> new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.0002));
+      };
+
     //Auto-Align
     public static final double kAutoAlignAllowableDistance = 2.0; //Meters
 
@@ -297,186 +296,6 @@ public final class Constants {
             kSteerMagicConfig.MotionMagicJerk = 0.0;
         }
 
-    }
-
-    public static final class VisionSubsystem {
-        public static final String kCameraName = "limelight";
-        // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        public static final Transform3d kRobotToCam =
-                new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
-
-        // The layout of the AprilTags on the field
-        public static final AprilTagFieldLayout kTagLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-
-        // The standard deviations of our vision estimated poses, which affect correction rate
-        // (Fake values. Experiment and determine estimation noise on an actual robot.)
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-    }
-
-    public static final class ArmSubsystem {
-        public static final class J1 {
-            public static final int kMasterMotorID = 30;
-            public static final int kFollowerMotorID = 31;
-            public static final String kMotorBus = "canivore"; // Both motors must be on same bus to use follower mode
-
-            public static final boolean invertMaster = false;
-            public static final boolean invertFollower = false;
-
-            public static final double kS = 0.0;
-            public static final double kV = 0.0;
-            public static final double kA = 0.0;
-            public static final double kP = 0.0;
-            public static final double kI = 0.0;
-            public static final double kD = 0.0;
-            
-            public static final double kMagicVel = 1.0;
-            public static final double kMagicAccel = 2.0;
-            public static final double kMagicJerk = 0.0;
-
-            public static final double kLiberalAllowableError = 0.05;
-            public static final double kConservativeAllowableError = 0.01;
-            
-            public static final double kHomePosition = 0.0;
-            public static final double kMinTargetPosition = 0.0;
-            public static final double kMaxTargetPosition = 0.0;
-
-            public static final double kAbsoluteMaxPosition = 0.0;
-            public static final double kAbsoluteMinPosition = 0.0;
-        }
-
-        public static final class J2 {
-            public static final int kMasterMotorID = 32;
-            public static final String kMotorBus = "canivore"; // Both motors must be on same bus to use follower mode
-
-            public static final boolean invertMaster = false;
-            
-            public static final double kG = 0.2;
-
-            public static final double kS = 0.0;
-            public static final double kV = 5.0;
-            public static final double kA = 0.0;
-            public static final double kP = 14.0;
-            public static final double kI = 0.0;
-            public static final double kD = 0.0;
-
-            public static final double kMagicVel = 1.0;
-            public static final double kMagicAccel = 10.0;
-            public static final double kMagicJerk = 0.0;
-
-            public static final double kLiberalAllowableError = 0.06;
-            public static final double kConservativeAllowableError = 0.04;
-
-            public static final double kHomePosition = 0.42;
-            public static final double kMinTargetPosition = 0.0;
-            public static final double kMaxTargetPosition = 0.0;
-
-            public static final double kAbsoluteMaxPosition = 0.0;
-            public static final double kAbsoluteMinPosition = 0.0;
-        }
-    }
-
-    public static final class Intake {
-        public static final int kMasterMotorID = 33;
-        public static final String kMotorBus = "canivore";
-
-        public static final boolean invertMaster = false;
-
-        public static final double kIdleThrottle = 0.0;
-        public static final double kPartialIntakeThrottle = 0.5;
-        public static final double kHandoffThrottle = 0.7;
-        public static final double kConstantThrottle = 0.7;
-        public static final double kReverseThrottle = -0.33;
-    }
-
-    public static final class Indexer {
-        public static final int kMotorID = 40;
-        public static final String kMotorBus = "canivore";
-
-        public static final double kIdleThrottle = 0.0;
-        public static final double kIntakingThrottle = 1.0;
-        public static final double kOverfedThrottle = -0.1;
-        public static final double kScoringThrottle = 1.0;
-        public static final double kReversingThrottle = -0.5;
-    }
-
-    public static final class ShooterFlywheels {
-        public static final int kLeftMotorID = 42;
-        public static final int kRightMotorID = 43;
-        public static final String kMotorBus = "canivore";
-
-        public static final double kS = 0.0;
-        public static final double kV = 0.11;
-        public static final double kA = 0.0;
-        public static final double kP = 0.0;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-
-        public static final double kMaxRPSForBrakeMode = 8;
-        public static final double kMaxRPSForIdleControl = 20;
-        public static final double kIdleRPS = 15.0;
-        public static final double kRPSTolerance = 5;
-    }
-
-    public static final class ShooterTilt {
-        public static final int kMotorID = 48;
-        public static final String kMotorBus = "canivore";
-
-        public static final boolean invertMaster = false;
-            
-        public static final double kG = 0.35;
-        public static final double kS = 2.5;
-        public static final double kV = 40.0;
-        public static final double kA = 20.0;
-        public static final double kP = 64.0;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-
-        public static final double kMagicVel = 0.5;
-        public static final double kMagicAccel = 5;
-        public static final double kMagicJerk = 10.0;
-
-        public static final double kLiberalAllowableError = 0.01;
-        public static final double kConservativeAllowableError = 0.005;
-
-        public static final double kHomePosition = 0.0;
-        public static final double kMinTargetPosition = 0.0;
-        public static final double kMaxTargetPosition = 0.08;
-
-        public static final double kAbsoluteMaxPosition = 0.8;
-        public static final double kAbsoluteMinPosition = 0.0;
-    }
-
-    public static final class Climb {
-        public static final int kLeftMotorID = 50;
-        public static final int kRightMotorID = 51;
-        public static final String kMotorBus = "canivore";
-
-        public static final InvertedValue leftMotorPolarity = InvertedValue.Clockwise_Positive;
-        public static final InvertedValue rightMotorPolarity = InvertedValue.CounterClockwise_Positive;
-
-        public static final double kG = 0.04;
-        public static final double kS = 0.0;
-        public static final double kV = 0.5;
-        public static final double kA = 0.0;
-        public static final double kP = 0.0;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-
-        public static final double kMagicVel = 20.0;
-        public static final double kMagicAccel = 150.0;
-        
-        public static final double kPIDAllowableError = 0.0;
-
-        public static final double kMotorHomePosition = -2.0;
-
-        public static final double kReverseSoftLimitValue = 1.0;
-        public static final double kForwardSoftLimitValue = 60.0;
-
-        public static final double kClimbingThrottle = 0.0;
-
-        public static final double kFullExtensionPosition = 59.0;
-        public static final double kFullRetractionPosition = 0.0;
     }
 
     public static final int kMaxLEDCount = 127;

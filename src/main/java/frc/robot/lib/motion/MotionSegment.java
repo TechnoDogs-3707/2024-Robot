@@ -1,7 +1,8 @@
 package frc.robot.lib.motion;
 
 import static frc.robot.lib.motion.MotionUtil.kEpsilon;
-import frc.robot.lib.util.Util;
+
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /**
  * A MotionSegment is a movement from a start MotionState to an end MotionState with a constant acceleration.
@@ -25,14 +26,14 @@ public class MotionSegment {
      * 3. The time, position, velocity, and acceleration of the profile are consistent.
      */
     public boolean isValid() {
-        if (!Util.epsilonEquals(start().acc(), end().acc(), kEpsilon)) {
+        if (!PoofsUtil.epsilonEquals(start().acc(), end().acc(), kEpsilon)) {
             // Acceleration is not constant within the segment.
             System.err.println(
                     "Segment acceleration not constant! Start acc: " + start().acc() + ", End acc: " + end().acc());
             return false;
         }
-        if (Math.signum(start().vel()) * Math.signum(end().vel()) < 0.0 && !Util.epsilonEquals(start().vel(), 0.0, kEpsilon)
-                && !Util.epsilonEquals(end().vel(), 0.0, kEpsilon)) {
+        if (Math.signum(start().vel()) * Math.signum(end().vel()) < 0.0 && !PoofsUtil.epsilonEquals(start().vel(), 0.0, kEpsilon)
+                && !PoofsUtil.epsilonEquals(end().vel(), 0.0, kEpsilon)) {
             // Velocity direction reverses within the segment.
             System.err.println("Segment velocity reverses! Start vel: " + start().vel() + ", End vel: " + end().vel());
             return false;

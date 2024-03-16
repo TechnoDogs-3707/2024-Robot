@@ -7,12 +7,12 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
-import frc.robot.lib.dashboard.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
+import frc.robot.util.LoggedTunableNumber;
 
-import static frc.robot.Constants.Climb.*;
+import static frc.robot.subsystems.climb.ClimbConstants.*;
 
 import java.util.ArrayList;
 

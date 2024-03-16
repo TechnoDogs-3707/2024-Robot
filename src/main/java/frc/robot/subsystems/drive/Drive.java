@@ -7,21 +7,23 @@ package frc.robot.subsystems.drive;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -30,9 +32,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.RobotStateTracker;
+import frc.robot.RobotState;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.RobotType;
+import frc.robot.RobotState.OdometryObservation;
 import frc.robot.lib.Utility;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.DashboardToggleSwitch;
@@ -41,7 +44,8 @@ import frc.robot.lib.drive.AutoAlignMotionPlanner;
 import frc.robot.lib.drive.SwerveSetpoint;
 import frc.robot.lib.drive.SwerveSetpointGenerator;
 import frc.robot.lib.drive.SwerveSetpointGenerator.KinematicLimits;
-import frc.robot.subsystems.localizer.VisionPose;
+import frc.robot.util.GeomUtil;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /** Add your docs here. */
 public class Drive extends SubsystemBase {
@@ -64,6 +68,23 @@ public class Drive extends SubsystemBase {
             this.title = title;
         }
     }
+
+    public enum DriveCurrentLimitState {
+        TELEOP_CONSERVATIVE(40),
+        TELEOP_AGGRESSIVE(50),
+        AUTON_AGGRESSIVE(60),
+        BROWNOUT_PROTECT(10);
+
+        public double currentLimitAmps;
+
+        DriveCurrentLimitState(double limit) {
+            currentLimitAmps = limit;
+        }
+    }
+
+    private DriveCurrentLimitState mCurrentLimitState = DriveCurrentLimitState.TELEOP_CONSERVATIVE;
+    private boolean mCurrentLimitStateHasChanged = true;
+    private Timer mBrownoutTimer = new Timer();
 
     private DriveControlState mControlState = DriveControlState.VELOCITY_CONTROL;
     private boolean mAllowDriveAssists = true;
@@ -119,8 +140,7 @@ public class Drive extends SubsystemBase {
     private final int kRearLeftID = 2;
     private final int kRearRightID = 3;
 
-    SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(Constants.kWheelPositions);
-    SwerveSetpointGenerator mGenerator = new SwerveSetpointGenerator(mKinematics);
+    SwerveSetpointGenerator mGenerator = new SwerveSetpointGenerator(Constants.kKinematics);
 
     private ChassisSpeeds mSetpoint = new ChassisSpeeds();
     private ChassisSpeeds mMeasuredSpeeds = new ChassisSpeeds();
@@ -144,9 +164,8 @@ public class Drive extends SubsystemBase {
     private Rotation3d mLastRotation3d = new Rotation3d();
     private Rotation2d mLastGyroYawPerSecond = new Rotation2d();
 
-    private SwerveDrivePoseEstimator mPoseEstimator;
-
-    private Rotation2d mAutonRotationTarget;
+    private boolean mSlowEnoughForAutoShoot = false;
+    private Timer autoShootDelayTimer = new Timer();
 
     public Drive(GyroIO gyroIO, SwerveModuleIO frontLeftIO, SwerveModuleIO frontRightIO, SwerveModuleIO rearLeftIO,
             SwerveModuleIO rearRightIO) {
@@ -159,22 +178,18 @@ public class Drive extends SubsystemBase {
         mModules[kRearLeftID] = new SwerveModule(rearLeftIO, kRearLeftID);
         mModules[kRearRightID] = new SwerveModule(rearRightIO, kRearRightID);
 
-        mPoseEstimator = new SwerveDrivePoseEstimator(mKinematics, mLastGyroYaw, mLastSwervePositions, new Pose2d());
-
-        mAutonRotationTarget = new Rotation2d();
-
         mLastMovementTimer.reset();
     }
 
     // PathPlanner setup has to be done after named commands are configured, which happens in RobotContainer.
     public void setupPathPlanner() {
         AutoBuilder.configureHolonomic(
-            this::getPose, // Robot pose supplier
-            this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            RobotState.getInstance()::getEstimatedPose, // Robot pose supplier
+            RobotState.getInstance()::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getMeasuredSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::setPathFollowing, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             Constants.kPathFollowerConfig,
-            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Flip paths if alliance is red TODO: make sure this works
+            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Flip paths if alliance is red
             this // Reference to this subsystem to set requirements
         );
         PathPlannerLogging.setLogActivePathCallback(
@@ -194,6 +209,8 @@ public class Drive extends SubsystemBase {
         // Update subsystem inputs - this should always be the first thing in periodic()
         mGyroIO.updateInputs(mGyroInputs);
         Logger.processInputs("Drive/Gyro", mGyroInputs);
+
+        double now = Timer.getFPGATimestamp();
 
         mLastGyroYawPerSecond = Rotation2d.fromRotations(mGyroInputs.yawVelocityRotationsPerSecond);
 
@@ -281,12 +298,6 @@ public class Drive extends SubsystemBase {
                 }
             }
 
-            RobotStateTracker.getInstance().setCurrentRobotPose(mLastRobotPose);
-            RobotStateTracker.getInstance().setCurrentRobotPosition(mLastRobotPose.getTranslation());
-            RobotStateTracker.getInstance().setCurrentRobotVelocity(mMeasuredSpeeds);
-            RobotStateTracker.getInstance().setAutoAlignActive(mControlState == DriveControlState.AUTO_ALIGN || mControlState == DriveControlState.AUTO_ALIGN_Y_THETA);
-            RobotStateTracker.getInstance().setAutoAlignComplete(autoAlignAtTarget());
-
             // Log setpoint states
             Logger.recordOutput("Drive/SwerveStates/Setpoints", setpointStates);
             Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", optimizedStates);
@@ -296,6 +307,32 @@ public class Drive extends SubsystemBase {
             Logger.recordOutput("Drive/AutoAlign/AtTarget", autoAlignAtTarget());
             Logger.recordOutput("Drive/AutoAlign/Override", mAlignStateOverride);
             Logger.recordOutput("Drive/AutoAlign/ReadyToScore", readyToScore());
+        }
+
+        if (RobotController.isBrownedOut()) {
+            mBrownoutTimer.restart();
+        } else if (mBrownoutTimer.hasElapsed(5)) {
+            mBrownoutTimer.stop();
+            mBrownoutTimer.reset();
+        }
+
+        if (mBrownoutTimer.get() > 0) {
+            setCurrentLimits(DriveCurrentLimitState.BROWNOUT_PROTECT);
+        } else if (DriverStation.isAutonomousEnabled()) {
+            setCurrentLimits(DriveCurrentLimitState.AUTON_AGGRESSIVE);
+        } else {
+            setCurrentLimits(DriveCurrentLimitState.TELEOP_CONSERVATIVE);
+        }
+
+        Logger.recordOutput("Drive/CurrentLimits/Mode", mCurrentLimitState);
+        Logger.recordOutput("Drive/CurrentLimits/Value", mCurrentLimitState.currentLimitAmps);
+
+        // Handle Current Limits
+        if (mCurrentLimitStateHasChanged) {
+            for (int i = 0; i < mModules.length; i++) {
+                mModules[i].setCurrentLimit(mCurrentLimitState.currentLimitAmps);
+            }
+            mCurrentLimitStateHasChanged = false;
         }
 
         // Log measured states
@@ -314,7 +351,7 @@ public class Drive extends SubsystemBase {
         }
 
         // Calculate robot velocity from measured chassis speeds
-        var inverseSpeeds = mKinematics.toChassisSpeeds(measuredStates);
+        var inverseSpeeds = Constants.kKinematics.toChassisSpeeds(measuredStates);
         mMeasuredSpeeds = inverseSpeeds;
 
         // Update gyro angle
@@ -330,7 +367,20 @@ public class Drive extends SubsystemBase {
         }
 
         // Update odometry
-        mLastRobotPose = mPoseEstimator.update(mLastGyroYaw, mLastSwervePositions);
+        // mLastRobotPose = mPoseEstimator.update(mLastGyroYaw, mLastSwervePositions);
+        OdometryObservation observation = new OdometryObservation(
+            new SwerveDriveWheelPositions(mLastSwervePositions), 
+            mLastGyroYaw, 
+            now
+        );
+        RobotState.getInstance().addOdometryObservation(observation);
+
+        ChassisSpeeds robotRelativeVelocity = mMeasuredSpeeds;
+        robotRelativeVelocity.omegaRadiansPerSecond = 
+            mGyroInputs.connected
+                ? mGyroInputs.yawVelocityRotationsPerSecond * 2.0 * Math.PI
+                : robotRelativeVelocity.omegaRadiansPerSecond;
+        RobotState.getInstance().addVelocityData(GeomUtil.toTwist2d(robotRelativeVelocity));
 
         // Update Field2d Widget
         if (mPoseWidgetUsePreview.getAsBoolean()) {
@@ -338,13 +388,6 @@ public class Drive extends SubsystemBase {
         } else {
             mPosePreviewSource.setRobotPose(mLastRobotPose);
         }
-
-        // poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
-        Logger.recordOutput("Drive/Odometry/Robot", getPose());
-
-        Logger.recordOutput("Drive/Odometry/RawPose2d/x", getPose().getX());
-        Logger.recordOutput("Drive/Odometry/RawPose2d/y", getPose().getY());
-        Logger.recordOutput("Drive/Odometry/RawPose2d/theta", getPose().getRotation().getRotations());
 
         // Log 3D odometry pose
         var robotTranslation3d = new Translation3d(
@@ -384,6 +427,21 @@ public class Drive extends SubsystemBase {
                     module.setDriveBrakeMode(false);
                 }
             }
+        }
+
+        if (
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vxMetersPerSecond, 0, 0.25) &&
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vyMetersPerSecond, 0, 0.25) &&
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.omegaRadiansPerSecond, 0, 0.5)
+        ) {
+            autoShootDelayTimer.start();
+            if (autoShootDelayTimer.get() > 0.5625) {
+                mSlowEnoughForAutoShoot = true;
+            }
+        } else {
+            mSlowEnoughForAutoShoot = false;
+            autoShootDelayTimer.stop();
+            autoShootDelayTimer.reset();
         }
 
         // Run alert checks
@@ -452,7 +510,8 @@ public class Drive extends SubsystemBase {
 
     public void reseedRotation() {
         boolean flip = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
-        mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, new Pose2d(mLastRobotPose.getTranslation(), flip ? Rotation2d.fromRotations(0.5) : new Rotation2d()));
+        RobotState.getInstance().resetPose(new Pose2d(RobotState.getInstance().getEstimatedPose().getTranslation(), flip ? Rotation2d.fromRotations(0.5) : new Rotation2d()));
+        // mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, new Pose2d(mLastRobotPose.getTranslation(), flip ? Rotation2d.fromRotations(0.5) : new Rotation2d()));
     }
 
     // public void reseedRotation() {
@@ -467,32 +526,8 @@ public class Drive extends SubsystemBase {
         mControlState = DriveControlState.X_MODE;
     }
 
-    public Pose2d getPose() {
-        return mLastRobotPose;
-    }
-
     public Rotation3d getGyroAngle() {
         return mLastRotation3d;
-    }
-
-    public Rotation3d getFieldOrientation() {
-        return mLastRotation3d.minus(new Rotation3d(0, 0, getGyroAngle().getZ()));
-    }
-
-    public Rotation2d getAutonRotationTarget() {
-        return mAutonRotationTarget;
-    }
-
-    public void setAutonRotationTarget(Rotation2d autonTarget) {
-        this.mAutonRotationTarget = autonTarget;
-    }
-
-    public void setPose(Pose2d pose) {
-        mPoseEstimator.resetPosition(mLastGyroYaw, mLastSwervePositions, pose);
-    }
-
-    public void addVisionPose(VisionPose pose) {
-        mPoseEstimator.addVisionMeasurement(pose.pose.toPose2d(), pose.timestampSeconds, pose.stddevs);
     }
 
     public double getLastEncoderPosition(int module) {
@@ -539,7 +574,7 @@ public class Drive extends SubsystemBase {
         }
 
         final double now = Timer.getFPGATimestamp();
-        var position = getPose();
+        var position = RobotState.getInstance().getEstimatedPose();
         var velocity = Utility.getTwist2dFromChassisSpeeds(getMeasuredSpeeds());
 
         ChassisSpeeds output = mAutoAlignPlanner.updateAutoAlign(now, position, velocity);
@@ -552,7 +587,7 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean autoAlignAtTarget() {
-        return getPose().relativeTo(getTargetPoint()).getTranslation().getNorm() <= Constants.kLEDClosenessDeadbandMeters 
+        return RobotState.getInstance().getEstimatedPose().relativeTo(getTargetPoint()).getTranslation().getNorm() <= Constants.kLEDClosenessDeadbandMeters 
             && (mControlState == DriveControlState.AUTO_ALIGN || mControlState == DriveControlState.AUTO_ALIGN_Y_THETA);
     }
 
@@ -578,6 +613,18 @@ public class Drive extends SubsystemBase {
 
     public Rotation2d getGyroYawVelocity() {
         return mLastGyroYawPerSecond;
+    }
+
+    public void setCurrentLimits(DriveCurrentLimitState currentLimitState) {
+        if (mCurrentLimitState != currentLimitState) {
+            mCurrentLimitState = currentLimitState;
+            mCurrentLimitStateHasChanged = true;
+        }
+    }
+
+    @AutoLogOutput(key = "Drive/CanAutoShoot")
+    public boolean isSlowEnoughForAutoShoot() {
+        return mSlowEnoughForAutoShoot;
     }
 
     public Pose2d getAutonInitialPose() {

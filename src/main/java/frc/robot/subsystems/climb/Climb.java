@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.Mode;
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
-import static frc.robot.Constants.Climb.*;
+import static frc.robot.subsystems.climb.ClimbConstants.*;
 
 import java.util.function.Supplier;
 
@@ -107,7 +107,7 @@ public class Climb extends SubsystemBase {
     }
 
     public boolean isAtPosition(double position) {
-        return Util.epsilonEquals(mInputs.leftMotorRotations, position, kPIDAllowableError) && Util.epsilonEquals(mInputs.rightMotorRotations, position, kPIDAllowableError);
+        return PoofsUtil.epsilonEquals(mInputs.leftMotorRotations, position, kPIDAllowableError) && PoofsUtil.epsilonEquals(mInputs.rightMotorRotations, position, kPIDAllowableError);
     }
 
     public Command setThrottleCommand(Supplier<Double> throttle) {

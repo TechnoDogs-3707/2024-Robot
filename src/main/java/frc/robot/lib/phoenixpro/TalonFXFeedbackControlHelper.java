@@ -77,61 +77,61 @@ public class TalonFXFeedbackControlHelper {
         PhoenixProUtil.checkErrorAndRetry(() -> mConfigurator.apply(mMagicConfigs, timeout));
     }
 
-    public void setKG(double kG) {
+    public void setKG(Double kG) {
         refreshConfigs();
         mPIDConfigs.kG = kG;
         applyConfigs();
     }
 
-    public void setKS(double kS) {
+    public void setKS(Double kS) {
         refreshConfigs();
         mPIDConfigs.kS = kS;
         applyConfigs();
     }
 
-    public void setKV(double kV) {
+    public void setKV(Double kV) {
         refreshConfigs();
         mPIDConfigs.kV= kV;
         applyConfigs();
     }
 
-    public void setKA(double kA) {
+    public void setKA(Double kA) {
         refreshConfigs();
         mPIDConfigs.kA= kA;
         applyConfigs();
     }
 
-    public void setKP(double kP) {
+    public void setKP(Double kP) {
         refreshConfigs();
         mPIDConfigs.kP = kP;
         applyConfigs();
     }
 
-    public void setKI(double kI) {
+    public void setKI(Double kI) {
         refreshConfigs();
         mPIDConfigs.kI = kI;
         applyConfigs();
     }
 
-    public void setKD(double kD) {
+    public void setKD(Double kD) {
         refreshConfigs();
         mPIDConfigs.kD = kD;
         applyConfigs();
     }
 
-    public void setMagicVelocity(double magicVelocity) {
+    public void setMagicVelocity(Double magicVelocity) {
         refreshConfigs();
         mMagicConfigs.MotionMagicCruiseVelocity = magicVelocity;
         applyConfigs();
     }
 
-    public void setMagicAcceleration(double magicAcceleration) {
+    public void setMagicAcceleration(Double magicAcceleration) {
         refreshConfigs();
         mMagicConfigs.MotionMagicAcceleration = magicAcceleration;
         applyConfigs();
     }
 
-    public void setMagicJerk(double magicJerk) {
+    public void setMagicJerk(Double magicJerk) {
         refreshConfigs();
         mMagicConfigs.MotionMagicJerk = magicJerk;
         applyConfigs();

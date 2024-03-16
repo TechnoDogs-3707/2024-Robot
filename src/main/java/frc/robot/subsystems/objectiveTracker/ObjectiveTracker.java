@@ -4,10 +4,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import frc.robot.lib.drive.AutoAlignPointSelector.RequestedAlignment;
 import frc.robot.lib.leds.TimedLEDState;
-import frc.robot.lib.util.VirtualSubsystem;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.LED;
+import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 public class ObjectiveTracker extends VirtualSubsystem {
     private final Intake mIntake;
@@ -35,7 +35,8 @@ public class ObjectiveTracker extends VirtualSubsystem {
     }
 
     public enum SpeakerAutoAimState {
-        STABILIZING_TRAJECTORY,
+        PREPARING_ROBOT,
+        WAITING_FOR_POSITION,
         SCORE_RUNNING,
         SCORE_FINISHED
     }
@@ -56,7 +57,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
     private MasterObjective mMasterObjective = MasterObjective.NONE;
     private IntakeGroundState mIntakeGroundState = IntakeGroundState.TO_INDEXER;
     private AutoAlignIntakeState mAutoIntakeState = AutoAlignIntakeState.DRIVING_TO_TARGET;
-    private SpeakerAutoAimState mAutoAimState = SpeakerAutoAimState.STABILIZING_TRAJECTORY;
+    private SpeakerAutoAimState mAutoAimState = SpeakerAutoAimState.PREPARING_ROBOT;
     private AutoAlignScoreState mAutoAlignState = AutoAlignScoreState.DRIVING_TO_TARGET;
     private ClimbingState mClimbingState = ClimbingState.RAISING;
 
@@ -135,7 +136,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         switch (mAutoIntakeState) {
             case DRIVING_TO_TARGET:
                 // TODO: percent full based on distance
-                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kTempAutoAligning);
+                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kAutoAimWaiting);
                 break;
             case ON_TARGET:
                 LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kIntakeAutoAlignOnTarget);
@@ -157,9 +158,11 @@ public class ObjectiveTracker extends VirtualSubsystem {
             case SCORE_RUNNING:
                 LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kAutoAimScoring);
                 break;
-            case STABILIZING_TRAJECTORY:
+            case PREPARING_ROBOT:
                 LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kAutoAimPreparing);
                 break;
+            case WAITING_FOR_POSITION:
+                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kAutoAimWaiting);
             default:
                 break;
             
@@ -170,7 +173,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         switch (mAutoAlignState) {
             case DRIVING_TO_TARGET:
                 //TODO: distance to target point
-                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kTempAutoAligning);
+                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kAutoAimWaiting);
                 break;
             case SCORE_FINISHED:
                 LED.setArmLEDState(TimedLEDState.StaticLEDState.kAutoAlignScoringComplete);

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.indexer;
 
+import static frc.robot.subsystems.indexer.IndexerConstants.*;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -12,8 +14,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
-
-import static frc.robot.Constants.Indexer.*;
 
 /** Add your docs here. */
 public class IndexerIOTalonFX implements IndexerIO {

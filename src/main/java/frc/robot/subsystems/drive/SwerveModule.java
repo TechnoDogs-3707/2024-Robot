@@ -13,7 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import frc.robot.Constants;
-import frc.robot.lib.dashboard.LoggedTunableNumber;
+import frc.robot.util.LoggedTunableNumber;
 
 /** Add your docs here. */
 public class SwerveModule {
@@ -174,5 +174,9 @@ public class SwerveModule {
 
     public double getEncoderRawPosition() {
         return io.getEncoderRawPosition();
+    }
+
+    public void setCurrentLimit(double amps) {
+        io.setCurrentLimit(amps);
     }
 }

@@ -1,6 +1,6 @@
 package frc.robot.lib.motion;
 
-import frc.robot.lib.util.Util;
+import frc.robot.util.poofsUtils.PoofsUtil;
 
 /**
  * A MotionProfileGoal defines a desired position and maximum velocity (at this position), along with the behavior that
@@ -94,7 +94,7 @@ public class MotionProfileGoal implements IMotionProfileGoal {
 
     @Override
     public boolean atGoalPos(double pos) {
-        return Util.epsilonEquals(pos, this.pos, pos_tolerance);
+        return PoofsUtil.epsilonEquals(pos, this.pos, pos_tolerance);
     }
 
     /**

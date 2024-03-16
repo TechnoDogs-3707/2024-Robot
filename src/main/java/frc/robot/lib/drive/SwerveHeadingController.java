@@ -3,11 +3,10 @@ package frc.robot.lib.drive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
-import frc.robot.RobotStateTracker;
+import frc.robot.RobotState;
 import frc.robot.lib.Utility;
 
 /**
@@ -59,7 +58,7 @@ public class SwerveHeadingController {
     /**
      * @param goal_pos pos in degrees
      */
-    public void setGoal(double goal_pos) {
+    public void setGoal(Double goal_pos) {
         mSetpoint = goal_pos;
     }
 
@@ -115,7 +114,7 @@ public class SwerveHeadingController {
         }
 
         // var current_translational_velocity = RobotState.getInstance().getMeasuredVelocity().norm();
-        var current_translational_velocity = Utility.getSpeedAsScalar(RobotStateTracker.getInstance().getCurrentRobotSpeeds());
+        var current_translational_velocity = RobotState.getInstance().linearVelocity().getNorm();
         final double kMinTranslationalVelocity = 0.2;
         if (current_translational_velocity < kMinTranslationalVelocity) {
             current_translational_velocity = kMinTranslationalVelocity;
