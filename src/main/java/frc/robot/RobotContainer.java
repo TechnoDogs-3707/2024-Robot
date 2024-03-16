@@ -129,6 +129,7 @@ public class RobotContainer {
     private final Trigger operatorClimbShift = operator.L1();
 
     private final Trigger operatorScoreOverride = operator.circle();
+    private final Trigger operatorAutoAim = operator.cross();
 
     private final Trigger operatorSubwoofer = operatorClimbShift.negate().and(operator.povRight());
     private final Trigger operatorPodium = operatorClimbShift.negate().and(operator.povLeft());
@@ -386,7 +387,7 @@ public class RobotContainer {
         driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
         driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(intakeDeploy, intake, indexer, flywheels, objective));
 
-        driverAlignPodium.whileTrue(new ShooterAutoAimCommand(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
+        operatorAutoAim.whileTrue(new ShooterAutoAimCommand(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
         
         //Operator button bindings
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));

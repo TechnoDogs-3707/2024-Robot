@@ -64,8 +64,15 @@ public class RobotState {
         // }
         
         static {
+            tiltAngleMap.put(1.07, 0.078);
             tiltAngleMap.put(1.18, 0.065);
-            tiltAngleMap.put(2.4, 0.02);
+            tiltAngleMap.put(1.5, 0.05);
+            tiltAngleMap.put(1.757, 0.04);
+            tiltAngleMap.put(2.003, 0.03);
+            tiltAngleMap.put(2.254, 0.02);
+            tiltAngleMap.put(2.5, 0.016);
+            tiltAngleMap.put(2.76, 0.013);
+            tiltAngleMap.put(3.016, 0.008);
             tiltAngleMap.put(3.55, 0.007);
         }
         
