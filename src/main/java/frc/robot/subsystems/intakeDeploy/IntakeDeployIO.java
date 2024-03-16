@@ -15,7 +15,7 @@ public interface IntakeDeployIO {
 
     public default void updateInputs(IntakeDeployIOInputs inputs) {}
 
-    public default void udpateOutputs() {}
+    public default void updateOutputs() {}
 
     public default void setPositionTarget(double positionTarget) {}
     

@@ -24,7 +24,7 @@ public final class IntakeDeployConstants {
     public static final double kLiberalAllowableError = 0.06;
     public static final double kConservativeAllowableError = 0.04;
 
-    public static final double kHomePosition = 0.42;
+    public static final double kHomePosition = 0.39;
     public static final double kMinTargetPosition = 0.0;
     public static final double kMaxTargetPosition = 0.0;
 

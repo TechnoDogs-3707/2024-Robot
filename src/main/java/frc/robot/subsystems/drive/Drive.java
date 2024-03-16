@@ -82,7 +82,7 @@ public class Drive extends SubsystemBase {
         }
     }
 
-    private DriveCurrentLimitState mCurrentLimitState = DriveCurrentLimitState.TELEOP_CONSERVATIVE;
+    private DriveCurrentLimitState mCurrentLimitState = DriveCurrentLimitState.TELEOP_AGGRESSIVE;
     private boolean mCurrentLimitStateHasChanged = true;
     private Timer mBrownoutTimer = new Timer();
 
@@ -311,7 +311,7 @@ public class Drive extends SubsystemBase {
 
         if (RobotController.isBrownedOut()) {
             mBrownoutTimer.restart();
-        } else if (mBrownoutTimer.hasElapsed(5)) {
+        } else if (mBrownoutTimer.hasElapsed(2.5)) {
             mBrownoutTimer.stop();
             mBrownoutTimer.reset();
         }
@@ -321,7 +321,7 @@ public class Drive extends SubsystemBase {
         } else if (DriverStation.isAutonomousEnabled()) {
             setCurrentLimits(DriveCurrentLimitState.AUTON_AGGRESSIVE);
         } else {
-            setCurrentLimits(DriveCurrentLimitState.TELEOP_CONSERVATIVE);
+            setCurrentLimits(DriveCurrentLimitState.TELEOP_AGGRESSIVE);
         }
 
         Logger.recordOutput("Drive/CurrentLimits/Mode", mCurrentLimitState);
@@ -435,7 +435,7 @@ public class Drive extends SubsystemBase {
             PoofsUtil.epsilonEquals(mMeasuredSpeeds.omegaRadiansPerSecond, 0, 0.5)
         ) {
             autoShootDelayTimer.start();
-            if (autoShootDelayTimer.get() > 0.5625) {
+            if (autoShootDelayTimer.get() > 0.125) {
                 mSlowEnoughForAutoShoot = true;
             }
         } else {

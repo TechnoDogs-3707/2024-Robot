@@ -1,8 +1,6 @@
 package frc.robot.subsystems.intakeDeploy;
 
-import static frc.robot.subsystems.intakeDeploy.IntakeDeployConstants.kHomingMinTime;
-import static frc.robot.subsystems.intakeDeploy.IntakeDeployConstants.kHomingThrottle;
-import static frc.robot.subsystems.intakeDeploy.IntakeDeployConstants.kHomingVelocityThreshold;
+import static frc.robot.subsystems.intakeDeploy.IntakeDeployConstants.*;
 
 import java.util.function.Supplier;
 
@@ -20,7 +18,7 @@ public class IntakeDeploy extends SubsystemBase {
     public enum IntakePositionPreset {
         STOWED(0.3),
         EJECT(0.1875),
-        DEPLOYED(-0.05);
+        DEPLOYED(-0.1);
 
         public double position;
 
@@ -77,13 +75,13 @@ public class IntakeDeploy extends SubsystemBase {
         mIO.setManualThrottle(mManualThrottle);
         mIO.setPositionTarget(positionTarget);
 
-        mIO.udpateOutputs();
+        mIO.updateOutputs();
     }
 
     public void setPositionPreset(IntakePositionPreset positionPreset) {
         mPositionPreset = positionPreset;
         mWithinTolerance = false;
-        mUseManualThrottle = true;
+        mUseManualThrottle = false;
         mManualThrottle = 0.0;
     }
 
@@ -96,7 +94,7 @@ public class IntakeDeploy extends SubsystemBase {
     }
 
     public Command setPositionBlockingCommand(Supplier<IntakePositionPreset> preset) {
-        return runOnce(() -> setPositionBlockingCommand(preset.get())).andThen(
+        return runOnce(() -> setPositionPreset(preset.get())).andThen(
             Commands.waitUntil(this::atTarget)
         );
     }
@@ -106,7 +104,7 @@ public class IntakeDeploy extends SubsystemBase {
     }
 
     public Command setPositionCommand(Supplier<IntakePositionPreset> preset) {
-        return runOnce(() -> setPositionBlockingCommand(preset.get()));
+        return runOnce(() -> setPositionPreset(preset.get()));
     }
 
     public void setManualThrottle(double manualThrottle) {
