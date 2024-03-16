@@ -64,8 +64,9 @@ public class RobotState {
         // }
         
         static {
-            tiltAngleMap.put(1.221, 0.078);
-            tiltAngleMap.put(3.550, 0.01);
+            tiltAngleMap.put(1.18, 0.065);
+            tiltAngleMap.put(2.4, 0.02);
+            tiltAngleMap.put(3.55, 0.007);
         }
         
         @AutoLogOutput @Setter @Getter private double shotCompensationDegrees = 0.0;
