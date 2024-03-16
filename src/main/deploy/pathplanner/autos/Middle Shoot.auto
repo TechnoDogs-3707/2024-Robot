@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4135621611975744,
-      "y": 5.499852420348571
+      "x": 1.3676672858340169,
+      "y": 5.536568320639416
     },
     "rotation": 0.0
   },
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Intake"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -30,6 +36,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Indexer Set Score"
@@ -39,6 +51,12 @@
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Indexer Set Intake"
           }
         }
       ]

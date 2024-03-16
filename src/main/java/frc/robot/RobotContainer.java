@@ -330,7 +330,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Set Off", intake.setActionCommand(IntakeWantedAction.OFF));
         NamedCommands.registerCommand("Deploy Intake", intakeDeploy.setPositionCommand(IntakePositionPreset.DEPLOYED));
         NamedCommands.registerCommand("Stow Intake", intakeDeploy.setPositionCommand(IntakePositionPreset.STOWED));
-        NamedCommands.registerCommand("Point to Speaker", new AutonDriveAimCommand(drive));
+        NamedCommands.registerCommand("Point to Speaker", new AutonDriveAimCommand(drive).withTimeout(0.5));
         drive.setupPathPlanner();
 
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());

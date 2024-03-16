@@ -16,12 +16,11 @@
     "Other+Misc+Test"
   ],
   "autoFolders": [
-    "Bottom",
+    "Close Paths",
     "Just Shoot and Move",
-    "Middle",
+    "OLD PATHS",
     "Scorched Earth",
-    "Test+Misc",
-    "Top"
+    "Test+Misc"
   ],
   "defaultMaxVel": 4.172,
   "defaultMaxAccel": 8.1,
