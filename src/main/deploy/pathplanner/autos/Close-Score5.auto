@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": -5.253672270552454e-29
+    "rotation": -6.299600407235394e-28
   },
   "command": {
     "type": "sequential",
@@ -233,6 +233,18 @@
                 "data": {
                   "name": "Indexer Set Intake"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Off"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stow Intake"
+                }
               }
             ]
           }
@@ -248,6 +260,18 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Close-Score5.7"
@@ -257,6 +281,18 @@
                 "type": "path",
                 "data": {
                   "pathName": "Close-Score5.8"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Off"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stow Intake"
                 }
               },
               {

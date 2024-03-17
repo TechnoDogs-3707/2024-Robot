@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.9,
-  "robotLength": 0.9,
+  "robotWidth": 0.876,
+  "robotLength": 0.88,
   "holonomicMode": true,
   "pathFolders": [
     " 2-3",
@@ -17,10 +17,7 @@
   ],
   "autoFolders": [
     "Close Paths",
-    "Just Shoot and Move",
-    "OLD PATHS",
-    "Scorched Earth",
-    "Test+Misc"
+    "Misc"
   ],
   "defaultMaxVel": 4.172,
   "defaultMaxAccel": 8.1,
