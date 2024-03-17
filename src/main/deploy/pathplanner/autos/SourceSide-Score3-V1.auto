@@ -60,18 +60,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Intake"
                 }
               }
