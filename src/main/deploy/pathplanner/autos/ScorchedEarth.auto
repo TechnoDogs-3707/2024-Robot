@@ -1,0 +1,112 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.49403247237205505,
+      "y": 2.078228712081909
+    },
+    "rotation": -1.2378839075992624e-20
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Speed To 60"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Close"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "ScorchedEarth.1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Indexer Set Score"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ScorchedEarth.2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ScorchedEarth.3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ScorchedEarth.4"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Misc",
+  "choreoAuto": true
+}
