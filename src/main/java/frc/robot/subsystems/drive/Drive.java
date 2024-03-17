@@ -70,9 +70,10 @@ public class Drive extends SubsystemBase {
     }
 
     public enum DriveCurrentLimitState {
-        TELEOP_CONSERVATIVE(40),
+        TELEOP_CONSERVATIVE(45),
         TELEOP_AGGRESSIVE(50),
         AUTON_AGGRESSIVE(60),
+        TELEOP_BOOST(60),
         BROWNOUT_PROTECT(10);
 
         public double currentLimitAmps;
@@ -82,7 +83,7 @@ public class Drive extends SubsystemBase {
         }
     }
 
-    private DriveCurrentLimitState mCurrentLimitState = DriveCurrentLimitState.TELEOP_AGGRESSIVE;
+    private DriveCurrentLimitState mCurrentLimitState = DriveCurrentLimitState.TELEOP_CONSERVATIVE;
     private boolean mCurrentLimitStateHasChanged = true;
     private Timer mBrownoutTimer = new Timer();
 
@@ -321,7 +322,7 @@ public class Drive extends SubsystemBase {
         } else if (DriverStation.isAutonomousEnabled()) {
             setCurrentLimits(DriveCurrentLimitState.AUTON_AGGRESSIVE);
         } else {
-            setCurrentLimits(DriveCurrentLimitState.TELEOP_AGGRESSIVE);
+            setCurrentLimits(DriveCurrentLimitState.TELEOP_CONSERVATIVE);
         }
 
         Logger.recordOutput("Drive/CurrentLimits/Mode", mCurrentLimitState);
