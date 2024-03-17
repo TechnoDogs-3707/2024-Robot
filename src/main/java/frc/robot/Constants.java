@@ -225,14 +225,17 @@ public final class Constants {
     public static final double kSwerveHeadingControllerErrorTolerance = 1.5; // degree error
     public static final double kSwerveHeadingControllerMaintainThreshold = 25.0; // at what error will the heading controller switch from snap mode to maintain mode
 
-    public static final double kSnapSwerveHeadingKp = 0.025;
+    // THESE ARE THE PID NUMBERS FOR SNAP MODE
+    public static final double kSnapSwerveHeadingKp = 0.05;
     public static final double kSnapSwerveHeadingKi = 0.0;
-    public static final double kSnapSwerveHeadingKd = 0.0005;
+    public static final double kSnapSwerveHeadingKd = 0.0075;
 
-    public static final double kMaintainSwerveHeadingKpHighVelocity = 0.0125; //0.0225
+    // THESE ARE THE PID NUMBERS FOR MAINTAIN MODE
+    public static final double kMaintainSwerveHeadingKpHighVelocity = 0.0075; //0.0225
     public static final double kMaintainSwerveHeadingKiHighVelocity = 0.0;
-    public static final double kMaintainSwerveHeadingKdHighVelocity = 0.001; // 0.003
+    public static final double kMaintainSwerveHeadingKdHighVelocity = 0.000003; // 0.003
 
+    // THESE ARE NOT THE NUMBERS YOU ARE LOOKING FOR
     public static final double kMaintainSwerveHeadingKpLowVelocity = 0.02;  // 0.01;
     public static final double kMaintainSwerveHeadingKiLowVelocity = 0.0;
     public static final double kMaintainSwerveHeadingKdLowVelocity = 0.0;
@@ -255,8 +258,8 @@ public final class Constants {
 
     //Auton Driving
     public static final HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(
-        new PIDConstants(2.5, 0, 0, 0),
-        new PIDConstants(2.5, 0, 0, 0),
+        new PIDConstants(2.5, 0.001, 0, 0),
+        new PIDConstants(5, 0, 0.02, 0),
         kMaxVelocityMetersPerSecond,
         kWheelPositions[0].getNorm(),
         new ReplanningConfig()
@@ -277,7 +280,7 @@ public final class Constants {
             kDrivePIDConfig.kI = 0.0;
             kDrivePIDConfig.kD = 0.000002 * 12;
             kDrivePIDConfig.kV = 0.117;// (kMaxVelocityMetersPerSecond / (Math.PI * Constants.kDriveWheelDiameter * Constants.kDriveReduction));;
-            kDrivePIDConfig.kS = 0.8;//8;
+            kDrivePIDConfig.kS = 0.6;//0.8;
         }
 
         public static final Slot0Configs kSteerPIDConfig = new Slot0Configs();

@@ -122,11 +122,11 @@ public class DriveWithController extends Command {
 
         if (autoMaintain || shouldSnapPodium || shouldSnapAmp) {
             mHeadingGoal.ifPresent(mSwerveHeadingController::setGoal);
-            // if (mSwerveHeadingController.getAbsError() <= Constants.kSwerveHeadingControllerMaintainThreshold) {
-            //     mSwerveHeadingController.setHeadingControllerState(HeadingControllerState.MAINTAIN);
-            // } else {
+            if (mSwerveHeadingController.getAbsError() <= Constants.kSwerveHeadingControllerMaintainThreshold) {
+                mSwerveHeadingController.setHeadingControllerState(HeadingControllerState.MAINTAIN);
+            } else {
                 mSwerveHeadingController.setHeadingControllerState(HeadingControllerState.SNAP);
-            // }
+            }
         } else {
             mSwerveHeadingController.setHeadingControllerState(HeadingControllerState.OFF);
         }
