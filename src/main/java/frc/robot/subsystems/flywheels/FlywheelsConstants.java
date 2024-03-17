@@ -13,7 +13,7 @@ public final class FlywheelsConstants {
     public static final double kD = 0.0;
 
     public static final double kMaxRPSForBrakeMode = 8;
-    public static final double kMaxRPSForIdleControl = 20;
-    public static final double kIdleRPS = 15.0;
+    public static final double kMaxRPSForIdleControl = 45;
+    public static final double kIdleRPS = 40.0;
     public static final double kRPSTolerance = 5;
 }
