@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3928816318511963,
-      "y": 5.578441619873047
+      "x": 0.755447268486023,
+      "y": 6.696418285369873
     },
-    "rotation": 1.0465743417502966e-28
+    "rotation": 59.34934488268508
   },
   "command": {
     "type": "sequential",
@@ -83,21 +83,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
+                  "pathName": "AmpSide-Score4-V1.1"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.1"
+                  "pathName": "AmpSide-Score4-V1.2"
                 }
               },
               {
@@ -146,13 +140,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.2"
+                  "pathName": "AmpSide-Score4-V1.3"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.3"
+                  "pathName": "AmpSide-Score4-V1.4"
                 }
               },
               {
@@ -201,13 +195,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.4"
+                  "pathName": "AmpSide-Score4-V1.5"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.5"
+                  "pathName": "AmpSide-Score4-V1.6"
                 }
               },
               {
@@ -252,6 +246,6 @@
       ]
     }
   },
-  "folder": "Close Paths",
+  "folder": "AmpSide Paths",
   "choreoAuto": true
 }

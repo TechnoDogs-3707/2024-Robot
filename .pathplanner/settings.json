@@ -17,7 +17,9 @@
   ],
   "autoFolders": [
     "Close Paths",
-    "Misc"
+    "Misc",
+    "AmpSide Paths",
+    "SourceSide Paths"
   ],
   "defaultMaxVel": 4.172,
   "defaultMaxAccel": 8.1,

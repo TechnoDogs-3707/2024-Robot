@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3928816318511963,
-      "y": 5.578441619873047
+      "x": 1.4305188655853271,
+      "y": 3.0240256786346436
     },
-    "rotation": 1.0465743417502966e-28
+    "rotation": -3.5136373544082246e-25
   },
   "command": {
     "type": "sequential",
@@ -83,21 +83,9 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.1"
+                  "pathName": "SourceSide-Score3.1"
                 }
               },
               {
@@ -146,13 +134,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.2"
+                  "pathName": "SourceSide-Score3.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.3"
+                  "pathName": "SourceSide-Score3.3"
                 }
               },
               {
@@ -201,13 +189,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.4"
+                  "pathName": "SourceSide-Score3.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.5"
+                  "pathName": "SourceSide-Score3.5"
                 }
               },
               {
@@ -252,6 +240,6 @@
       ]
     }
   },
-  "folder": "Close Paths",
+  "folder": "SourceSide Paths",
   "choreoAuto": true
 }
