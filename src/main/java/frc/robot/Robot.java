@@ -167,6 +167,10 @@ public class Robot extends LoggedRobot {
         (Command command) -> {
             logCommandFunction.accept(command, false);
         });
+
+        // This is to "fix" the lag spike when FieldConstants is first initialized (we do it during init now)
+        @SuppressWarnings("unused")
+        var test = FieldConstants.ampCenter;
         
         robotContainer = new RobotContainer(this);
     }
