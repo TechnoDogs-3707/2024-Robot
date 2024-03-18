@@ -166,7 +166,7 @@ public class RobotContainer {
     private final Alert driverDisconnected = new Alert("Driver controller disconnected (port 0).", AlertType.WARNING);
     private final Alert operatorDisconnected = new Alert("Operator controller disconnected (port 1).",
             AlertType.WARNING);
-    private final Alert overrideDisconnected = new Alert("Override controller disconnected (port 5).", AlertType.INFO);
+    // private final Alert overrideDisconnected = new Alert("Override controller disconnected (port 5).", AlertType.INFO);
 
     public RobotContainer(Robot robot) {
         if (Constants.getMode() != Mode.REPLAY) {
@@ -343,13 +343,9 @@ public class RobotContainer {
     }
 
     public void checkControllers() {
-        driverDisconnected.set(
-                !DriverStation.isJoystickConnected(driver.getHID().getPort())
-                        || !DriverStation.getJoystickIsXbox(driver.getHID().getPort()));
-        operatorDisconnected.set(
-                !DriverStation.isJoystickConnected(operator.getHID().getPort())
-                        || !DriverStation.getJoystickIsXbox(operator.getHID().getPort()));
-        overrideDisconnected.set(!overrides.isConnected());
+        driverDisconnected.set(!DriverStation.isJoystickConnected(driver.getHID().getPort()));
+        operatorDisconnected.set(!DriverStation.isJoystickConnected(operator.getHID().getPort()));
+        // overrideDisconnected.set(!overrides.isConnected());
     }
 
     private void setDefaultCommands() {
