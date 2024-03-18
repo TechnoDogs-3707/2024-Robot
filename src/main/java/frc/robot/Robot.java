@@ -110,10 +110,13 @@ public class Robot extends LoggedRobot {
             String folder = Constants.logFolders.get(Constants.getRobot());
             if (folder != null) {
                 // Logger.addDataReceiver(new WPILOGWriter(folder)); TODO: fix this
+                System.out.println("[Logger]: Added WPI Log Writer as data reciever on path: " + folder);
             } else {
                 logNoFileAlert.set(true);
+                System.out.println("[Logger]: Log file not added!");
             }
             Logger.addDataReceiver(new NT4Publisher());
+            System.out.println("[Logger]: Added data NT4 Publisher as data reciever");
             switch (Constants.getRobot()) {
                 case ROBOT_2023_HEAVYMETAL:
                     LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
@@ -127,6 +130,7 @@ public class Robot extends LoggedRobot {
             
             case SIM:
             Logger.addDataReceiver(new NT4Publisher());
+            System.out.println("[Logger]: Added data NT4 Publisher as data reciever");
             break;
             
             case REPLAY:
@@ -171,8 +175,10 @@ public class Robot extends LoggedRobot {
         // This is to "fix" the lag spike when FieldConstants is first initialized (we do it during init now)
         @SuppressWarnings("unused")
         var test = FieldConstants.ampCenter;
+        System.out.println("Initialized FieldConstants Class");
         
         robotContainer = new RobotContainer(this);
+        System.out.println("Created RobotContainer");
     }
     
     @Override
