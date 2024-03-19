@@ -49,6 +49,8 @@ public class TalonFXCurrentLimitHelper {
         PhoenixProUtil.checkErrorAndRetry(() -> mConfigurator.refresh(mFOCLimitConfig, timeout));
     }
 
+
+
     private void applyConfigs() {
         applyConfigs(defaultTimeoutSeconds);
     }

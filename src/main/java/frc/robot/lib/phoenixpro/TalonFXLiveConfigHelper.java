@@ -4,7 +4,7 @@
 
 package frc.robot.lib.phoenixpro;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,7 +17,7 @@ public class TalonFXLiveConfigHelper{
      * @param modifier A function that is provided with the current motor config, and is expected to return
      * the updated config back, where it will be applied to the motor.
      */
-    public static void editConfig(TalonFX talon, Function<TalonFXConfiguration, TalonFXConfiguration> modifier) {
+    public static void editConfig(TalonFX talon, UnaryOperator<TalonFXConfiguration> modifier) {
         final TalonFXConfiguration config = new TalonFXConfiguration();
         PhoenixProUtil.checkErrorAndRetry(() -> talon.getConfigurator().refresh(config, 0.1));
         TalonFXConfiguration newConfig = modifier.apply(config);
