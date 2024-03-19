@@ -62,7 +62,7 @@ public class ClimbIOTalonFX implements ClimbIO {
         mLeftMotor = new TalonFX(kLeftMotorID, kMotorBus);
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
-        mLeftMotorConfig = TalonFXConfigHelper.getBaseConfig();
+        mLeftMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
         mLeftMotorConfig.MotorOutput.Inverted = leftMotorPolarity;
         mLeftMotorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
         mLeftMotorConfig.Slot0.kG = kG;
@@ -82,7 +82,7 @@ public class ClimbIOTalonFX implements ClimbIO {
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mLeftMotorConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.setPosition(kMotorHomePosition));
 
-        mRightMotorConfig = TalonFXConfigHelper.getBaseConfig();
+        mRightMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
         mRightMotorConfig.MotorOutput.Inverted = rightMotorPolarity;
         mRightMotorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
         mRightMotorConfig.Slot0.kG = kG;

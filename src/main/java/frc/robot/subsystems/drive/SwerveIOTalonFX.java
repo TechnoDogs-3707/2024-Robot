@@ -68,8 +68,8 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mDriveControl = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
         mDriveControlOpenLoop = new DutyCycleOut(0, false, false, false, false);
 
-        mDriveConfig = TalonFXConfigHelper.getBaseConfig();
-        mDriveConfig.CurrentLimits = TalonFXConfigHelper.getDefaultCurrentLimits();
+        mDriveConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
+        mDriveConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.getDefaultCurrentLimits();
 
         mDriveConfig.Slot0.kP = 0.0;
         mDriveConfig.Slot0.kV = 0.0;
@@ -85,8 +85,8 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mSteerControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mSteerControlOpenLoop = new VoltageOut(0, true, false, false, false);
 
-        mSteerConfig = TalonFXConfigHelper.getBaseConfig();
-        mSteerConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
+        mSteerConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
+        mSteerConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
 
         mSteerConfig.TorqueCurrent.PeakForwardTorqueCurrent = 20;
         mSteerConfig.TorqueCurrent.PeakReverseTorqueCurrent = -20;

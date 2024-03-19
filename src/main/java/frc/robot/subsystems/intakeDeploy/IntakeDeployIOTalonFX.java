@@ -58,8 +58,8 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
     public IntakeDeployIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
-        mConfig = TalonFXConfigHelper.getBaseConfig();
-        mConfig.CurrentLimits = TalonFXConfigHelper.getDefaultCurrentLimits();
+        mConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
+        mConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.getDefaultCurrentLimits();
         mConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         mConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;

@@ -58,8 +58,8 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
         mLeftMotor = new TalonFX(kLeftMotorID, kMotorBus);
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
-        mRightMotorConfig = TalonFXConfigHelper.getBaseConfig();
-        mRightMotorConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
+        mRightMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
+        mRightMotorConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         mRightMotorConfig.Slot0.kS = kS;
         mRightMotorConfig.Slot0.kV = kV;
         mRightMotorConfig.Slot0.kA = kA;
@@ -68,8 +68,8 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
         mRightMotorConfig.Slot0.kD = kD;
         mRightMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        mLeftMotorConfig = TalonFXConfigHelper.getBaseConfig();
-        mLeftMotorConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
+        mLeftMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
+        mLeftMotorConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         mLeftMotorConfig.Slot0.kS = kS;
         mLeftMotorConfig.Slot0.kV = kV;
         mLeftMotorConfig.Slot0.kA = kA;

@@ -31,8 +31,8 @@ public class IndexerIOTalonFX implements IndexerIO {
 
     public IndexerIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
-        mConfig = TalonFXConfigHelper.getBaseConfig();
-        mConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
+        mConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
+        mConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         
 
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));

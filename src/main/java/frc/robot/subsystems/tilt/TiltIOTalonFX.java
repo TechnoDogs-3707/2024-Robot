@@ -49,8 +49,8 @@ public class TiltIOTalonFX implements TiltIO {
     public TiltIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
-        mConfig = TalonFXConfigHelper.getBaseConfig();
-        mConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
+        mConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
+        mConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         mConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = kAbsoluteMaxPosition;
