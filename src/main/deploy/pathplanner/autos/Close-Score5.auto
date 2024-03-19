@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": -6.299600407235394e-28
+    "rotation": -1.8240739492899226e-26
   },
   "command": {
     "type": "sequential",
@@ -40,9 +40,21 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.25
                 }
               },
               {
@@ -70,18 +82,6 @@
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
               {
                 "type": "path",
                 "data": {
@@ -278,9 +278,9 @@
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Close-Score5.8"
+                  "name": "Stow Intake"
                 }
               },
               {
@@ -290,15 +290,9 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "Stow Intake"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5.9"
+                  "pathName": "Close-Score5.8"
                 }
               },
               {
