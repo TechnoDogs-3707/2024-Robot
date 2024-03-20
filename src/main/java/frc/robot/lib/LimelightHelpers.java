@@ -5,6 +5,7 @@ package frc.robot.lib;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,7 +18,10 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
+import org.littletonrobotics.junction.Logger;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -751,10 +755,12 @@ public class LimelightHelpers {
         return false;
     }
 
+    private static long lastErrorPrintMicros = 0;
+
     /**
      * Parses Limelight's JSON results dump into a LimelightResults Object
      */
-    public static LimelightResults getLatestResults(String limelightName) {
+    public static Optional<LimelightResults> getLatestResults(String limelightName) {
 
         long start = System.nanoTime();
         LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
@@ -765,7 +771,11 @@ public class LimelightHelpers {
         try {
             results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
         } catch (JsonProcessingException e) {
-            System.err.println("lljson error: " + e.getMessage());
+            if (lastErrorPrintMicros - Logger.getRealTimestamp() >= 1_000_000) {
+                System.err.println("lljson error: " + e.getMessage());
+                lastErrorPrintMicros = Logger.getRealTimestamp();
+            }
+            return Optional.empty();
         }
 
         long end = System.nanoTime();
@@ -775,6 +785,6 @@ public class LimelightHelpers {
             System.out.printf("lljson: %.2f\r\n", millis);
         }
 
-        return results;
+        return Optional.of(results);
     }
 }

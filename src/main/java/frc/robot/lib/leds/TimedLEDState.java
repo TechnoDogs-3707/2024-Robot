@@ -21,6 +21,8 @@ public interface TimedLEDState {
 
         public static BlinkingLEDState kClimbRunningDutyCycle = new BlinkingLEDState(LEDState.kOff, LEDState.kYellow, 0.1);
 
+        public static BlinkingLEDState kVisionMissing = new BlinkingLEDState(LEDState.kOff, LEDState.kYellow, 0.1);
+
         LEDState mStateOne = new LEDState(0, 0, 0);
         LEDState mStateTwo = new LEDState(0, 0, 0);
         private boolean mAsymmetricDuration = false;

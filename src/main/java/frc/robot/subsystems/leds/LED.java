@@ -137,26 +137,17 @@ public class LED extends SubsystemBase {
     }
 
     private void setDisplayingVision(double timeInState) {
-        // TODO: adjust these settings as desired
-        LimelightResults results = LimelightHelpers.getLatestResults("limelight");
-        if (DriverStation.isDisabled()) {
-            if (results.targetingResults.targets_Fiducials.length < 1) {
-                // If in disabled, and don't have target show yellow rapid blink.
-                // TODO: fix this
-                // TimedLEDState.BlinkingLEDState.kVisionMissing.getCurrentLEDState(mDesiredLEDState, timeInState);
+        var results = LimelightHelpers.getLatestResults("limelight");
+        
+        if (results.isPresent()) {
+            if (results.get().targetingResults.targets_Fiducials.length < 1) {
+                // If we don't have target show yellow rapid blink.
+                TimedLEDState.BlinkingLEDState.kVisionMissing.getCurrentLEDState(mDesiredLEDState, timeInState);
             } else {
                 // Otherwise, go green.
-                // TimedLEDState.BlinkingLEDState.kVisionPresent.getCurrentLEDState(mDesiredLEDState, timeInState);
+                TimedLEDState.RSLBasedLEDState.kVisionPresent.getCurrentLEDState(mDesiredLEDState, timeInState);
             }
-        } else {
-            // // If we are in auto, show when limelight goes active.
-            // if (!RobotStateTracker.getInstance().getAutoAlignActive()) {
-            //     TimedLEDState.StaticLEDState.kVisionDisabled.getCurrentLEDState(mDesiredLEDState, timeInState);
-            // } else {
-            //     TimedLEDState.StaticLEDState.kStaticRobotZeroedWithGoodBattery.getCurrentLEDState(mDesiredLEDState, timeInState);
-            // }
         }
-        TimedLEDState.StaticLEDState.kStaticRobotZeroedWithGoodBattery.getCurrentLEDState(mDesiredLEDState, timeInState);
     }
 
     private void setNotHomedCommand(double timeInState) {

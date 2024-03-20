@@ -2,6 +2,8 @@ package frc.robot.subsystems.localizer;
 
 import static frc.robot.subsystems.localizer.LocalizerConstants.*;
 
+import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.Matrix;
@@ -13,6 +15,7 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.lib.LimelightHelpers;
+import frc.robot.lib.LimelightHelpers.LimelightResults;
 import frc.robot.lib.LimelightHelpers.Results;
 
 public class LocalizerIOLL3 implements LocalizerIO {
@@ -32,21 +35,20 @@ public class LocalizerIOLL3 implements LocalizerIO {
 
     @Override
     public void updateInputs(LocalizerIOInputs inputs) {
-        // use the assumption that recent NT data means that limelight is connected
-        inputs.visionConnected = true; // TODO: make sure we can detect if we are connected or not
+        Optional<LimelightResults> results = LimelightHelpers.getLatestResults("limelight");
 
-        if (inputs.visionConnected) {
-            Results results = LimelightHelpers.getLatestResults("limelight").targetingResults;
+        if (results.isPresent()) {
+            var tgtResults = results.get().targetingResults;
 
-            inputs.position = results.botpose_wpiblue;
+            inputs.position = tgtResults.botpose_wpiblue;
             // inputs.stddevs = getStdDevs(results).getData();
-            inputs.stddevs = getStdDevsTrusting(results).getData();
+            inputs.stddevs = getStdDevsTrusting(tgtResults).getData();
 
-            inputs.targetsVisible = results.targets_Fiducials.length;
+            inputs.targetsVisible = tgtResults.targets_Fiducials.length;
 
-            inputs.lastUpdateTimestamp = (Logger.getRealTimestamp()/1_000_000.0) - (results.latency_capture/1000.0) - (results.latency_pipeline/1000.0) - (results.latency_jsonParse/1000.0);
+            inputs.lastUpdateTimestamp = (Logger.getRealTimestamp()/1_000_000.0) - (tgtResults.latency_capture/1000.0) - (tgtResults.latency_pipeline/1000.0) - (tgtResults.latency_jsonParse/1000.0);
 
-            inputs.poseValid = results.valid;
+            inputs.poseValid = tgtResults.valid;
         } else {
             inputs.poseValid = false;
         }
