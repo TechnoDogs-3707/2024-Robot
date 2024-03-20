@@ -189,35 +189,6 @@ public class RobotContainer {
                     leds = new LED(new LEDIOCANdle(8, "canivore"));
                     vision = new Localizer(new LocalizerIOLL3(), RobotState.getInstance()::addVisionObservation);
                     break;
-                // case ROBOT_2024_HARD_ROCK:
-                //     drive = new Drive(
-                //         new GyroPigeonIO(9, "canivore"), 
-                //         new SwerveIOTalonFX(0, "canivore"), 
-                //         new SwerveIOTalonFX(1, "canivore"), 
-                //         new SwerveIOTalonFX(2, "canivore"), 
-                //         new SwerveIOTalonFX(3, "canivore")
-                //     );
-                //     arm = new Arm(new ArmIOSimV1());
-                //     intake = new Intake(new IntakeIOSim());
-                //     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
-                //     shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
-                //     indexer = new Indexer(new IndexerIOSim());
-                //     leds = new LED(new LEDIOSim(127));
-                //     vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
-                //     break;
-                case ROBOT_2023_HEAVYMETAL:
-                    drive = new Drive(
-                            // new GyroNavXIO(SPI.Port.kMXP),
-                            // new GyroPigeon5IO(9, "canivore"),
-                            new GyroPigeonIO(9, "canivore"),
-                            new SwerveIOTalonFX(0, "canivore"),
-                            new SwerveIOTalonFX(1, "canivore"),
-                            new SwerveIOTalonFX(2, "canivore"),
-                            new SwerveIOTalonFX(3, "canivore"));
-                    // arm = new Arm(new ArmIOFalcons(), new GripperIOFalcon());
-                    // arm = new Arm(new ArmIOSimV1());
-                    leds = new LED(new LEDIOCANdle(8, "canivore"));
-                    break;
                 case ROBOT_2023_FLAPJACK:
                     drive = new Drive(
                             new GyroNavXIO(Port.kMXP),
