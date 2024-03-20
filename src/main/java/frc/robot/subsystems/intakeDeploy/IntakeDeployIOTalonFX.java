@@ -6,7 +6,6 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -14,8 +13,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
-import frc.robot.lib.phoenixpro.TalonFXCurrentLimitHelper;
-import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 
 import static frc.robot.subsystems.intakeDeploy.IntakeDeployConstants.*;
 
@@ -40,8 +37,7 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
     private double mIntakeTargetRotations = kHomePosition;
     private double mIntakeManualThrottle = 0;
 
-    private final TalonFXFeedbackControlHelper mFeedbackHelper;
-    private final TalonFXCurrentLimitHelper mCurrentLimitHelper;
+    private final TalonFXConfigHelper mConfigHelper;
     
     private final LoggedTunableNumber mTunableKG = new LoggedTunableNumber("IntakeDeploy/kG", kG);
     private final LoggedTunableNumber mTunableKS = new LoggedTunableNumber("IntakeDeploy/kS", kS);
@@ -58,8 +54,7 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
     public IntakeDeployIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
-        mConfig = TalonFXConfigHelper.getBaseConfig();
-        mConfig.CurrentLimits = TalonFXConfigHelper.getDefaultCurrentLimits();
+        mConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
         mConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         mConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
@@ -79,12 +74,13 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
         mConfig.MotionMagic.MotionMagicJerk = kMagicJerk;
         
         mConfig.Feedback.SensorToMechanismRatio = 48.0;
+
+        mConfigHelper = new TalonFXConfigHelper(mMotor, mConfig);
+        mConfigHelper.writeConfigs();
+        mConfigHelper.setSupplyCurrentLimit(40, true);
+        mConfigHelper.setStatorCurrentLimit(20, true);
         
-        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
-        
-        mFeedbackHelper = new TalonFXFeedbackControlHelper(mMotor, mConfig.Slot0, mConfig.MotionMagic);
-        mCurrentLimitHelper = new TalonFXCurrentLimitHelper(mMotor, 40, 80);
 
         mPIDControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mManualControl = new DutyCycleOut(0, true, false, false, false);
@@ -114,17 +110,17 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
         inputs.tempCelsius = mMotorTemp.getValue();
         inputs.forwardSoftLimit = mMotorForwardSoftLimit.getValue();
         
-        mTunableKG.ifChanged(hashCode(), mFeedbackHelper::setKG);
-        mTunableKS.ifChanged(hashCode(), mFeedbackHelper::setKS);
-        mTunableKV.ifChanged(hashCode(), mFeedbackHelper::setKV);
-        mTunableKA.ifChanged(hashCode(), mFeedbackHelper::setKA);
-        mTunableKP.ifChanged(hashCode(), mFeedbackHelper::setKP);
-        mTunableKI.ifChanged(hashCode(), mFeedbackHelper::setKI);
-        mTunableKD.ifChanged(hashCode(), mFeedbackHelper::setKD);
+        mTunableKG.ifChanged(hashCode(), mConfigHelper::setKG);
+        mTunableKS.ifChanged(hashCode(), mConfigHelper::setKS);
+        mTunableKV.ifChanged(hashCode(), mConfigHelper::setKV);
+        mTunableKA.ifChanged(hashCode(), mConfigHelper::setKA);
+        mTunableKP.ifChanged(hashCode(), mConfigHelper::setKP);
+        mTunableKI.ifChanged(hashCode(), mConfigHelper::setKI);
+        mTunableKD.ifChanged(hashCode(), mConfigHelper::setKD);
 
-        mTunableMagicVel.ifChanged(hashCode(), mFeedbackHelper::setMagicVelocity);
-        mTunableMagicAccel.ifChanged(hashCode(), mFeedbackHelper::setMagicAcceleration);
-        mTunableMagicJerk.ifChanged(hashCode(), mFeedbackHelper::setMagicJerk);
+        mTunableMagicVel.ifChanged(hashCode(), mConfigHelper::setMagicVelocity);
+        mTunableMagicAccel.ifChanged(hashCode(), mConfigHelper::setMagicAcceleration);
+        mTunableMagicJerk.ifChanged(hashCode(), mConfigHelper::setMagicJerk);
     }
 
     @Override
@@ -161,6 +157,6 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
 
     @Override
     public void setTorqueLimit(double torqueLimitAmps) {
-        mCurrentLimitHelper.setStatorCurrentLimit(torqueLimitAmps);
+        mConfigHelper.setStatorCurrentLimitUnchecked(torqueLimitAmps, true);
     }
 }

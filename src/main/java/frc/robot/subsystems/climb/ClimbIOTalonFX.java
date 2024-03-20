@@ -9,7 +9,6 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
-import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.util.LoggedTunableNumber;
 
 import static frc.robot.subsystems.climb.ClimbConstants.*;
@@ -53,8 +52,8 @@ public class ClimbIOTalonFX implements ClimbIO {
     private final LoggedTunableNumber mTunableMagicVel = new LoggedTunableNumber("Climb/MagicVelocity", kMagicVel);
     private final LoggedTunableNumber mTunableMagicAccel = new LoggedTunableNumber("Climb/MagicAcceleration", kMagicAccel);
 
-    private final TalonFXFeedbackControlHelper mFeedbackHelperLeft;
-    private final TalonFXFeedbackControlHelper mFeedbackHelperRight;
+    private final TalonFXConfigHelper mConfigHelperLeft;
+    private final TalonFXConfigHelper mConfigHelperRight;
 
     private boolean mEnablePID = false;
 
@@ -62,7 +61,7 @@ public class ClimbIOTalonFX implements ClimbIO {
         mLeftMotor = new TalonFX(kLeftMotorID, kMotorBus);
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
-        mLeftMotorConfig = TalonFXConfigHelper.getBaseConfig();
+        mLeftMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
         mLeftMotorConfig.MotorOutput.Inverted = leftMotorPolarity;
         mLeftMotorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
         mLeftMotorConfig.Slot0.kG = kG;
@@ -79,10 +78,12 @@ public class ClimbIOTalonFX implements ClimbIO {
         mLeftMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         mLeftMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = kReverseSoftLimitValue;
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mLeftMotorConfig));
+        mConfigHelperLeft = new TalonFXConfigHelper(mLeftMotor, mLeftMotorConfig);
+        mConfigHelperLeft.writeConfigs();
+
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.setPosition(kMotorHomePosition));
 
-        mRightMotorConfig = TalonFXConfigHelper.getBaseConfig();
+        mRightMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
         mRightMotorConfig.MotorOutput.Inverted = rightMotorPolarity;
         mRightMotorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
         mRightMotorConfig.Slot0.kG = kG;
@@ -99,7 +100,9 @@ public class ClimbIOTalonFX implements ClimbIO {
         mRightMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         mRightMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = kReverseSoftLimitValue;
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mRightMotorConfig));
+        mConfigHelperRight = new TalonFXConfigHelper(mRightMotor, mRightMotorConfig);
+        mConfigHelperRight.writeConfigs();
+
         PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.setPosition(kMotorHomePosition));
 
         mDutyCycle = new DutyCycleOut(0, true, false, false, false);
@@ -134,9 +137,6 @@ public class ClimbIOTalonFX implements ClimbIO {
         mStatusSignals.add(rightMotorTemperature);
         mStatusSignals.add(rightMotorReverseSoftLimit);
         mStatusSignals.add(rightMotorForwardsSoftLimit);
-
-        mFeedbackHelperLeft = new TalonFXFeedbackControlHelper(mLeftMotor, mLeftMotorConfig.Slot0, mLeftMotorConfig.MotionMagic);
-        mFeedbackHelperRight = new TalonFXFeedbackControlHelper(mRightMotor, mRightMotorConfig.Slot0, mRightMotorConfig.MotionMagic);
     }
 
     @Override
@@ -157,16 +157,16 @@ public class ClimbIOTalonFX implements ClimbIO {
         inputs.rightMotorReverseSoftLimit = rightMotorReverseSoftLimit.getValue();
         inputs.rightMotorForwardSoftLimit = rightMotorForwardsSoftLimit.getValue();
         
-        mTunableKG.ifChanged(hashCode(), mFeedbackHelperLeft::setKG, mFeedbackHelperRight::setKG);
-        mTunableKS.ifChanged(hashCode(), mFeedbackHelperLeft::setKS, mFeedbackHelperRight::setKS);
-        mTunableKV.ifChanged(hashCode(), mFeedbackHelperLeft::setKV, mFeedbackHelperRight::setKV);
-        mTunableKA.ifChanged(hashCode(), mFeedbackHelperLeft::setKA, mFeedbackHelperRight::setKA);
-        mTunableKP.ifChanged(hashCode(), mFeedbackHelperLeft::setKP, mFeedbackHelperRight::setKP);
-        mTunableKI.ifChanged(hashCode(), mFeedbackHelperLeft::setKI, mFeedbackHelperRight::setKI);
-        mTunableKD.ifChanged(hashCode(), mFeedbackHelperLeft::setKD, mFeedbackHelperRight::setKD);
+        mTunableKG.ifChanged(hashCode(), mConfigHelperLeft::setKG, mConfigHelperRight::setKG);
+        mTunableKS.ifChanged(hashCode(), mConfigHelperLeft::setKS, mConfigHelperRight::setKS);
+        mTunableKV.ifChanged(hashCode(), mConfigHelperLeft::setKV, mConfigHelperRight::setKV);
+        mTunableKA.ifChanged(hashCode(), mConfigHelperLeft::setKA, mConfigHelperRight::setKA);
+        mTunableKP.ifChanged(hashCode(), mConfigHelperLeft::setKP, mConfigHelperRight::setKP);
+        mTunableKI.ifChanged(hashCode(), mConfigHelperLeft::setKI, mConfigHelperRight::setKI);
+        mTunableKD.ifChanged(hashCode(), mConfigHelperLeft::setKD, mConfigHelperRight::setKD);
 
-        mTunableMagicVel.ifChanged(hashCode(), mFeedbackHelperLeft::setMagicVelocity, mFeedbackHelperRight::setMagicVelocity);
-        mTunableMagicAccel.ifChanged(hashCode(), mFeedbackHelperLeft::setMagicAcceleration, mFeedbackHelperRight::setMagicAcceleration);
+        mTunableMagicVel.ifChanged(hashCode(), mConfigHelperLeft::setMagicVelocity, mConfigHelperRight::setMagicVelocity);
+        mTunableMagicAccel.ifChanged(hashCode(), mConfigHelperLeft::setMagicAcceleration, mConfigHelperRight::setMagicAcceleration);
     }
 
     @Override

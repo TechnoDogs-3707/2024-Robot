@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import java.util.function.Supplier;
 
 public class PhoenixProUtil {
+
     /**
      * checks the specified error code for issues
      *

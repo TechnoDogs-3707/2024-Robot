@@ -20,12 +20,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
-import frc.robot.lib.phoenixpro.CANcoderLiveConfigHelper;
-import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
-import frc.robot.lib.phoenixpro.TalonFXCurrentLimitHelper;
-import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 
 /** Add your docs here. */
 public class SwerveIOTalonFX implements SwerveModuleIO {
@@ -41,11 +37,10 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
     private boolean mUseOpenLoopSteering = false;
 
     private final TalonFXConfiguration mDriveConfig;
-    private final TalonFXFeedbackControlHelper mDriveFeedbackHelper;
-    private final TalonFXCurrentLimitHelper mDriveCurrentLimitHelper;
+    private final TalonFXConfigHelper mDriveHelper;
 
     private final TalonFXConfiguration mSteerConfig;
-    private final TalonFXFeedbackControlHelper mSteerFeedbackHelper;
+    private final TalonFXConfigHelper mSteerHelper;
 
     private final CANcoder mEncoder;
     private final CANcoderConfiguration mEncoderConfig = new CANcoderConfiguration();
@@ -68,8 +63,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mDriveControl = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
         mDriveControlOpenLoop = new DutyCycleOut(0, false, false, false, false);
 
-        mDriveConfig = TalonFXConfigHelper.getBaseConfig();
-        mDriveConfig.CurrentLimits = TalonFXConfigHelper.getDefaultCurrentLimits();
+        mDriveConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
 
         mDriveConfig.Slot0.kP = 0.0;
         mDriveConfig.Slot0.kV = 0.0;
@@ -77,16 +71,19 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mDriveConfig.TorqueCurrent.PeakForwardTorqueCurrent = 40;
         mDriveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -40;
         mDriveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        PhoenixProUtil.checkErrorAndRetry(() -> mDriveMotor.getConfigurator().apply(mDriveConfig));
-        mDriveFeedbackHelper = new TalonFXFeedbackControlHelper(mDriveMotor, mDriveConfig.Slot0);
+        mDriveConfig.Slot0 = Constants.DriveSubsystem.kDrivePIDConfig;
+
+        mDriveHelper = new TalonFXConfigHelper(mDriveMotor, mDriveConfig);
+        mDriveHelper.writeConfigs();
+        mDriveHelper.setSupplyCurrentLimit(40, true);
+        mDriveHelper.setStatorCurrentLimit(100, true);
+
         mDriveMotor.setPosition(0);
-        mDriveCurrentLimitHelper = new TalonFXCurrentLimitHelper(mDriveMotor, 40.0, 120.0);
 
         mSteerControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mSteerControlOpenLoop = new VoltageOut(0, true, false, false, false);
 
-        mSteerConfig = TalonFXConfigHelper.getBaseConfig();
-        mSteerConfig.CurrentLimits = TalonFXConfigHelper.get20ACurrentLimits();
+        mSteerConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
 
         mSteerConfig.TorqueCurrent.PeakForwardTorqueCurrent = 20;
         mSteerConfig.TorqueCurrent.PeakReverseTorqueCurrent = -20;
@@ -96,11 +93,15 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mSteerConfig.ClosedLoopGeneral.ContinuousWrap = true;
         mSteerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         mSteerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        PhoenixProUtil.checkErrorAndRetry(() -> mSteerMotor.getConfigurator().apply(mSteerConfig));
-        mSteerFeedbackHelper = new TalonFXFeedbackControlHelper(mSteerMotor, Constants.DriveSubsystem.kSteerPIDConfig, Constants.DriveSubsystem.kSteerMagicConfig);
+        mSteerConfig.Slot0 = Constants.DriveSubsystem.kSteerPIDConfig;
+        mSteerConfig.MotionMagic = Constants.DriveSubsystem.kSteerMagicConfig;
+
+        mSteerHelper = new TalonFXConfigHelper(mSteerMotor, mSteerConfig);
+        mSteerHelper.writeConfigs();
+        mSteerHelper.setSupplyCurrentLimit(20, true);
+        mSteerHelper.setStatorCurrentLimit(100, true);
 
         PhoenixProUtil.checkErrorAndRetry(() -> mEncoder.getConfigurator().refresh(mEncoderConfig));
-        mEncoderOffsetCache = mEncoderConfig.MagnetSensor.MagnetOffset;
         mEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         mEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         PhoenixProUtil.checkErrorAndRetry(() -> mEncoder.getConfigurator().apply(mEncoderConfig));
@@ -194,68 +195,62 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
 
     @Override
     public void setDriveBrakeMode(boolean driveBrakeMode) {
-        TalonFXLiveConfigHelper.editConfig(mDriveMotor, (c) -> {
-            c.MotorOutput.NeutralMode = (driveBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-            return c;
-        });
+        mDriveHelper.setNeutralMode(driveBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
 
     @Override
     public void setSteerBrakeMode(boolean steerBrakeMode) {
-        TalonFXLiveConfigHelper.editConfig(mSteerMotor, (c) -> {
-            c.MotorOutput.NeutralMode = (steerBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-            return c;
-        });
+        mSteerHelper.setNeutralMode(steerBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
 
     @Override
     public void setDriveKP(double driveKP) {
-        mDriveFeedbackHelper.setKP(driveKP);
+        mDriveHelper.setKP(driveKP);
     }
 
     @Override
     public void setDriveKI(double driveKI) {
-        mDriveFeedbackHelper.setKI(driveKI);
+        mDriveHelper.setKI(driveKI);
     }
 
     @Override
     public void setDriveKD(double drivekD) {
-        mDriveFeedbackHelper.setKD(drivekD);
+        mDriveHelper.setKD(drivekD);
     }
 
     @Override
     public void setDriveKV(double drivekF) {
-        mDriveFeedbackHelper.setKV(drivekF);
+        mDriveHelper.setKV(drivekF);
     }
 
     @Override
     public void setDriveKS(double driveKS) {
-        mDriveFeedbackHelper.setKS(driveKS);
+        mDriveHelper.setKS(driveKS);
     }
 
     @Override
     public void setSteerKP(double steerKP) {
-        mSteerFeedbackHelper.setKP(steerKP);
+        mSteerHelper.setKP(steerKP);
     }
 
     @Override
     public void setSteerKI(double steerKI) {
-        mSteerFeedbackHelper.setKI(steerKI);
+        mSteerHelper.setKI(steerKI);
     }
 
     @Override
     public void setSteerKD(double steerKD) {
-        mSteerFeedbackHelper.setKD(steerKD);
+        mSteerHelper.setKD(steerKD);
     }
 
     @Override
     public void setSteerKS(double steerKS) {
-        mSteerFeedbackHelper.setKS(steerKS);
+        mSteerHelper.setKS(steerKS);
     }
         
     @Override
     public void setSteerKV(double steerKF) {
-        mSteerFeedbackHelper.setKV(steerKF);
+        mSteerHelper.setKV(steerKF);
     }
 
     @Override
@@ -269,33 +264,13 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
     }
 
     @Override
-    public void updateEncoderOffset(double zeroRotations) {
-        CANcoderLiveConfigHelper.editConfig(mEncoder, (c) -> {
-            c.MagnetSensor.MagnetOffset = -zeroRotations;
-            return c;
-        });
-        refreshEncoderOffset();
-    }
-
-    @Override
-    public double getEncoderOffset() {
-        return mEncoderOffsetCache;
-    }
-
-    private void refreshEncoderOffset() {
-        mEncoderOffsetCache = CANcoderLiveConfigHelper.getValueFromConfig(mEncoder, (c) -> {
-            return c.MagnetSensor.MagnetOffset;
-        });
-    }
-
-    @Override
-    public double getEncoderRawPosition() {
-        return mEncoder.getAbsolutePosition().getValue() - mEncoderOffsetCache;
+    public double getEncoderPosition() {
+        return mEncoder.getAbsolutePosition().getValue();
     }
 
     @Override
     public void setCurrentLimit(double limit) {
-        mDriveCurrentLimitHelper.setInputCurrentLimit(limit);
+        mDriveHelper.setSupplyCurrentLimitUnchecked(limit, true);
     }
 
     @Override

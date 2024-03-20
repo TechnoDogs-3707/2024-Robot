@@ -26,7 +26,7 @@ public class IntakeIOTalonFX implements IntakeIO {
     public IntakeIOTalonFX() {
         mIntakeMotorMaster = new TalonFX(IntakeConstants.kMasterMotorID, IntakeConstants.kMotorBus);
 
-        mIntakeConfig = TalonFXConfigHelper.getBaseConfig(); //TODO: set up intake config
+        mIntakeConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig(); //TODO: set up intake config
         mIntakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         mIntakeControlMaster = new DutyCycleOut(0, false, false, false, false);
