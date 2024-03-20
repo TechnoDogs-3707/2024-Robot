@@ -18,6 +18,8 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import com.ctre.phoenix6.CANBus;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -40,8 +42,9 @@ import frc.robot.util.poofsUtils.VirtualSubsystem;
 
 public class Robot extends LoggedRobot {
     private static final double canErrorTimeThreshold = 0.5; // Seconds to disable alert
-    private static final double lowBatteryVoltage = 12.5;
-    private static final double lowBatteryDisabledTime = 1.5;
+  private static final double canivoreErrorTimeThreshold = 0.5;
+  private static final double lowBatteryVoltage = 11.8;
+  private static final double lowBatteryDisabledTime = 1.5;
     
     private RobotContainer robotContainer;
     private Command autoCommand;
@@ -49,6 +52,7 @@ public class Robot extends LoggedRobot {
     private boolean autoMessagePrinted;
     private final Timer canErrorTimer = new Timer();
     private final Timer canErrorTimerInitial = new Timer();
+    private final Timer canivoreErrorTimer = new Timer();
     private final Timer disabledTimer = new Timer();
 
     private static final HashMap<String, Double> subsystemCurrents = new HashMap<>();
@@ -63,7 +67,9 @@ public class Robot extends LoggedRobot {
     private final Alert logReceiverQueueAlert =
     new Alert("Logging queue exceeded capacity, data will NOT be logged.", AlertType.ERROR);
     private final Alert canErrorAlert =
-      new Alert("CAN errors detected, robot may not be controllable.", AlertType.ERROR);
+      new Alert("RoboRIO CANbus error detected, robot may not be controllable.", AlertType.ERROR);
+      private final Alert canivoreErrorAlert =
+      new Alert("CANivore error detected, robot may not be controllable.", AlertType.ERROR);
     private final Alert lowBatteryAlert =
       new Alert(
           "Battery voltage is very low, consider turning off the robot or replacing the battery.",
@@ -110,10 +116,13 @@ public class Robot extends LoggedRobot {
             String folder = Constants.logFolders.get(Constants.getRobot());
             if (folder != null) {
                 // Logger.addDataReceiver(new WPILOGWriter(folder)); TODO: fix this
+                System.out.println("[Logger]: Added WPI Log Writer as data reciever on path: " + folder);
             } else {
                 logNoFileAlert.set(true);
+                System.out.println("[Logger]: Log file not added!");
             }
             Logger.addDataReceiver(new NT4Publisher());
+            System.out.println("[Logger]: Added data NT4 Publisher as data reciever");
             switch (Constants.getRobot()) {
                 case ROBOT_2023_HEAVYMETAL:
                     LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
@@ -127,6 +136,7 @@ public class Robot extends LoggedRobot {
             
             case SIM:
             Logger.addDataReceiver(new NT4Publisher());
+            System.out.println("[Logger]: Added data NT4 Publisher as data reciever");
             break;
             
             case REPLAY:
@@ -167,8 +177,22 @@ public class Robot extends LoggedRobot {
         (Command command) -> {
             logCommandFunction.accept(command, false);
         });
+
+        // reset alert timers
+        canErrorTimer.restart();
+        canErrorTimerInitial.restart();
+        canivoreErrorTimer.restart();
+        disabledTimer.restart();
+
+        // This is to "fix" the lag spike when FieldConstants is first initialized (we do it during init now)
+        @SuppressWarnings("unused")
+        var test = FieldConstants.ampCenter;
+        System.out.println("Initialized FieldConstants Class");
+
+        RobotController.setBrownoutVoltage(6.0);
         
         robotContainer = new RobotContainer(this);
+        System.out.println("Created RobotContainer");
     }
     
     @Override
@@ -193,18 +217,37 @@ public class Robot extends LoggedRobot {
             Logger.recordOutput("SimData/EstimatedBatteryVoltage", getSimulatedVoltage());
         }
 
-        // Update CAN error alert
+        // Check CAN status
         var canStatus = RobotController.getCANStatus();
-        if (canStatus.receiveErrorCount > 0 || canStatus.transmitErrorCount > 0) {
-        canErrorTimer.reset();
+        if (canStatus.transmitErrorCount > 0 || canStatus.receiveErrorCount > 0) {
+            canErrorTimer.restart();
         }
         canErrorAlert.set(
             !canErrorTimer.hasElapsed(canErrorTimeThreshold)
-                && canErrorTimerInitial.hasElapsed(canErrorTimeThreshold));
+                && !canErrorTimerInitial.hasElapsed(canErrorTimeThreshold));
 
-        // Update low battery alert
+        // Log CANivore status
+        if (Constants.getMode() == Mode.REAL) {
+        var canivoreStatus = CANBus.getStatus("canivore");
+        Logger.recordOutput("CANivoreStatus/Status", canivoreStatus.Status.getName());
+        Logger.recordOutput("CANivoreStatus/Utilization", canivoreStatus.BusUtilization);
+        Logger.recordOutput("CANivoreStatus/OffCount", canivoreStatus.BusOffCount);
+        Logger.recordOutput("CANivoreStatus/TxFullCount", canivoreStatus.TxFullCount);
+        Logger.recordOutput("CANivoreStatus/ReceiveErrorCount", canivoreStatus.REC);
+        Logger.recordOutput("CANivoreStatus/TransmitErrorCount", canivoreStatus.TEC);
+        if (!canivoreStatus.Status.isOK()
+            || canStatus.transmitErrorCount > 0
+            || canStatus.receiveErrorCount > 0) {
+            canivoreErrorTimer.restart();
+        }
+        canivoreErrorAlert.set(
+            !canivoreErrorTimer.hasElapsed(canivoreErrorTimeThreshold)
+                && !canErrorTimerInitial.hasElapsed(canErrorTimeThreshold));
+        }
+
+        // Low battery alert
         if (DriverStation.isEnabled()) {
-            disabledTimer.reset();
+        disabledTimer.reset();
         }
 
         // Log list of NT clients
@@ -247,7 +290,7 @@ public class Robot extends LoggedRobot {
     
     @Override
     public void disabledPeriodic() {
-        if (RobotController.getBatteryVoltage() < lowBatteryVoltage
+        if (RobotController.getBatteryVoltage() <= lowBatteryVoltage
             && disabledTimer.hasElapsed(lowBatteryDisabledTime)) {
             LED.setWantedAction(WantedAction.DISPLAY_BATTERY_LOW);
             lowBatteryAlert.set(true);

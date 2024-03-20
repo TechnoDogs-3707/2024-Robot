@@ -10,17 +10,21 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.FieldConstants;
 import frc.robot.RobotState;
 import frc.robot.lib.Utility;
 import frc.robot.lib.drive.ControllerDriveInputs;
 import frc.robot.lib.drive.SwerveHeadingController;
 import frc.robot.lib.drive.SwerveHeadingController.HeadingControllerState;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.LoggedTunableBoolean;
 import frc.robot.util.poofsUtils.PoofsUtil;
 import frc.robot.util.poofsUtils.TimeDelayedBoolean;
@@ -112,7 +116,6 @@ public class DriveWithController extends Command {
         boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapPodium && !shouldSnapAmp, 0.2);
 
         if (shouldSnapPodium) {
-            // mHeadingGoal = Optional.of(flipAngles ? kSpeakerAlignAngle.unaryMinus().getDegrees() : kSpeakerAlignAngle.getDegrees());
             mHeadingGoal = Optional.of(RobotState.getInstance().getAimingParameters().driveHeading().getDegrees());
         } else if (shouldSnapAmp) {
             mHeadingGoal = Optional.of(kAmpAlignAngle.getDegrees());

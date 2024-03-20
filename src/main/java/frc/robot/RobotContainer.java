@@ -166,10 +166,11 @@ public class RobotContainer {
     private final Alert driverDisconnected = new Alert("Driver controller disconnected (port 0).", AlertType.WARNING);
     private final Alert operatorDisconnected = new Alert("Operator controller disconnected (port 1).",
             AlertType.WARNING);
-    private final Alert overrideDisconnected = new Alert("Override controller disconnected (port 5).", AlertType.INFO);
+    // private final Alert overrideDisconnected = new Alert("Override controller disconnected (port 5).", AlertType.INFO);
 
     public RobotContainer(Robot robot) {
         if (Constants.getMode() != Mode.REPLAY) {
+            System.out.println("[RobotContainer]: Loading subsystems for Robot: " + Constants.getRobot());
             switch (Constants.getRobot()) {
                 case ROBOT_2024_SONIC:
                     drive = new Drive(
@@ -185,37 +186,8 @@ public class RobotContainer {
                     tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
                     climb = new Climb(new ClimbIOTalonFX());
-                    leds = new LED(new LEDIOSim(127));
-                    vision = new Localizer(new LocalizerIOLL3(), RobotState.getInstance()::addVisionObservation);
-                    break;
-                // case ROBOT_2024_HARD_ROCK:
-                //     drive = new Drive(
-                //         new GyroPigeonIO(9, "canivore"), 
-                //         new SwerveIOTalonFX(0, "canivore"), 
-                //         new SwerveIOTalonFX(1, "canivore"), 
-                //         new SwerveIOTalonFX(2, "canivore"), 
-                //         new SwerveIOTalonFX(3, "canivore")
-                //     );
-                //     arm = new Arm(new ArmIOSimV1());
-                //     intake = new Intake(new IntakeIOSim());
-                //     shooterFlywheels = new ShooterFlywheels(new ShooterFlywheelsIOSim());
-                //     shooterTilt = new ShooterTilt(new ShooterTiltIOSim());
-                //     indexer = new Indexer(new IndexerIOSim());
-                //     leds = new LED(new LEDIOSim(127));
-                //     vision = new Localizer(new LocalizerIOLL3(), drive::addVisionPose);
-                //     break;
-                case ROBOT_2023_HEAVYMETAL:
-                    drive = new Drive(
-                            // new GyroNavXIO(SPI.Port.kMXP),
-                            // new GyroPigeon5IO(9, "canivore"),
-                            new GyroPigeonIO(9, "canivore"),
-                            new SwerveIOTalonFX(0, "canivore"),
-                            new SwerveIOTalonFX(1, "canivore"),
-                            new SwerveIOTalonFX(2, "canivore"),
-                            new SwerveIOTalonFX(3, "canivore"));
-                    // arm = new Arm(new ArmIOFalcons(), new GripperIOFalcon());
-                    // arm = new Arm(new ArmIOSimV1());
                     leds = new LED(new LEDIOCANdle(8, "canivore"));
+                    vision = new Localizer(new LocalizerIOLL3(), RobotState.getInstance()::addVisionObservation);
                     break;
                 case ROBOT_2023_FLAPJACK:
                     drive = new Drive(
@@ -248,6 +220,7 @@ public class RobotContainer {
         }
 
         if (drive == null) {
+            System.out.println("[Subsystem Manager]: DriveSubsytem will be replaced with a placeholder.");
             drive = new Drive(
                     new GyroIO() {
                     },
@@ -262,48 +235,56 @@ public class RobotContainer {
         }
 
         if (intakeDeploy == null) {
+            System.out.println("[Subsystem Manager]: IntakeDeploy will be replaced with a placeholder.");
             intakeDeploy = new IntakeDeploy(new IntakeDeployIO() {
 
             });
         }
 
         if (intake == null) {
+            System.out.println("[Subsystem Manager]: Intake will be replaced with a placeholder.");
             intake = new Intake(new IntakeIO() {
                 
             });
         }
 
         if (flywheels == null) {
+            System.out.println("[Subsystem Manager]: Flywheels will be replaced with a placeholder.");
             flywheels = new Flywheels(new FlywheelsIO() {
                 
             });
         }
 
         if (tilt == null) {
+            System.out.println("[Subsystem Manager]: Tilt will be replaced with a placeholder.");
             tilt = new Tilt(new TiltIO() {
                 
             });
         }
 
         if (indexer == null) {
+            System.out.println("[Subsystem Manager]: Indexer will be replaced with a placeholder.");
             indexer = new Indexer(new IndexerIO() {
 
             });
         }
 
         if (climb == null) {
+            System.out.println("[Subsystem Manager]: Climb will be replaced with a placeholder.");
             climb = new Climb(new ClimbIO() {
                 
             });
         }
 
         if (leds == null) {
+            System.out.println("[Subsystem Manager]: LEDs will be replaced with a placeholder.");
             leds = new LED(new LEDIO() {
                 
             });
         }
 
         if (vision == null) {
+            System.out.println("[Subsystem Manager]: Localizer will be replaced with a placeholder.");
             vision = new Localizer(new LocalizerIO() {}, (v) -> {});
         }
 
@@ -311,11 +292,14 @@ public class RobotContainer {
 
         controllerFeedback = new ControllerFeedback(driver.getHID(), operator.getHID());
 
+        System.out.println("[Subsystem Manager]: Finished creating all subsystems");
+
         if (Constants.tuningMode) {
             new Alert("Tuning mode active! This should not be used in competition.", AlertType.INFO).set(true);
         }
 
         // Register Commands with PathPlanner
+        System.out.println("[RobotContainer]: Creating NamedCommands for PathPlanner");
         NamedCommands.registerCommand("Drive Set X Mode", new AutonXModeCommand(drive));
         NamedCommands.registerCommand("Indexer Set Intake", indexer.setActionCommand(IndexerWantedAction.INTAKE));
         NamedCommands.registerCommand("Indexer Set Score", indexer.setActionCommand(IndexerWantedAction.SCORE));
@@ -333,6 +317,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Point to Speaker", new AutonDriveAimCommand(drive).withTimeout(0.5));
         drive.setupPathPlanner();
 
+        System.out.println("[RobotContainer]: Building AutoChooser");
         autoChooser = new LoggedDashboardChooser<>("autonMode", AutoBuilder.buildAutoChooser());
 
         dashboard = new Dashboard(robot, this, drive, intakeDeploy, intake, flywheels, tilt, indexer, leds, vision, objective, controllerFeedback);
@@ -343,16 +328,13 @@ public class RobotContainer {
     }
 
     public void checkControllers() {
-        driverDisconnected.set(
-                !DriverStation.isJoystickConnected(driver.getHID().getPort())
-                        || !DriverStation.getJoystickIsXbox(driver.getHID().getPort()));
-        operatorDisconnected.set(
-                !DriverStation.isJoystickConnected(operator.getHID().getPort())
-                        || !DriverStation.getJoystickIsXbox(operator.getHID().getPort()));
-        overrideDisconnected.set(!overrides.isConnected());
+        driverDisconnected.set(!DriverStation.isJoystickConnected(driver.getHID().getPort()));
+        operatorDisconnected.set(!DriverStation.isJoystickConnected(operator.getHID().getPort()));
+        // overrideDisconnected.set(!overrides.isConnected());
     }
 
     private void setDefaultCommands() {
+        System.out.println("[RobotContainer]: Setting default commands");
         drive.setDefaultCommand(
             new DriveWithController(
                 drive,
@@ -369,6 +351,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        System.out.println("[RobotContainer]: Configure Button Bindings");
         DriverStation.silenceJoystickConnectionWarning(true);
 
         // Drive button bindings

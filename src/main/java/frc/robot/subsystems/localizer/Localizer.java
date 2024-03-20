@@ -70,7 +70,7 @@ public class Localizer extends VirtualSubsystem {
             Matrix<N3, N1> stddevs = VecBuilder.fill(
                 mInputs.stddevs[0], 
                 mInputs.stddevs[1], 
-                999999// mInputs.stddevs[2]
+                Double.MAX_VALUE// mInputs.stddevs[2]
             );
 
             mConsumer.accept(new VisionObservation(pose.toPose2d(), mInputs.lastUpdateTimestamp, stddevs));

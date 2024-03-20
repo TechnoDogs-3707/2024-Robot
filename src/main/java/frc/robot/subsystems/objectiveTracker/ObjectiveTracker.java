@@ -241,6 +241,9 @@ public class ObjectiveTracker extends VirtualSubsystem {
             case SCORE_AMP_AUTOALIGN:
                 handleScoreAutoAlignLEDs();
                 break;
+            case CLIMB:
+                handleClimbingLEDs();
+                break;
             default:
                 break;
         }

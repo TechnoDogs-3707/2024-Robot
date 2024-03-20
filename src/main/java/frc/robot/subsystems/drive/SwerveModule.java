@@ -164,14 +164,6 @@ public class SwerveModule {
         return inputs.driveSuppliedCurrentAmps + inputs.steerSuppliedCurrentAmps;
     }
 
-    public void updateEncoderOffset(double zeroRotations) {
-        io.updateEncoderOffset(zeroRotations);
-    }
-
-    public double getEncoderOffset() {
-        return io.getEncoderOffset();
-    }
-
     public double getEncoderRawPosition() {
         return io.getEncoderRawPosition();
     }
