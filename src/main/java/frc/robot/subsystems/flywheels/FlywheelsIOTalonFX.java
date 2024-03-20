@@ -57,7 +57,6 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
         mRightMotor = new TalonFX(kRightMotorID, kMotorBus);
 
         mRightMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
-        mRightMotorConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         mRightMotorConfig.Slot0.kS = kS;
         mRightMotorConfig.Slot0.kV = kV;
         mRightMotorConfig.Slot0.kA = kA;
@@ -67,7 +66,6 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
         mRightMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         mLeftMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
-        mLeftMotorConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         mLeftMotorConfig.Slot0.kS = kS;
         mLeftMotorConfig.Slot0.kV = kV;
         mLeftMotorConfig.Slot0.kA = kA;
@@ -76,14 +74,15 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
         mLeftMotorConfig.Slot0.kD = kD;
         mLeftMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mLeftMotorConfig));
-        PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mRightMotorConfig));
-
         mLeftConfigHelper = new TalonFXConfigHelper(mLeftMotor, mLeftMotorConfig);
         mLeftConfigHelper.writeConfigs();
+        mLeftConfigHelper.setSupplyCurrentLimit(40, true);
+        mLeftConfigHelper.setStatorCurrentLimit(100, true);
 
         mRightConfigHelper = new TalonFXConfigHelper(mRightMotor, mRightMotorConfig);
         mRightConfigHelper.writeConfigs();
+        mRightConfigHelper.setSupplyCurrentLimit(40, true);
+        mRightConfigHelper.setStatorCurrentLimit(100, true);
 
         mOutputControlLeft = new VelocityVoltage(0, 0, false, 0, 0, false, false, false);
         mOutputControlRight = new VelocityVoltage(0, 0, false, 0, 0, false, false, false);

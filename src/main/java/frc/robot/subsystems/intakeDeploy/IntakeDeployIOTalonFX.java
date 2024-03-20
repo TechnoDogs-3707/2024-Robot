@@ -55,7 +55,6 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
         mConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
-        mConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.getDefaultCurrentLimits();
         mConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         mConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
@@ -75,13 +74,13 @@ public class IntakeDeployIOTalonFX implements IntakeDeployIO {
         mConfig.MotionMagic.MotionMagicJerk = kMagicJerk;
         
         mConfig.Feedback.SensorToMechanismRatio = 48.0;
-        
-        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
-        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
-        
+
         mConfigHelper = new TalonFXConfigHelper(mMotor, mConfig);
         mConfigHelper.writeConfigs();
-
+        mConfigHelper.setSupplyCurrentLimit(40, true);
+        mConfigHelper.setStatorCurrentLimit(20, true);
+        
+        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
 
         mPIDControl = new MotionMagicVoltage(0, true, 0, 0, false, false, false);
         mManualControl = new DutyCycleOut(0, true, false, false, false);

@@ -20,6 +20,8 @@ public class IndexerIOTalonFX implements IndexerIO {
     private final TalonFX mMotor;
     private final TalonFXConfiguration mConfig;
 
+    private final TalonFXConfigHelper mConfigHelper;
+
     private final DigitalInput mFirstBanner;
     private final DigitalInput mSecondBanner;
 
@@ -32,10 +34,11 @@ public class IndexerIOTalonFX implements IndexerIO {
     public IndexerIOTalonFX() {
         mMotor = new TalonFX(kMotorID, kMotorBus);
         mConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
-        mConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         
-
-        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
+        mConfigHelper = new TalonFXConfigHelper(mMotor, mConfig);
+        mConfigHelper.writeConfigs();
+        mConfigHelper.setSupplyCurrentLimit(20, true);
+        mConfigHelper.setStatorCurrentLimit(100, true);
 
         mOutputControl = new DutyCycleOut(0, false, false, false, false);
 

@@ -49,7 +49,6 @@ public class TiltIOTalonFX implements TiltIO {
         mMotor = new TalonFX(kMotorID, kMotorBus);
 
         mConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
-        mConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
         mConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         mConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = kAbsoluteMaxPosition;
@@ -71,10 +70,12 @@ public class TiltIOTalonFX implements TiltIO {
         
         mConfig.Feedback.SensorToMechanismRatio = kSensorToMechanismRatio;
         
-        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
-        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
-        
         mConfigHelper = new TalonFXConfigHelper(mMotor, mConfig);
+        mConfigHelper.writeConfigs();
+        mConfigHelper.setSupplyCurrentLimit(20, true);
+        mConfigHelper.setStatorCurrentLimit(80, true);
+        
+        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
 
         mControl = new PositionVoltage(0, 0, true, 0, 0, false, false, false);
 

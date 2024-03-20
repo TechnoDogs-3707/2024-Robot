@@ -64,7 +64,6 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mDriveControlOpenLoop = new DutyCycleOut(0, false, false, false, false);
 
         mDriveConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
-        mDriveConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.getDefaultCurrentLimits();
 
         mDriveConfig.Slot0.kP = 0.0;
         mDriveConfig.Slot0.kV = 0.0;
@@ -76,6 +75,8 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
 
         mDriveHelper = new TalonFXConfigHelper(mDriveMotor, mDriveConfig);
         mDriveHelper.writeConfigs();
+        mDriveHelper.setSupplyCurrentLimit(40, true);
+        mDriveHelper.setStatorCurrentLimit(100, true);
 
         mDriveMotor.setPosition(0);
 
@@ -83,7 +84,6 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mSteerControlOpenLoop = new VoltageOut(0, true, false, false, false);
 
         mSteerConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
-        mSteerConfig.CurrentLimits = TalonFXConfigHelper.DefaultConfigs.get20ACurrentLimits();
 
         mSteerConfig.TorqueCurrent.PeakForwardTorqueCurrent = 20;
         mSteerConfig.TorqueCurrent.PeakReverseTorqueCurrent = -20;
@@ -98,6 +98,8 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
 
         mSteerHelper = new TalonFXConfigHelper(mSteerMotor, mSteerConfig);
         mSteerHelper.writeConfigs();
+        mSteerHelper.setSupplyCurrentLimit(20, true);
+        mSteerHelper.setStatorCurrentLimit(100, true);
 
         PhoenixProUtil.checkErrorAndRetry(() -> mEncoder.getConfigurator().refresh(mEncoderConfig));
         mEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
