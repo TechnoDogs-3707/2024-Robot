@@ -65,9 +65,7 @@ public interface SwerveModuleIO {
 
     public default void setSteerKA(double steerKA) {}
 
-    public default void updateEncoderOffset(double zeroRotations) {}
-    
-    public default double getEncoderOffset() {return 0.0;};
+    public default double getEncoderPosition() {return 0.0;}
 
     public default double getEncoderRawPosition() {return 0.0;}
 
