@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": 6.405153868853236e-28
+    "rotation": -1.3537667451674305e-28
   },
   "command": {
     "type": "sequential",
@@ -85,7 +85,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5.1"
+                  "pathName": "Close-Score4-V2.1"
                 }
               },
               {
@@ -134,68 +134,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5.2"
+                  "pathName": "Close-Score4-V2.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5.3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Close-Score5.4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Close-Score5.5"
+                  "pathName": "Close-Score4-V2.3"
                 }
               },
               {
@@ -256,7 +201,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5.6"
+                  "pathName": "Close-Score4-V2.4"
                 }
               },
               {
@@ -274,7 +219,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5.7"
+                  "pathName": "Close-Score4-V2.5"
                 }
               },
               {
@@ -284,7 +229,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Close-Score5.8"
+                        "pathName": "Close-Score4-V2.6"
                       }
                     },
                     {
@@ -333,12 +278,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": []
           }
         }
       ]

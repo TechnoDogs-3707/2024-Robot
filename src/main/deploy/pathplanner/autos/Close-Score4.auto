@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": 1.0465743417502966e-28
+    "rotation": 4.835162745303414e-28
   },
   "command": {
     "type": "sequential",
@@ -82,18 +82,6 @@
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
               {
                 "type": "path",
                 "data": {
