@@ -43,7 +43,7 @@ import frc.robot.util.poofsUtils.VirtualSubsystem;
 public class Robot extends LoggedRobot {
     private static final double canErrorTimeThreshold = 0.5; // Seconds to disable alert
   private static final double canivoreErrorTimeThreshold = 0.5;
-  private static final double lowBatteryVoltage = 11.8;
+  private static final double lowBatteryVoltage = 12;
   private static final double lowBatteryDisabledTime = 1.5;
     
     private RobotContainer robotContainer;
@@ -115,7 +115,7 @@ public class Robot extends LoggedRobot {
             case REAL:
             String folder = Constants.logFolders.get(Constants.getRobot());
             if (folder != null) {
-                // Logger.addDataReceiver(new WPILOGWriter(folder)); TODO: fix this
+                Logger.addDataReceiver(new WPILOGWriter(folder)); //TODO: fix this
                 System.out.println("[Logger]: Added WPI Log Writer as data reciever on path: " + folder);
             } else {
                 logNoFileAlert.set(true);
