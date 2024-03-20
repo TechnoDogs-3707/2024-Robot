@@ -8,10 +8,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
-import frc.robot.lib.phoenixpro.TalonFXLiveConfigHelper;
 import frc.robot.util.LoggedTunableNumber;
 
 import static frc.robot.subsystems.flywheels.FlywheelsConstants.*;
@@ -24,8 +22,8 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
 
     private final TalonFXConfiguration mRightMotorConfig;
     private final TalonFXConfiguration mLeftMotorConfig;
-    private final TalonFXFeedbackControlHelper mLeftFeedbackHelper;
-    private final TalonFXFeedbackControlHelper mRightFeedbackHelper;
+    private final TalonFXConfigHelper mLeftConfigHelper;
+    private final TalonFXConfigHelper mRightConfigHelper;
 
     private final LoggedTunableNumber mTunableKS = new LoggedTunableNumber("Flywheels/kS", kS);
     private final LoggedTunableNumber mTunableKV = new LoggedTunableNumber("Flywheels/kV", kV);
@@ -80,9 +78,12 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
 
         PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.getConfigurator().apply(mLeftMotorConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.getConfigurator().apply(mRightMotorConfig));
-        
-        mLeftFeedbackHelper = new TalonFXFeedbackControlHelper(mLeftMotor, mLeftMotorConfig.Slot0);
-        mRightFeedbackHelper = new TalonFXFeedbackControlHelper(mRightMotor, mRightMotorConfig.Slot0);
+
+        mLeftConfigHelper = new TalonFXConfigHelper(mLeftMotor, mLeftMotorConfig);
+        mLeftConfigHelper.writeConfigs();
+
+        mRightConfigHelper = new TalonFXConfigHelper(mRightMotor, mRightMotorConfig);
+        mRightConfigHelper.writeConfigs();
 
         mOutputControlLeft = new VelocityVoltage(0, 0, false, 0, 0, false, false, false);
         mOutputControlRight = new VelocityVoltage(0, 0, false, 0, 0, false, false, false);
@@ -116,29 +117,23 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
         inputs.rightMotorSuppliedCurrentAmps = mRightMotorCurrent.getValue();
         inputs.rightMotorTempCelsius = mRightMotorTemp.getValue();
 
-        mTunableKS.ifChanged(hashCode(), mLeftFeedbackHelper::setKS, mRightFeedbackHelper::setKS);
-        mTunableKV.ifChanged(hashCode(), mLeftFeedbackHelper::setKV, mRightFeedbackHelper::setKV);
-        mTunableKA.ifChanged(hashCode(), mLeftFeedbackHelper::setKA, mRightFeedbackHelper::setKA);
-        mTunableKP.ifChanged(hashCode(), mLeftFeedbackHelper::setKP, mRightFeedbackHelper::setKP);
-        mTunableKI.ifChanged(hashCode(), mLeftFeedbackHelper::setKI, mRightFeedbackHelper::setKI);
-        mTunableKD.ifChanged(hashCode(), mLeftFeedbackHelper::setKD, mRightFeedbackHelper::setKD);
+        mTunableKS.ifChanged(hashCode(), mLeftConfigHelper::setKS, mRightConfigHelper::setKS);
+        mTunableKV.ifChanged(hashCode(), mLeftConfigHelper::setKV, mRightConfigHelper::setKV);
+        mTunableKA.ifChanged(hashCode(), mLeftConfigHelper::setKA, mRightConfigHelper::setKA);
+        mTunableKP.ifChanged(hashCode(), mLeftConfigHelper::setKP, mRightConfigHelper::setKP);
+        mTunableKI.ifChanged(hashCode(), mLeftConfigHelper::setKI, mRightConfigHelper::setKI);
+        mTunableKD.ifChanged(hashCode(), mLeftConfigHelper::setKD, mRightConfigHelper::setKD);
     }
 
     @Override
     public void updateOutputs() {
         if (mBrakeMode != mWasBrakeMode) {
-            TalonFXLiveConfigHelper.editConfig(mLeftMotor, (c) -> {
-                c.MotorOutput.NeutralMode = mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-                return c;
-            });
-            TalonFXLiveConfigHelper.editConfig(mRightMotor, (c) -> {
-                c.MotorOutput.NeutralMode = mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-                return c;
-            });
+            mLeftConfigHelper.setNeutralMode(mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+            mRightConfigHelper.setNeutralMode(mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
             mWasBrakeMode = mBrakeMode;
         }
 
-        mOutputControlLeft.Velocity = mSetpointSpeedLeft; // TODO: make this hack proper
+        mOutputControlLeft.Velocity = mSetpointSpeedLeft;
         mOutputControlRight.Velocity = mSetpointSpeedRight;
 
         if (mSpinDownMode) {
