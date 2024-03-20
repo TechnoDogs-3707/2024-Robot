@@ -10,7 +10,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
-import frc.robot.lib.phoenixpro.TalonFXFeedbackControlHelper;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.lib.phoenixpro.PhoenixProUtil;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
@@ -33,7 +32,7 @@ public class TiltIOTalonFX implements TiltIO {
     private double tiltTargetRotations = 0.0;
     private double tiltFeedforwardVoltage = 0.0;
 
-    private final TalonFXFeedbackControlHelper mFeedbackHelper;
+    private final TalonFXConfigHelper mConfigHelper;
 
     private final LoggedTunableNumber mTunableKS = new LoggedTunableNumber("Tilt/kS", kS);
     private final LoggedTunableNumber mTunableKV = new LoggedTunableNumber("Tilt/kV", kV);
@@ -75,7 +74,7 @@ public class TiltIOTalonFX implements TiltIO {
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.getConfigurator().apply(mConfig));
         PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
         
-        mFeedbackHelper = new TalonFXFeedbackControlHelper(mMotor, mConfig.Slot0, mConfig.MotionMagic);
+        mConfigHelper = new TalonFXConfigHelper(mMotor, mConfig);
 
         mControl = new PositionVoltage(0, 0, true, 0, 0, false, false, false);
 
@@ -104,16 +103,16 @@ public class TiltIOTalonFX implements TiltIO {
         inputs.tiltSuppliedCurrentAmps = mMotorCurrent.getValue();
         inputs.tiltTempCelsius = mMotorTemp.getValue();
 
-        mTunableKS.ifChanged(hashCode(), mFeedbackHelper::setKS);
-        mTunableKV.ifChanged(hashCode(), mFeedbackHelper::setKV);
-        mTunableKA.ifChanged(hashCode(), mFeedbackHelper::setKA);
-        mTunableKP.ifChanged(hashCode(), mFeedbackHelper::setKP);
-        mTunableKI.ifChanged(hashCode(), mFeedbackHelper::setKI);
-        mTunableKD.ifChanged(hashCode(), mFeedbackHelper::setKD);
+        mTunableKS.ifChanged(hashCode(), mConfigHelper::setKS);
+        mTunableKV.ifChanged(hashCode(), mConfigHelper::setKV);
+        mTunableKA.ifChanged(hashCode(), mConfigHelper::setKA);
+        mTunableKP.ifChanged(hashCode(), mConfigHelper::setKP);
+        mTunableKI.ifChanged(hashCode(), mConfigHelper::setKI);
+        mTunableKD.ifChanged(hashCode(), mConfigHelper::setKD);
 
-        mTunableMagicVel.ifChanged(hashCode(), mFeedbackHelper::setMagicVelocity);
-        mTunableMagicAccel.ifChanged(hashCode(), mFeedbackHelper::setMagicAcceleration);
-        mTunableMagicJerk.ifChanged(hashCode(), mFeedbackHelper::setMagicJerk);
+        mTunableMagicVel.ifChanged(hashCode(), mConfigHelper::setMagicVelocity);
+        mTunableMagicAccel.ifChanged(hashCode(), mConfigHelper::setMagicAcceleration);
+        mTunableMagicJerk.ifChanged(hashCode(), mConfigHelper::setMagicJerk);
     }
 
     @Override
