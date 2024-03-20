@@ -43,7 +43,7 @@ import frc.robot.util.poofsUtils.VirtualSubsystem;
 public class Robot extends LoggedRobot {
     private static final double canErrorTimeThreshold = 0.5; // Seconds to disable alert
   private static final double canivoreErrorTimeThreshold = 0.5;
-  private static final double lowBatteryVoltage = 11.8;
+  private static final double lowBatteryVoltage = 12;
   private static final double lowBatteryDisabledTime = 1.5;
     
     private RobotContainer robotContainer;

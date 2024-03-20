@@ -5,6 +5,8 @@
 package frc.robot.subsystems.leds;
 
 import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 
 /** Add your docs here. */
 public class LEDIOCANdle implements LEDIO {
@@ -12,6 +14,10 @@ public class LEDIOCANdle implements LEDIO {
 
     public LEDIOCANdle(int id, String bus) {
         candle = new CANdle(id, bus);
+        CANdleConfiguration config = new CANdleConfiguration();
+        config.disableWhenLOS = true;
+        config.statusLedOffWhenActive = true;
+        config.vBatOutputMode = VBatOutputMode.Off;
     }
 
     @Override
