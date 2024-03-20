@@ -14,6 +14,7 @@ public interface SwerveModuleIO {
         public double driveVelocityMetersPerSec = 0.0;
         public double driveSuppliedCurrentAmps = 0.0;
         public double driveTempCelsius = 0.0;
+        public boolean driveUsingFOC = false;
 
         public double steerPositionRotations = 0.0;
         public double steerVelocityRotPerSec = 0.0;

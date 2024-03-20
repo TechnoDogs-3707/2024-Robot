@@ -44,7 +44,6 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
 
     private final CANcoder mEncoder;
     private final CANcoderConfiguration mEncoderConfig = new CANcoderConfiguration();
-    private double mEncoderOffsetCache = 0.0;
 
     private StatusSignal<Double> mDrivePosition;
     private StatusSignal<Double> mDriveVelocity;
@@ -134,6 +133,7 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         inputs.driveVelocityMetersPerSec = convertRotationsToMeters(mDriveVelocity.getValue());
         inputs.driveSuppliedCurrentAmps = mDriveSuppliedCurrent.getValue();
         inputs.driveTempCelsius = mDriveTempCelsius.getValue();
+        inputs.driveUsingFOC = mDriveControl.EnableFOC;
 
         inputs.steerPositionRotations = angle_compensated;
         inputs.steerVelocityRotPerSec = mSteerVelocity.getValue();
