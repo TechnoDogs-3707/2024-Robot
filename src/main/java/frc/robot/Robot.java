@@ -115,7 +115,7 @@ public class Robot extends LoggedRobot {
             case REAL:
             String folder = Constants.logFolders.get(Constants.getRobot());
             if (folder != null) {
-                // Logger.addDataReceiver(new WPILOGWriter(folder)); TODO: fix this
+                Logger.addDataReceiver(new WPILOGWriter(folder)); //TODO: fix this
                 System.out.println("[Logger]: Added WPI Log Writer as data reciever on path: " + folder);
             } else {
                 logNoFileAlert.set(true);

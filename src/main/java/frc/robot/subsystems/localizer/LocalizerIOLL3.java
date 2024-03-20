@@ -36,6 +36,7 @@ public class LocalizerIOLL3 implements LocalizerIO {
     @Override
     public void updateInputs(LocalizerIOInputs inputs) {
         Optional<LimelightResults> results = LimelightHelpers.getLatestResults("limelight");
+        inputs.visionConnected = results.isPresent();
 
         if (results.isPresent()) {
             var tgtResults = results.get().targetingResults;

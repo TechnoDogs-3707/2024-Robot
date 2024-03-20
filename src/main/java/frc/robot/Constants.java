@@ -23,7 +23,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    private static final RobotType robot = RobotType.ROBOT_2024_SONIC;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -63,8 +63,8 @@ public final class Constants {
     
     public static final Map<RobotType, String> logFolders =
         Map.of(
-            RobotType.ROBOT_2024_SONIC, "/media/sda2"
-        ); // log to internal storage
+            RobotType.ROBOT_2024_SONIC, "/media/sda1/"
+        );
     // Map.of(RobotType.ROBOT_2023_CN1, "/media/sda2", RobotType.ROBOT_2023_CN2, "/media/sda2/"); // log to sd card
     
     public static enum RobotType {
