@@ -41,6 +41,9 @@ import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
+import frc.robot.subsystems.armTilt.ArmTilt;
+import frc.robot.subsystems.armTilt.ArmTiltIO;
+import frc.robot.subsystems.armTilt.ArmTiltIOTalonFX;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOTalonFX;
@@ -89,6 +92,7 @@ import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class RobotContainer {
     private Drive drive;
+    private ArmTilt armTilt;
     private IntakeDeploy intakeDeploy;
     private Intake intake;
     private Flywheels flywheels;
@@ -180,6 +184,7 @@ public class RobotContainer {
                         new SwerveIOTalonFX(2, "canivore"), 
                         new SwerveIOTalonFX(3, "canivore")
                     );
+                    armTilt = new ArmTilt(new ArmTiltIOTalonFX());
                     intakeDeploy = new IntakeDeploy(new IntakeDeployIOTalonFX());
                     intake = new Intake(new IntakeIOTalonFX());
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
@@ -232,6 +237,13 @@ public class RobotContainer {
                     },
                     new SwerveModuleIO() {
                     });
+        }
+
+        if (armTilt == null) {
+            System.out.println("[Subsystem Manager]: ArmTilt will be replaced with a placeholder.");
+            armTilt = new ArmTilt(new ArmTiltIO() {
+                
+            });
         }
 
         if (intakeDeploy == null) {
