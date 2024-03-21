@@ -18,7 +18,8 @@ public class IntakeDeploy extends SubsystemBase {
     public enum IntakePositionPreset {
         STOWED(0.3),
         EJECT(0.1875),
-        AMP_SCORE(0.08),
+        AMP_SCORE(0.1),
+        HANDOFF(-0.03),
         DEPLOYED(-0.1);
 
         public double position;

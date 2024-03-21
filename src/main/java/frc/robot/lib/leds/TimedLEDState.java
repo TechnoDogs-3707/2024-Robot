@@ -23,6 +23,9 @@ public interface TimedLEDState {
 
         public static BlinkingLEDState kVisionMissing = new BlinkingLEDState(LEDState.kOff, LEDState.kYellow, 0.1);
 
+        public static BlinkingLEDState kAmpScorePreparing = new BlinkingLEDState(LEDState.kOff, LEDState.kYellow, 0.1);
+        public static BlinkingLEDState kAmpScoreScoring = new BlinkingLEDState(LEDState.kOff, LEDState.kWhite, 0.1);
+
         LEDState mStateOne = new LEDState(0, 0, 0);
         LEDState mStateTwo = new LEDState(0, 0, 0);
         private boolean mAsymmetricDuration = false;
@@ -91,6 +94,8 @@ public interface TimedLEDState {
 
         public static RSLBasedLEDState kAutoAimWaiting = new RSLBasedLEDState(LEDState.kOff, LEDState.kGreen);
 
+        public static RSLBasedLEDState kAmpScoreWaiting = new RSLBasedLEDState(LEDState.kOff, LEDState.kGreen);
+
         private final double mDurationIfSimulating = 0.2;
         LEDState mStateWhenOff = new LEDState(0, 0, 0);
         LEDState mStateWhenOn = new LEDState(0, 0, 0);
@@ -132,6 +137,8 @@ public interface TimedLEDState {
 
         public static StaticLEDState kAutoAlignScoringComplete = new StaticLEDState(LEDState.kGreen);
         public static StaticLEDState kClimbHeightTargetReached = new StaticLEDState(LEDState.kGreen);
+
+        public static StaticLEDState kAmpScoreDone = new StaticLEDState(LEDState.kGreen);
 
         LEDState mStaticState = new LEDState(0, 0, 0);
 

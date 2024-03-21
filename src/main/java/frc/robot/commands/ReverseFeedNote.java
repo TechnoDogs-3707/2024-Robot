@@ -13,24 +13,31 @@ import frc.robot.subsystems.intake.IntakeStateMachine.IntakeWantedAction;
 import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
 import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class ReverseFeedNote extends SequentialCommandGroup {
-    public ReverseFeedNote(ArmTilt armTilt, Indexer indexer, ObjectiveTracker objectiveTracker, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, Tilt tilt) {
+    public ReverseFeedNote(ArmTilt armTilt, Indexer indexer, ObjectiveTracker objective, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, Tilt tilt) {
         addCommands(
+            Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.INTAKE_HANDOFF)),
             flywheels.setActionCommand(FlywheelsWantedAction.OFF),
             tilt.setGoalCommand(TiltGoalState.STOW),
             indexer.setActionCommand(IndexerWantedAction.OFF),
             intake.setActionCommand(IntakeWantedAction.OFF),
             armTilt.setPositionBlockingCommand(ArmPositionPreset.STOWED),
-            intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.DEPLOYED),
+            intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.HANDOFF),
             intake.setActionCommand(IntakeWantedAction.REVERSE)
             .alongWith(indexer.setActionCommand(IndexerWantedAction.REVERSE)),
             Commands.waitSeconds(1),
             intake.setActionCommand(IntakeWantedAction.OFF),
             indexer.setActionCommand(IndexerWantedAction.OFF),
             intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.STOWED)
+            .finallyDo( () -> {
+                indexer.setWantedAction(IndexerWantedAction.OFF);
+                intake.setWantedAction(IntakeWantedAction.OFF);
+                objective.setMasterObjective(MasterObjective.NONE);
+            })
         );
     }
 }

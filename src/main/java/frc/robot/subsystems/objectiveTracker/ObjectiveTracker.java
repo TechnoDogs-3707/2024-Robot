@@ -21,7 +21,8 @@ public class ObjectiveTracker extends VirtualSubsystem {
         SCORE_SPEAKER_AUTOALIGN,
         SCORE_SPEAKER_AUTOAIM,
         SCORE_AMP_AUTOALIGN,
-        CLIMB
+        CLIMB,
+        ARM_SCORE_AMP
     }
 
     public enum IntakeGroundState {
@@ -54,12 +55,20 @@ public class ObjectiveTracker extends VirtualSubsystem {
         CLIMBING_MANUAL
     }
 
+    public enum ArmScoreAmpState {
+        PREPARING,
+        WAITING,
+        SCORING,
+        DONE
+    }
+
     private MasterObjective mMasterObjective = MasterObjective.NONE;
     private IntakeGroundState mIntakeGroundState = IntakeGroundState.TO_INDEXER;
     private AutoAlignIntakeState mAutoIntakeState = AutoAlignIntakeState.DRIVING_TO_TARGET;
     private SpeakerAutoAimState mAutoAimState = SpeakerAutoAimState.PREPARING_ROBOT;
     private AutoAlignScoreState mAutoAlignState = AutoAlignScoreState.DRIVING_TO_TARGET;
     private ClimbingState mClimbingState = ClimbingState.RAISING;
+    private ArmScoreAmpState mArmScoreAmpState = ArmScoreAmpState.PREPARING;
 
     public void setMasterObjective(MasterObjective masterObjective) {
         mMasterObjective = masterObjective;
@@ -109,6 +118,14 @@ public class ObjectiveTracker extends VirtualSubsystem {
         return mClimbingState;
     }
 
+    public void setArmScoreAmpState(ArmScoreAmpState intakeHandoffState) {
+        mArmScoreAmpState = intakeHandoffState;
+    }
+
+    public ArmScoreAmpState getArmScoreAmpState() {
+        return mArmScoreAmpState;
+    }
+
     public void handleNoneLEDs() {
         if (mIntake.hasNote()) {
             LED.setArmLEDState(TimedLEDState.StaticLEDState.kNoteInArm);
@@ -148,6 +165,25 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
     public void handleHandoffLEDs() {
         LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kHandoffRunning);
+    }
+
+    public void handleArmScoreAmpLEDs() {
+        switch (mArmScoreAmpState) {
+            case PREPARING:
+                LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kAmpScorePreparing);
+                break;
+            case WAITING:
+                LED.setArmLEDState(TimedLEDState.RSLBasedLEDState.kAmpScoreWaiting);
+                break;
+            case SCORING:
+                LED.setArmLEDState(TimedLEDState.BlinkingLEDState.kAmpScoreScoring);
+                break;
+            case DONE:
+                LED.setArmLEDState(TimedLEDState.StaticLEDState.kAmpScoreDone);
+                break;
+            default:
+                break;
+        }
     }
 
     public void handleScoreSpeakerAutoAimLEDs() {
@@ -243,6 +279,9 @@ public class ObjectiveTracker extends VirtualSubsystem {
                 break;
             case CLIMB:
                 handleClimbingLEDs();
+                break;
+            case ARM_SCORE_AMP:
+                handleArmScoreAmpLEDs();
                 break;
             default:
                 break;
