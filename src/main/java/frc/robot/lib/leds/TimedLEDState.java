@@ -127,7 +127,7 @@ public interface TimedLEDState {
         public static StaticLEDState kStaticNotHomed = new StaticLEDState(LEDState.kYellow);
         public static StaticLEDState kVisionDisabled = new StaticLEDState(LEDState.kRed);
 
-        public static StaticLEDState kNoteInIndexer = new StaticLEDState(LEDState.kOrange);
+        public static StaticLEDState kNoteInIndexer = new StaticLEDState(LEDState.kGreen);
         public static StaticLEDState kNoteInArm = new StaticLEDState(LEDState.kPurple);
 
         public static StaticLEDState kAutoAlignScoringComplete = new StaticLEDState(LEDState.kGreen);
