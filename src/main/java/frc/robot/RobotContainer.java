@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.IntakeStow;
+import frc.robot.commands.ReverseFeedNote;
+import frc.robot.commands.ScoreAmpWithArm;
 import frc.robot.commands.ShooterAutoAimCommand;
 import frc.robot.commands.AutoScoreShooterAmp;
 import frc.robot.commands.AutoScoreShooterPodium;
@@ -144,6 +146,9 @@ public class RobotContainer {
     private final Trigger operatorClimbPull = operatorClimbShift.and(operator.povDown());
     private final Trigger operatorClimbReset = operatorClimbShift.and(operator.povLeft());
     private final Trigger operatorClimbManual = operatorClimbShift.and(operator.povRight());
+
+    private final Trigger operatorReverseFeed = operator.triangle();
+    private final Trigger operatorScoreAmpWithArm = operator.square();
 
     private final Supplier<Double> operatorClimbThrottle = () -> -PoofsUtil.handleDeadband(operator.getLeftY(), 0.05);
 
@@ -397,6 +402,9 @@ public class RobotContainer {
         operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
         operatorClimbReset.onTrue(new ClimbReset(climb, objective));
         operatorClimbManual.onTrue(new ClimbManualOverride(climb, objective, operatorClimbThrottle));
+
+        operatorReverseFeed.onTrue(new ReverseFeedNote(armTilt, indexer, objective, intakeDeploy, intake, flywheels, tilt));
+        operatorScoreAmpWithArm.onTrue(new ScoreAmpWithArm(objective, armTilt, intakeDeploy, intake, driverAutoShoot.or(operatorScoreOverride)));
 
         // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
 
