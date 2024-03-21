@@ -8,18 +8,18 @@ public final class ArmTiltConstants {
 
     public static final InvertedValue mInverted = InvertedValue.CounterClockwise_Positive;
     
-    public static final double kG = 0.352;
+    public static final double kG = 0.5;
 
     public static final double kS = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
-    public static final double kP = 0.0;
+    public static final double kV = 14.0;
+    public static final double kA = 0.8;
+    public static final double kP = 48.0;
     public static final double kI = 0.0;
-    public static final double kD = 0.0;
+    public static final double kD = 0.30;
 
-    public static final double kMagicVel = 0.05;
-    public static final double kMagicAccel = 0.5;
-    public static final double kMagicJerk = 0.0;
+    public static final double kMagicVel = 0.75;
+    public static final double kMagicAccel = 1.0;
+    public static final double kMagicJerk = 50.0;
 
     public static final double kLiberalAllowableError = 0.06;
     public static final double kConservativeAllowableError = 0.04;
