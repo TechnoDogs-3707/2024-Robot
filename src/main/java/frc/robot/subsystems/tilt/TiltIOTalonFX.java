@@ -11,7 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 import frc.robot.util.LoggedTunableNumber;
-import frc.robot.lib.phoenixpro.PhoenixProUtil;
+import frc.robot.lib.phoenixpro.PhoenixErrorChecker;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
 public class TiltIOTalonFX implements TiltIO {
@@ -75,7 +75,7 @@ public class TiltIOTalonFX implements TiltIO {
         mConfigHelper.setSupplyCurrentLimit(20, true);
         mConfigHelper.setStatorCurrentLimit(80, true);
         
-        PhoenixProUtil.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> mMotor.setPosition(kHomePosition));
 
         mControl = new PositionVoltage(0, 0, true, 0, 0, false, false, false);
 

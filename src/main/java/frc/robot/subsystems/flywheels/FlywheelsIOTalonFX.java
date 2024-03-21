@@ -8,7 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import frc.robot.lib.phoenixpro.PhoenixProUtil;
+import frc.robot.lib.phoenixpro.PhoenixErrorChecker;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.util.LoggedTunableNumber;
 

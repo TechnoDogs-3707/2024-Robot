@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class TalonFXUtil {
     public static boolean applyAndCheckConfiguration(TalonFX talon, TalonFXConfiguration config, int numTries) {
         for (int i = 0; i < numTries; i++) {
-            if (PhoenixProUtil.checkErrorAndRetry(() -> talon.getConfigurator().apply(config))) {
+            if (PhoenixErrorChecker.checkErrorAndRetry(() -> talon.getConfigurator().apply(config))) {
                 // API says we applied config, lets make sure it's right
                 if (readAndVerifyConfiguration(talon, config)) {
                     return true;
@@ -25,7 +25,7 @@ public class TalonFXUtil {
 
     public static boolean readAndVerifyConfiguration(TalonFX talon, TalonFXConfiguration config) {
         TalonFXConfiguration readConfig = new TalonFXConfiguration();
-        if (!PhoenixProUtil.checkErrorAndRetry(() -> talon.getConfigurator().refresh(readConfig))) {
+        if (!PhoenixErrorChecker.checkErrorAndRetry(() -> talon.getConfigurator().refresh(readConfig))) {
             // could not get config!
             DriverStation.reportWarning("Failed to read config for talon [" + talon.getDescription() + "]", false);
             return false;

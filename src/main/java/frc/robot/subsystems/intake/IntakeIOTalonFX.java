@@ -7,7 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.lib.phoenixpro.PhoenixProUtil;
+import frc.robot.lib.phoenixpro.PhoenixErrorChecker;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
 public class IntakeIOTalonFX implements IntakeIO {
@@ -37,7 +37,7 @@ public class IntakeIOTalonFX implements IntakeIO {
         intakeMasterSuppliedCurrent = mIntakeMotorMaster.getSupplyCurrent();
         intakeMasterTempCelsius = mIntakeMotorMaster.getDeviceTemp();
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mIntakeMotorMaster.getConfigurator().apply(mIntakeConfig));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> mIntakeMotorMaster.getConfigurator().apply(mIntakeConfig));
     }
 
     @Override

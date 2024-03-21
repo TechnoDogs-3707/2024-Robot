@@ -14,9 +14,9 @@ public class CANcoderLiveConfigHelper {
      */
     public static void editConfig(CANcoder encoder, Function<CANcoderConfiguration, CANcoderConfiguration> mutator) {
         final CANcoderConfiguration config = new CANcoderConfiguration();
-        PhoenixProUtil.checkErrorAndRetry(() -> encoder.getConfigurator().refresh(config, 0.1));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> encoder.getConfigurator().refresh(config, 0.1));
         CANcoderConfiguration newConfig = mutator.apply(config);
-        PhoenixProUtil.checkErrorAndRetry(() -> encoder.getConfigurator().apply(newConfig, 0.1));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> encoder.getConfigurator().apply(newConfig, 0.1));
     }
 
     /**
@@ -26,7 +26,7 @@ public class CANcoderLiveConfigHelper {
      */
     public static void usingConfig(CANcoder encoder, Consumer<CANcoderConfiguration> consumer) {
         CANcoderConfiguration config = new CANcoderConfiguration();
-        PhoenixProUtil.checkErrorAndRetry(() -> encoder.getConfigurator().refresh(config, 0.1));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> encoder.getConfigurator().refresh(config, 0.1));
         consumer.accept(config);
     }
 
@@ -40,7 +40,7 @@ public class CANcoderLiveConfigHelper {
      */
     public static <T> T getValueFromConfig(CANcoder encoder, Function<CANcoderConfiguration, T> consumer) {
         CANcoderConfiguration config = new CANcoderConfiguration();
-        PhoenixProUtil.checkErrorAndRetry(() -> encoder.getConfigurator().refresh(config, 0.1));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> encoder.getConfigurator().refresh(config, 0.1));
         return consumer.apply(config);
     }
 }

@@ -20,7 +20,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
-import frc.robot.lib.phoenixpro.PhoenixProUtil;
+import frc.robot.lib.phoenixpro.PhoenixErrorChecker;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 
 /** Add your docs here. */
@@ -100,10 +100,10 @@ public class SwerveIOTalonFX implements SwerveModuleIO {
         mSteerHelper.setSupplyCurrentLimit(20, true);
         mSteerHelper.setStatorCurrentLimit(100, true);
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mEncoder.getConfigurator().refresh(mEncoderConfig));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> mEncoder.getConfigurator().refresh(mEncoderConfig));
         mEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         mEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        PhoenixProUtil.checkErrorAndRetry(() -> mEncoder.getConfigurator().apply(mEncoderConfig));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> mEncoder.getConfigurator().apply(mEncoderConfig));
 
         mDrivePosition = mDriveMotor.getPosition();
         mDriveVelocity = mDriveMotor.getVelocity();

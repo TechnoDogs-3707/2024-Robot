@@ -7,7 +7,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
-import frc.robot.lib.phoenixpro.PhoenixProUtil;
+import frc.robot.lib.phoenixpro.PhoenixErrorChecker;
 import frc.robot.lib.phoenixpro.TalonFXConfigHelper;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -81,7 +81,7 @@ public class ClimbIOTalonFX implements ClimbIO {
         mConfigHelperLeft = new TalonFXConfigHelper(mLeftMotor, mLeftMotorConfig);
         mConfigHelperLeft.writeConfigs();
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mLeftMotor.setPosition(kMotorHomePosition));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> mLeftMotor.setPosition(kMotorHomePosition));
 
         mRightMotorConfig = TalonFXConfigHelper.DefaultConfigs.getBaseConfig();
         mRightMotorConfig.MotorOutput.Inverted = rightMotorPolarity;
@@ -103,7 +103,7 @@ public class ClimbIOTalonFX implements ClimbIO {
         mConfigHelperRight = new TalonFXConfigHelper(mRightMotor, mRightMotorConfig);
         mConfigHelperRight.writeConfigs();
 
-        PhoenixProUtil.checkErrorAndRetry(() -> mRightMotor.setPosition(kMotorHomePosition));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> mRightMotor.setPosition(kMotorHomePosition));
 
         mDutyCycle = new DutyCycleOut(0, true, false, false, false);
         mPosition = new MotionMagicVoltage(0, true, 0, 0, false, false, false);

@@ -10,7 +10,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
-import frc.robot.lib.phoenixpro.PhoenixProUtil;
+import frc.robot.lib.phoenixpro.PhoenixErrorChecker;
 
 /** Add your docs here. */
 public class GyroPigeonIO implements GyroIO {
@@ -36,8 +36,8 @@ public class GyroPigeonIO implements GyroIO {
         this.gyro = new Pigeon2(id, bus);
         gyroConfig = new Pigeon2Configuration();
 
-        PhoenixProUtil.checkErrorAndRetry(() -> gyro.getConfigurator().apply(gyroConfig));
-        PhoenixProUtil.checkErrorAndRetry(() -> gyro.setYaw(0.0));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> gyro.getConfigurator().apply(gyroConfig));
+        PhoenixErrorChecker.checkErrorAndRetry(() -> gyro.setYaw(0.0));
 
         yawSignal = gyro.getYaw();
         pitchSignal = gyro.getPitch();
