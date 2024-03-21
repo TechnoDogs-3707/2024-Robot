@@ -317,7 +317,9 @@ public class Drive extends SubsystemBase {
             mBrownoutTimer.reset();
         }
 
-        if (mBrownoutTimer.get() > 0) {
+        Logger.recordOutput("Drive/CurrentLimits/BrownoutTimer", mBrownoutTimer.get());
+
+        if (mBrownoutTimer.get() > 0 || RobotController.isBrownedOut()) {
             setCurrentLimits(DriveCurrentLimitState.BROWNOUT_PROTECT);
         } else if (DriverStation.isAutonomousEnabled()) {
             setCurrentLimits(DriveCurrentLimitState.AUTON_AGGRESSIVE);
