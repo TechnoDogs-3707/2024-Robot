@@ -29,7 +29,7 @@ public class ReverseFeedNote extends SequentialCommandGroup {
             intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.HANDOFF),
             intake.setActionCommand(IntakeWantedAction.REVERSE)
             .alongWith(indexer.setActionCommand(IndexerWantedAction.REVERSE)),
-            Commands.waitSeconds(1),
+            Commands.waitSeconds(0.75),
             intake.setActionCommand(IntakeWantedAction.OFF),
             indexer.setActionCommand(IndexerWantedAction.OFF),
             intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.STOWED)

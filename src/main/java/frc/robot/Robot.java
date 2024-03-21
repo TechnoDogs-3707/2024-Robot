@@ -311,6 +311,7 @@ public class Robot extends LoggedRobot {
         autoCommand = robotContainer.getAutonomousCommand();
         autoStart = Timer.getFPGATimestamp();
         autoCommand.schedule();
+        LED.setWantedAction(WantedAction.DISPLAY_VISION);
     }
     
     @Override

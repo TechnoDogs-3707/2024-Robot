@@ -147,6 +147,8 @@ public class LED extends SubsystemBase {
                 // Otherwise, go green.
                 TimedLEDState.RSLBasedLEDState.kVisionPresent.getCurrentLEDState(mDesiredLEDState, timeInState);
             }
+        } else {
+            TimedLEDState.BlinkingLEDState.kVisionMissing.getCurrentLEDState(mDesiredLEDState, timeInState);
         }
     }
 

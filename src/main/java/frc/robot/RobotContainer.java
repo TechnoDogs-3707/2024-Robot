@@ -384,7 +384,7 @@ public class RobotContainer {
         driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
         driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
 
-        driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake).alongWith(new IndexerReset(indexer, tilt, flywheels)));
+        driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake, armTilt).alongWith(new IndexerReset(indexer, tilt, flywheels)));
         driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(intakeDeploy, intake, indexer, flywheels, objective));
 
         operatorAutoAim.whileTrue(new ShooterAutoAimCommand(drive, indexer, tilt, flywheels, objective, driverAutoShoot));
