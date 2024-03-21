@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3928816318511963,
-      "y": 5.578441619873047
+      "x": 0.7038198709487915,
+      "y": 6.712855815887451
     },
-    "rotation": 1.7342847058877038e-28
+    "rotation": 59.34934488268508
   },
   "command": {
     "type": "sequential",
@@ -85,7 +85,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4-V.1"
+                  "pathName": "AmpSide-Score4.1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score4.2"
                 }
               },
               {
@@ -134,13 +140,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4-V.2"
+                  "pathName": "AmpSide-Score4.3"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4-V.3"
+                  "pathName": "AmpSide-Score4.4"
                 }
               },
               {
@@ -178,18 +184,6 @@
                 "data": {
                   "name": "Indexer Set Intake"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Off"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stow Intake"
-                }
               }
             ]
           }
@@ -201,63 +195,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4-V.4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
+                  "pathName": "AmpSide-Score4.5"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4-V.5"
-                }
-              },
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Close-Score4-V.6"
-                      }
-                    },
-                    {
-                      "type": "sequential",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 0.5
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Intake Set Off"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Stow Intake"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
+                  "pathName": "AmpSide-Score4.6"
                 }
               },
               {
@@ -288,6 +232,12 @@
                 "type": "wait",
                 "data": {
                   "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
                 }
               }
             ]
@@ -296,6 +246,6 @@
       ]
     }
   },
-  "folder": "Close Paths",
+  "folder": "AmpSide Paths",
   "choreoAuto": true
 }
