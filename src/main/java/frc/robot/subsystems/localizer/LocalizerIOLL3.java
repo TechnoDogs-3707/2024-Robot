@@ -13,7 +13,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.lib.LimelightHelpers;
 import frc.robot.lib.LimelightHelpers.LimelightResults;
 import frc.robot.lib.LimelightHelpers.Results;
@@ -41,7 +40,7 @@ public class LocalizerIOLL3 implements LocalizerIO {
         if (results.isPresent()) {
             var tgtResults = results.get().targetingResults;
 
-            inputs.position = tgtResults.botpose_wpiblue;
+            inputs.position = convertPoseArrayToRadians(tgtResults.botpose_wpiblue);
             // inputs.stddevs = getStdDevs(results).getData();
             inputs.stddevs = getStdDevsTrusting(tgtResults).getData();
 
@@ -82,10 +81,10 @@ public class LocalizerIOLL3 implements LocalizerIO {
         return kMultiTagStdDevs;
     }
 
-    // private double[] convertPoseArrayToRadians(double[] poseArray) {
-    //     for (int i = 3; i < 6; i++) {
-    //         poseArray[i] = Math.toRadians(poseArray[i]);
-    //     }
-    //     return poseArray;
-    // }
+    private double[] convertPoseArrayToRadians(double[] poseArray) {
+        for (int i = 3; i < 6; i++) {
+            poseArray[i] = Math.toRadians(poseArray[i]);
+        }
+        return poseArray;
+    }
 }

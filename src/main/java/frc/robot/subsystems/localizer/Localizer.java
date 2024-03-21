@@ -6,6 +6,7 @@ package frc.robot.subsystems.localizer;
 
 import java.util.function.Consumer;
 
+import org.checkerframework.checker.units.qual.min;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.Matrix;
@@ -54,6 +55,8 @@ public class Localizer extends VirtualSubsystem {
         mAlertVisionUpdatesDisabled.set(!mEnableVisionUpdates);
         mAlertVisionNotConnected.set(!mInputs.visionConnected);
 
+        Logger.recordOutput("Localizer/DashboardEnabledVisionUpdates", mEnableVisionUpdates);
+
         if (mInputs.visionConnected && mInputs.poseValid && mEnableVisionUpdates) {
             Pose3d pose = new Pose3d(
                 new Translation3d(
@@ -73,6 +76,9 @@ public class Localizer extends VirtualSubsystem {
                 Double.MAX_VALUE// mInputs.stddevs[2]
             );
 
+            Logger.recordOutput("Localizer/LastPose2d", pose.toPose2d());
+            Logger.recordOutput("Localizer/LastStdDevs", stddevs.getData());
+            Logger.recordOutput("Localizer/LastTimestamp", mInputs.lastUpdateTimestamp);
             mConsumer.accept(new VisionObservation(pose.toPose2d(), mInputs.lastUpdateTimestamp, stddevs));
         }
     }
