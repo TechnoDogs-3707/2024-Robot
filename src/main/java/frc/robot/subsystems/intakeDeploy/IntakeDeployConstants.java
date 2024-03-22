@@ -32,6 +32,6 @@ public final class IntakeDeployConstants {
     public static final double kHomingVelocityThreshold = 0.01;
     public static final double kHomingMinTime = 0.5;
 
-    public static final double kAbsoluteMaxPosition = 0.42;
+    public static final double kAbsoluteMaxPosition = 0.6;
     public static final double kAbsoluteMinPosition = -0.15;
 }

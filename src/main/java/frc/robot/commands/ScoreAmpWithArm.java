@@ -19,18 +19,19 @@ public class ScoreAmpWithArm extends SequentialCommandGroup {
         addCommands(
             Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.ARM_SCORE_AMP)),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.PREPARING)),
-            // armTilt.setPositionCommand(ArmPositionPreset.AMP_SCORE),
             armTilt.setPositionBlockingCommand(ArmPositionPreset.AMP_SCORE),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.WAITING)),
+            intakeDeploy.setPositionCommand(IntakePositionPreset.AMP_SCORE),
             Commands.waitUntil(overrideScore),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.SCORING)),
-            intakeDeploy.setPositionCommand(IntakePositionPreset.AMP_SCORE),
-            Commands.waitSeconds(0.5),
             intake.setActionCommand(IntakeWantedAction.REVERSE),
+            Commands.waitSeconds(0.3707),
+            intakeDeploy.setPositionCommand(IntakePositionPreset.AMP_SCORE),
             Commands.waitSeconds(1),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.DONE)),
             intake.setActionCommand(IntakeWantedAction.OFF),
             intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.STOWED),
+            armTilt.setPositionBlockingCommand(ArmPositionPreset.STOWED),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.DONE))
             .finallyDo(() -> {
                 intake.setWantedAction(IntakeWantedAction.OFF);
