@@ -150,6 +150,8 @@ public class RobotContainer {
     private final Trigger operatorReverseFeed = operator.triangle();
     private final Trigger operatorScoreAmpWithArm = operator.square();
 
+    private final Trigger operatorCompensateShift = operator.R2();
+
     private final Supplier<Double> operatorClimbThrottle = () -> -PoofsUtil.handleDeadband(operator.getLeftY(), 0.05);
 
     // OVERRIDE SWITCHES

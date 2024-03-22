@@ -126,7 +126,7 @@ public class Dashboard {
         
         match_ledColorPreview = new SupplierWidget<String>(matchTabName, "LED Preview", "#000000", led::getPreviewColor, new WidgetConfig(4, 0, 3, 1, "Single Color View"));
 
-        match_boostTimer = new SupplierWidget<Double>(matchTabName, "Boost Timer", 0.0, () -> 0.0, new WidgetConfig(7, 0, 3, 1, "Match Time", Map.of("time_display_mode", "Seconds Only")));
+        match_boostTimer = new SupplierWidget<Double>(matchTabName, "Boost Timer", 0.0, () -> RobotState.getInstance().shotCompensationRotations, new WidgetConfig(7, 0, 3, 1, BuiltInWidgets.kTextView));
         match_boostActive = new SupplierWidget<Boolean>(matchTabName, "Boost Active", false, () -> false, new WidgetConfig(6, 1, 2, 1, BuiltInWidgets.kBooleanBox));
         match_boostAvailable = new SupplierWidget<Boolean>(matchTabName, "Boost Available", false, () -> false, new WidgetConfig(8, 1, 2, 1, BuiltInWidgets.kBooleanBox));
 
