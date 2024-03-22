@@ -5,7 +5,7 @@
       "x": 1.4305188655853271,
       "y": 3.0240256786346436
     },
-    "rotation": 4.2000329339586096e-26
+    "rotation": 0.45918822296735706
   },
   "command": {
     "type": "sequential",
@@ -73,7 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3.1"
+                  "pathName": "SourceSide-Score4.1"
                 }
               },
               {
@@ -122,13 +122,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3.2"
+                  "pathName": "SourceSide-Score4.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3.3"
+                  "pathName": "SourceSide-Score4.3"
                 }
               },
               {
@@ -177,13 +177,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3.4"
+                  "pathName": "SourceSide-Score4.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3.5"
+                  "pathName": "SourceSide-Score4.5"
                 }
               },
               {
