@@ -76,10 +76,10 @@ public class RobotState {
             tiltAngleMap.put(3.55, 0.007);
         }
         
-        @AutoLogOutput @Setter @Getter private double shotCompensationDegrees = 0.0;
+        @AutoLogOutput @Setter @Getter private double shotCompensationRotations = 0.004;
         
-        public void adjustShotCompensationDegrees(double deltaDegrees) {
-            shotCompensationDegrees += deltaDegrees;
+        public void adjustShotCompensationRotations(double deltaRotations) {
+            shotCompensationRotations += deltaRotations;
         }
         
         private static RobotState instance;
@@ -241,7 +241,7 @@ public class RobotState {
             new AimingParameters(
             targetVehicleDirection,
             Rotation2d.fromRotations(
-            tiltAngleMap.get(targetDistance) + Units.degreesToRadians(shotCompensationDegrees)),
+            tiltAngleMap.get(targetDistance) + shotCompensationRotations),
             targetDistance,
             feedVelocity);
 
