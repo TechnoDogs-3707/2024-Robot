@@ -25,7 +25,7 @@ public class ScoreAmpWithArm extends SequentialCommandGroup {
             Commands.waitUntil(overrideScore),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.SCORING)),
             intake.setActionCommand(IntakeWantedAction.REVERSE),
-            Commands.waitSeconds(0.125),
+            Commands.waitSeconds(0.25),
             intakeDeploy.setPositionCommand(IntakePositionPreset.AMP_SCORE_PRIME),
             Commands.waitSeconds(1),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.DONE)),

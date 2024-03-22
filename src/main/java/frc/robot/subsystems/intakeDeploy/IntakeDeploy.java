@@ -19,7 +19,7 @@ public class IntakeDeploy extends SubsystemBase {
         STOWED(0.3),
         EJECT(0.1875),
         AMP_SCORE(0.598),
-        AMP_SCORE_PRIME(0.3),
+        AMP_SCORE_PRIME(0.5),
         HANDOFF(-0.03),
         DEPLOYED(-0.1);
 
