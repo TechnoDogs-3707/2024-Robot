@@ -76,7 +76,7 @@ public class RobotState {
             tiltAngleMap.put(3.55, 0.007);
         }
         
-        @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = 0.002;
+        @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = 0.001;
         
         public void adjustShotCompensationRotations(double deltaRotations) {
             shotCompensationRotations += deltaRotations;
