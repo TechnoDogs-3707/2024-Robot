@@ -16,6 +16,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -137,15 +138,20 @@ public class RobotContainer {
     private final Trigger operatorScoreOverride = operator.circle();
     private final Trigger operatorAutoAim = operator.cross();
 
-    private final Trigger operatorSubwoofer = operatorClimbShift.negate().and(operator.povRight());
-    private final Trigger operatorPodium = operatorClimbShift.negate().and(operator.povLeft());
-    private final Trigger operatorAmp = operatorClimbShift.negate().and(operator.povUp());
-    private final Trigger operatorJamClear = operatorClimbShift.negate().and(operator.povDown());
+    private final Trigger operatorCompensateShift = operator.R2();
 
-    private final Trigger operatorClimbRaise = operatorClimbShift.and(operator.povUp());
-    private final Trigger operatorClimbPull = operatorClimbShift.and(operator.povDown());
-    private final Trigger operatorClimbReset = operatorClimbShift.and(operator.povLeft());
-    private final Trigger operatorClimbManual = operatorClimbShift.and(operator.povRight());
+    private final Trigger operatorSubwoofer = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povRight()));
+    private final Trigger operatorPodium = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povLeft()));
+    private final Trigger operatorAmp = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povUp()));
+    private final Trigger operatorJamClear = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povDown()));
+
+    private final Trigger operatorClimbRaise = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povUp()));
+    private final Trigger operatorClimbPull = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povDown()));
+    private final Trigger operatorClimbReset = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povLeft()));
+    private final Trigger operatorClimbManual = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povRight()));
+
+    private final Trigger operatorOffsetUp = operatorClimbShift.negate().and(operatorCompensateShift.and(operator.povUp()));
+    private final Trigger operatorOffsetDown = operatorClimbShift.negate().and(operatorCompensateShift.and(operator.povDown()));
 
     private final Trigger operatorReverseFeed = operator.triangle();
     private final Trigger operatorScoreAmpWithArm = operator.square();
@@ -405,6 +411,9 @@ public class RobotContainer {
 
         operatorReverseFeed.onTrue(new ReverseFeedNote(armTilt, indexer, objective, intakeDeploy, intake, flywheels, tilt));
         operatorScoreAmpWithArm.onTrue(new ScoreAmpWithArm(objective, armTilt, intakeDeploy, intake, driverAutoShoot.or(operatorScoreOverride)));
+
+        operatorOffsetUp.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShotCompensationRotations(0.001)));
+        operatorOffsetDown.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShotCompensationRotations(-0.001)));
 
         // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
 

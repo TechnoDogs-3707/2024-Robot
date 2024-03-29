@@ -23,7 +23,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
-    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    private static final RobotType robot = RobotType.ROBOT_2024_SONIC;
     public static final double loopPeriodSecs = 0.02;
     public static final boolean tuningMode = true;
     
@@ -280,7 +280,7 @@ public final class Constants {
             kDrivePIDConfig.kI = 0.0;
             kDrivePIDConfig.kD = 0.000002 * 12;
             kDrivePIDConfig.kV = 0.117;// (kMaxVelocityMetersPerSecond / (Math.PI * Constants.kDriveWheelDiameter * Constants.kDriveReduction));;
-            kDrivePIDConfig.kS = 0.6;//0.8;
+            kDrivePIDConfig.kS = 0.0;//0.6;//0.8;
         }
 
         public static final Slot0Configs kSteerPIDConfig = new Slot0Configs();

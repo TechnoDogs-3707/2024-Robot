@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": 4.835162745303414e-28
+    "rotation": -8.550679335047048e-27
   },
   "command": {
     "type": "sequential",
@@ -66,7 +66,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.4
                 }
               },
               {
@@ -85,7 +85,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.1"
+                  "pathName": "Cheesecake.1"
                 }
               },
               {
@@ -115,7 +115,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.4
                 }
               },
               {
@@ -134,13 +134,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.2"
+                  "pathName": "Cheesecake.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.3"
+                  "pathName": "Cheesecake.3"
                 }
               },
               {
@@ -170,7 +170,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.4
                 }
               },
               {
@@ -189,13 +189,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.4"
+                  "pathName": "Cheesecake.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.5"
+                  "pathName": "Cheesecake.5"
                 }
               },
               {
