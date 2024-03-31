@@ -202,7 +202,7 @@ public class RobotContainer {
                     tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
                     climb = new Climb(new ClimbIOTalonFX());
-                    leds = new LED(new LEDIOCANdle(8, "canivore"));
+                    leds = new LED(new LEDIOCANdle(8, "rio"));
                     vision = new Localizer(new LocalizerIOLL3(), RobotState.getInstance()::addVisionObservation);
                     break;
                 case ROBOT_2023_FLAPJACK:
