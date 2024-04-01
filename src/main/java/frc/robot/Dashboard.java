@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.DriveWithController;
+import frc.robot.commands.drive.DriveWithController;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.SupplierWidget;
 import frc.robot.lib.dashboard.WidgetConfig;

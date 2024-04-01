@@ -1,11 +1,11 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 
-public class AutonXModeCommand extends Command {
+public class XModeDriveCommand extends Command {
     private final Drive drive;
-    public AutonXModeCommand(Drive drive) {
+    public XModeDriveCommand(Drive drive) {
         this.drive = drive;
         addRequirements(this.drive);
     }
@@ -17,12 +17,7 @@ public class AutonXModeCommand extends Command {
     }
 
     @Override
-    public boolean isFinished() {
-        return true;
-    }
-
-    @Override
     public void end(boolean interrupted) {
-        drive.stop();
+        // drive.setXMode(false);
     }
 }
