@@ -5,7 +5,7 @@
       "x": 1.4305188655853271,
       "y": 3.0240256786346436
     },
-    "rotation": 0.45918822296735706
+    "rotation": -1.5901766766235424e-26
   },
   "command": {
     "type": "sequential",
@@ -49,12 +49,6 @@
                 "type": "named",
                 "data": {
                   "name": "Intake Set Run"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.25
                 }
               },
               {
@@ -236,9 +230,41 @@
                 }
               },
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "SourceSide-Score4.7"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SourceSide-Score4.7"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.5
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake Set Off"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Stow Intake"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -268,7 +294,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.5
                 }
               }
             ]

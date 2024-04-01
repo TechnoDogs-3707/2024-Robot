@@ -5,7 +5,7 @@
       "x": 1.4305188655853271,
       "y": 3.0240256786346436
     },
-    "rotation": -1.081217500661476e-25
+    "rotation": -5.455355807741043e-26
   },
   "command": {
     "type": "sequential",
@@ -52,6 +52,12 @@
                 }
               },
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Intake"
@@ -67,7 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.1"
+                  "pathName": "SourceSide-Score4-BACKUP.1"
                 }
               },
               {
@@ -116,13 +122,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.2"
+                  "pathName": "SourceSide-Score4-BACKUP.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.3"
+                  "pathName": "SourceSide-Score4-BACKUP.3"
                 }
               },
               {
@@ -171,92 +177,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.4"
+                  "pathName": "SourceSide-Score4-BACKUP.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Off"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stow Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score4-V.6"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score4-V.7"
+                  "pathName": "SourceSide-Score4-BACKUP.5"
                 }
               },
               {
@@ -303,41 +230,15 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "SourceSide-Score4-V.8"
-                      }
-                    },
-                    {
-                      "type": "sequential",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 0.5
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Intake Set Off"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Stow Intake"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
+                  "pathName": "SourceSide-Score4-BACKUP.6"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BACKUP.7"
                 }
               },
               {
@@ -367,13 +268,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
+                  "waitTime": 0.4
                 }
               }
             ]
