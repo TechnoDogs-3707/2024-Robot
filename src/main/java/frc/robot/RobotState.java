@@ -39,13 +39,14 @@ public class RobotState {
     Rotation2d driveHeading,
     Rotation2d tiltAngle,
     double effectiveDistance,
-    double driveFeedVelocity) {}
+    double driveFeedVelocity,
+    double degreesOffAxis) {}
     
     private static final LoggedTunableNumber lookahead =
     new LoggedTunableNumber("RobotState/lookaheadS", 0.0);
     private static final double poseBufferSizeSeconds = 2.0;
     
-    /** Arm angle look up table key: meters, values: rotations */
+    /** Shooter angle look up table key: meters, values: rotations */
     private static final InterpolatingDoubleTreeMap tiltAngleMap = new InterpolatingDoubleTreeMap();
     
     // static {
@@ -74,6 +75,14 @@ public class RobotState {
             tiltAngleMap.put(2.76, 0.013);
             tiltAngleMap.put(3.016, 0.008);
             tiltAngleMap.put(3.55, 0.007);
+        }
+
+        /** Table to compensate for shooting off axis
+         * ; Key: degrees off axis (unsigned), Value: shooter rotations to add */
+        private static final InterpolatingDoubleTreeMap offAxisCompMap = new InterpolatingDoubleTreeMap();
+
+        static {
+            offAxisCompMap.put(0.0, 0.0);
         }
         
         @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = 0.001;
@@ -237,18 +246,22 @@ public class RobotState {
             robotVelocity.dx * vehicleToGoalDirection.getSin() / targetDistance
             - robotVelocity.dy * vehicleToGoalDirection.getCos() / targetDistance;
 
+            double degreesOffAxis = Math.abs(targetVehicleDirection.minus(fieldToTarget.getRotation()).getDegrees());
+
             latestParameters =
             new AimingParameters(
             targetVehicleDirection,
             Rotation2d.fromRotations(
-            tiltAngleMap.get(targetDistance) + shotCompensationRotations),
+            tiltAngleMap.get(targetDistance) + offAxisCompMap.get(degreesOffAxis) + shotCompensationRotations),
             targetDistance,
-            feedVelocity);
+            feedVelocity,
+            degreesOffAxis);
 
             Logger.recordOutput("RobotState/AimingParameters/DriveHeading", latestParameters.driveHeading());
             Logger.recordOutput("RobotState/AimingParameters/ShooterTilt", latestParameters.tiltAngle());
             Logger.recordOutput("RobotState/AimingParameters/EffectiveDistance", latestParameters.effectiveDistance());
             Logger.recordOutput("RobotState/AimingParameters/DriveFeedVelocity", latestParameters.driveFeedVelocity());
+            Logger.recordOutput("RobotState/AimingParameters/DegreesOffAxis", latestParameters.degreesOffAxis());
 
             return latestParameters;
         }
