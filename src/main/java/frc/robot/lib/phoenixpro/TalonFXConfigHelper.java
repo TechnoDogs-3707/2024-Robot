@@ -82,6 +82,12 @@ public class TalonFXConfigHelper {
         changeTalonConfig((config) -> {config.MotorOutput.NeutralMode = mode; return config;});
     }
 
+    public void setNeutralModeUnchecked(NeutralModeValue mode) {
+        mConfig.MotorOutput.NeutralMode = mode;
+
+        mMotor.getConfigurator().apply(mConfig);
+    }
+
     public void changeTalonConfig(UnaryOperator<TalonFXConfiguration> configChanger) {
         mConfig = configChanger.apply(mConfig);
         writeConfigs();
