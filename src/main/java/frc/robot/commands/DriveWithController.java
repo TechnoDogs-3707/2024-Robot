@@ -134,11 +134,15 @@ public class DriveWithController extends Command {
             mSwerveHeadingController.setHeadingControllerState(HeadingControllerState.OFF);
         }
 
-        Rotation2d angleWithTempDisable = disableFieldOrient.getAsBoolean() ? new Rotation2d() : currentPose.getRotation();
+        Rotation2d angleWithFlip = flipAngles ? currentPose.getRotation().plus(Rotation2d.fromDegrees(180)) : currentPose.getRotation();
+
+        // Rotation2d angleWithTempDisable = disableFieldOrient.getAsBoolean() ? (flipAngles ? Rotation2d.fromDegrees(180) : new Rotation2d()) : currentPose.getRotation();
 
         // Rotation2d angleWithFlipOnly = flipAngles ? currentPose.getRotation().plus(Rotation2d.fromDegrees(180)) : currentPose.getRotation();
 
-        Rotation2d angleWithFlipAndDisable = flipAngles ? angleWithTempDisable.plus(Rotation2d.fromDegrees(180)) : angleWithTempDisable;
+        // Rotation2d angleWithFlipAndDisable = flipAngles ? angleWithTempDisable.plus(Rotation2d.fromDegrees(180)) : angleWithTempDisable;
+
+        Rotation2d angleWithFlipAndDisable = disableFieldOrient.getAsBoolean() ? new Rotation2d() : angleWithFlip;
 
         if (mSwerveHeadingController.getHeadingControllerState() != HeadingControllerState.OFF) {
             controllerInputs.setRotation(mSwerveHeadingController.update(currentPose.getRotation().getDegrees()));
