@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4305188655853271,
-      "y": 3.0240256786346436
+      "x": 0.7038198709487915,
+      "y": 6.712855815887451
     },
-    "rotation": -2.892604715314214e-26
+    "rotation": 59.34934488268508
   },
   "command": {
     "type": "sequential",
@@ -60,6 +60,18 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "Indexer Set Intake"
                 }
               }
@@ -73,7 +85,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V-V.1"
+                  "pathName": "AmpSide-Score5.1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score5.2"
                 }
               },
               {
@@ -91,7 +109,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.5
                 }
               },
               {
@@ -122,13 +140,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V-V.2"
+                  "pathName": "AmpSide-Score5.3"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V-V.3"
+                  "pathName": "AmpSide-Score5.4"
                 }
               },
               {
@@ -146,7 +164,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.5
                 }
               },
               {
@@ -177,13 +195,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V-V.4"
+                  "pathName": "AmpSide-Score5.5"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V-V.5"
+                  "pathName": "AmpSide-Score5.6"
                 }
               },
               {
@@ -201,7 +219,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.5
                 }
               },
               {
@@ -232,13 +250,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V-V.6"
+                  "pathName": "AmpSide-Score5.7"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V-V.7"
+                  "pathName": "AmpSide-Score5.8"
                 }
               },
               {
@@ -256,7 +274,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.5
                 }
               },
               {
@@ -283,6 +301,6 @@
       ]
     }
   },
-  "folder": "SourceSide Paths",
+  "folder": "AmpSide Paths",
   "choreoAuto": true
 }

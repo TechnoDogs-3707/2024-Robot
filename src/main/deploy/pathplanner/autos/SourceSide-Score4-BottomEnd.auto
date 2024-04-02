@@ -1,0 +1,288 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4305188655853271,
+      "y": 3.0240256786346436
+    },
+    "rotation": -3.6789095433513624e-25
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Speed To 60"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Close"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.6"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.7"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "SourceSide Paths",
+  "choreoAuto": true
+}
