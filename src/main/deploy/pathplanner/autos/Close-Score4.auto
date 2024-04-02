@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": -8.550679335047048e-27
+    "rotation": 1.3437342176389622e-28
   },
   "command": {
     "type": "sequential",
@@ -85,7 +85,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cheesecake.1"
+                  "pathName": "Close-Score4.1"
                 }
               },
               {
@@ -134,13 +134,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cheesecake.2"
+                  "pathName": "Close-Score4.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cheesecake.3"
+                  "pathName": "Close-Score4.3"
                 }
               },
               {
@@ -189,13 +189,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cheesecake.4"
+                  "pathName": "Close-Score4.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Cheesecake.5"
+                  "pathName": "Close-Score4.5"
                 }
               },
               {

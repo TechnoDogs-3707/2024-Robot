@@ -5,7 +5,7 @@
       "x": 1.4305188655853271,
       "y": 3.0240256786346436
     },
-    "rotation": 4.5593038726753046e-26
+    "rotation": -4.0605302952073363e-25
   },
   "command": {
     "type": "sequential",
@@ -73,7 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-GRAB.1"
+                  "pathName": "SourceSide-Score3.1"
                 }
               },
               {
@@ -122,13 +122,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-GRAB.2"
+                  "pathName": "SourceSide-Score3.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-GRAB.3"
+                  "pathName": "SourceSide-Score3.3"
                 }
               },
               {
@@ -177,13 +177,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-GRAB.4"
+                  "pathName": "SourceSide-Score3.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-GRAB.5"
+                  "pathName": "SourceSide-Score3.5"
                 }
               },
               {
@@ -213,86 +213,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.5
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Off"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stow Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score3-GRAB.6"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score3-GRAB.7"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               }
             ]

@@ -52,6 +52,12 @@
                 }
               },
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Intake"
@@ -295,6 +301,12 @@
                 "type": "wait",
                 "data": {
                   "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
                 }
               }
             ]
