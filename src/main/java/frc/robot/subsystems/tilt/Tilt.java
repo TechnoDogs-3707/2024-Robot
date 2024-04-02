@@ -20,9 +20,10 @@ import java.util.function.Supplier;
 
 public class Tilt extends SubsystemBase {
     public enum TiltGoalState {
-        STOW(new TiltState(0.007, false, false)),
+        STOW(new TiltState(0.002, false, false)),
         CLOSE(new TiltState(0.078, false, true)),
-        PODIUM(new TiltState(0.017, false, true)),
+        PODIUM(new TiltState(0.002, false, true)),
+        MOONSHOT(new TiltState(0.06, false, true)),
         AMP(new TiltState(0.06, false, true)),
         AUTO_AIM(new TiltState(0.037, true, true));
 

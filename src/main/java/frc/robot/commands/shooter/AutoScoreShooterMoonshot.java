@@ -9,10 +9,10 @@ import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
-public class AutoScoreShooterPodium extends SequentialCommandGroup {
-    public AutoScoreShooterPodium(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
+public class AutoScoreShooterMoonshot extends SequentialCommandGroup {
+    public AutoScoreShooterMoonshot(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
-            new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 70.0, () -> 70.0, () -> TiltGoalState.PODIUM, scoreOverride)
+            new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 80.0, () -> 80.0, () -> TiltGoalState.MOONSHOT, scoreOverride)
         );
     }
 }

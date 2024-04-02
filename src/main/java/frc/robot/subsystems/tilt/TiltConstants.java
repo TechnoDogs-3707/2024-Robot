@@ -21,10 +21,10 @@ public final class TiltConstants {
     public static final double kMagicJerk = 10.0;
 
     public static final double kLiberalAllowableError = 0.01;
-    public static final double kConservativeAllowableError = 0.005;
+    public static final double kConservativeAllowableError = 0.003;
 
     public static final double kHomePosition = 0.0;
-    public static final double kMinTargetPosition = 0.005;
+    public static final double kMinTargetPosition = 0.002;
     public static final double kMaxTargetPosition = 0.08;
 
     public static final double kAbsoluteMinPosition = 0.002;

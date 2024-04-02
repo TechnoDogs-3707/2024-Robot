@@ -36,6 +36,7 @@ import frc.robot.commands.intake.IntakeNoteGroundToIndexer;
 import frc.robot.commands.intake.IntakeStow;
 import frc.robot.commands.intake.ReverseFeedNote;
 import frc.robot.commands.shooter.AutoScoreShooterAmp;
+import frc.robot.commands.shooter.AutoScoreShooterMoonshot;
 import frc.robot.commands.shooter.AutoScoreShooterPodium;
 import frc.robot.commands.shooter.AutoScoreShooterSubwoofer;
 import frc.robot.commands.shooter.ShooterAutoAimCommand;
@@ -381,7 +382,8 @@ public class RobotContainer {
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(intakeDeploy, intake, indexer));
         // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
-        operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        // operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        operatorAmp.onTrue(new AutoScoreShooterMoonshot(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
 
         operatorClimbRaise.onTrue(new ClimbAutoRaise(climb, objective));
         operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));

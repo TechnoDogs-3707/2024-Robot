@@ -8,7 +8,7 @@ public final class ArmTiltConstants {
 
     public static final InvertedValue mInverted = InvertedValue.CounterClockwise_Positive;
     
-    public static final double kG = 0.5;
+    public static final double kG = 0.35;
 
     public static final double kS = 0.0;
     public static final double kV = 14.0;
