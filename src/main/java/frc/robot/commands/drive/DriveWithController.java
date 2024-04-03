@@ -116,7 +116,12 @@ public class DriveWithController extends Command {
         boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapPodium && !shouldSnapAmp, 0.2);
 
         if (shouldSnapPodium) {
-            mHeadingGoal = Optional.of(RobotState.getInstance().getAimingParameters().driveHeading().getDegrees());
+            var aimParams = RobotState.getInstance().getAimingParameters();
+            if (aimParams.effectiveDistance() >= 5.5) {
+                mHeadingGoal = Optional.of(RobotState.getInstance().getTargetAngleForMoonshot().getDegrees());
+            } else {
+                mHeadingGoal = Optional.of(aimParams.driveHeading().getDegrees());
+            }
         } else if (shouldSnapAmp) {
             mHeadingGoal = Optional.of(kAmpAlignAngle.getDegrees());
         } else if (!autoMaintain) {

@@ -19,7 +19,7 @@ import frc.robot.subsystems.tilt.Tilt;
 import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 
 public class ShooterAutoAimCommand extends SequentialCommandGroup {
-    private static double kMaxShootingDistance = 4.0;
+    private static double kMaxShootingDistance = 4.85;
     public ShooterAutoAimCommand(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier dontShoot) {
         addCommands(
             Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.SCORE_SPEAKER_AUTOAIM))
