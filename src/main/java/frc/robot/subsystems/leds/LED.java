@@ -186,6 +186,11 @@ public class LED extends SubsystemBase {
                 }
                 return SystemState.DISPLAYING_GOOD_BATTERY;
             case DISPLAY_BATTERY_LOW:
+                if (mSystemState == SystemState.DISPLAYING_GOOD_BATTERY) {
+                    if (timeInState <= 0.5) {
+                        return SystemState.DISPLAYING_GOOD_BATTERY;
+                    }
+                }
                 return SystemState.DISPLAYING_BATTERY_LOW; 
             case DISPLAY_NOT_HOMED:
                 return SystemState.DISPLAYING_NOT_HOMED;
