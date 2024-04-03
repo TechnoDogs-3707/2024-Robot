@@ -86,6 +86,7 @@ public class RobotState {
         }
         
         @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = 0.001;
+        @AutoLogOutput @Setter @Getter protected double aimCompensationDegrees = -8;
         
         public void adjustShotCompensationRotations(double deltaRotations) {
             shotCompensationRotations += deltaRotations;
@@ -247,6 +248,8 @@ public class RobotState {
             - robotVelocity.dy * vehicleToGoalDirection.getCos() / targetDistance;
 
             double degreesOffAxis = Math.abs(targetVehicleDirection.minus(fieldToTarget.getRotation()).getDegrees());
+
+            targetVehicleDirection = targetVehicleDirection.plus(Rotation2d.fromDegrees(aimCompensationDegrees));
 
             latestParameters =
             new AimingParameters(

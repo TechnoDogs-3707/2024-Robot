@@ -25,14 +25,14 @@ public class LEDIOCANdle implements LEDIO {
 
         PhoenixErrorChecker.checkErrorAndRetryV5(() -> candle.configAllSettings(config, 100));
 
-        PhoenixErrorChecker.checkErrorAndRetryV5(() -> candle.setControlFramePeriod(CANdleControlFrame.CANdle_Control_2_ModulatedVBatOut, 250));
-        PhoenixErrorChecker.checkErrorAndRetryV5(() -> candle.setControlFramePeriod(CANdleControlFrame.CANdle_Control_1_General, 10));
-        PhoenixErrorChecker.checkErrorAndRetryV5(() -> candle.setStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_1_General, 250));
+        // PhoenixErrorChecker.checkErrorAndRetryV5(() -> candle.setControlFramePeriod(CANdleControlFrame.CANdle_Control_2_ModulatedVBatOut, 250));
+        // PhoenixErrorChecker.checkErrorAndRetryV5(() -> candle.setControlFramePeriod(CANdleControlFrame.CANdle_Control_1_General, 10));
+        // PhoenixErrorChecker.checkErrorAndRetryV5(() -> candle.setStatusFramePeriod(CANdleStatusFrame.CANdleStatusFrame_Status_1_General, 250));
     }
 
     @Override
     public void updateInputs(LEDIOInputsAutoLogged inputs) {
-        inputs.inputVoltage = candle.getBusVoltage();
+        // inputs.inputVoltage = candle.getBusVoltage();
     }
 
     @Override

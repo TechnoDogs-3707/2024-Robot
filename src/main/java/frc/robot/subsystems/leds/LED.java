@@ -97,6 +97,7 @@ public class LED extends SubsystemBase {
             mStateStartTime = timestamp;
         }
 
+        Logger.recordOutput("LEDs/WantedAction", mWantedAction.name());
         Logger.recordOutput("LEDs/SystemState", mSystemState.name());
 
         double timeInState = timestamp - mStateStartTime;

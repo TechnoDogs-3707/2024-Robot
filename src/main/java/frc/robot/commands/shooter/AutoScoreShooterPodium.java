@@ -12,7 +12,7 @@ import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 public class AutoScoreShooterPodium extends SequentialCommandGroup {
     public AutoScoreShooterPodium(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
-            new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 70.0, () -> 70.0, () -> TiltGoalState.PODIUM, scoreOverride)
+            new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 65.0, () -> 65.0, () -> TiltGoalState.PODIUM, scoreOverride)
         );
     }
 }
