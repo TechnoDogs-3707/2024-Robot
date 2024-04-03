@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7038198709487915,
-      "y": 6.712855815887451
+      "x": 1.4305188655853271,
+      "y": 3.0240256786346436
     },
-    "rotation": 59.34934488268508
+    "rotation": -3.6789095433513624e-25
   },
   "command": {
     "type": "sequential",
@@ -60,18 +60,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Intake"
                 }
               }
@@ -85,13 +73,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpSide-Score4.1"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "AmpSide-Score4.2"
+                  "pathName": "SourceSide-Score4-BottomEnd.1"
                 }
               },
               {
@@ -109,7 +91,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.4
                 }
               },
               {
@@ -140,13 +122,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpSide-Score4.3"
+                  "pathName": "SourceSide-Score4-BottomEnd.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpSide-Score4.4"
+                  "pathName": "SourceSide-Score4-BottomEnd.3"
                 }
               },
               {
@@ -164,7 +146,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.4
                 }
               },
               {
@@ -195,13 +177,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpSide-Score4.5"
+                  "pathName": "SourceSide-Score4-BottomEnd.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "AmpSide-Score4.6"
+                  "pathName": "SourceSide-Score4-BottomEnd.5"
                 }
               },
               {
@@ -219,7 +201,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.4
                 }
               },
               {
@@ -232,6 +214,61 @@
                 "type": "wait",
                 "data": {
                   "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.6"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score4-BottomEnd.7"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
                 }
               },
               {
@@ -246,6 +283,6 @@
       ]
     }
   },
-  "folder": "AmpSide Paths",
+  "folder": "SourceSide Paths",
   "choreoAuto": true
 }

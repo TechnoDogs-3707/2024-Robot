@@ -1,0 +1,313 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7038198709487915,
+      "y": 6.712855815887451
+    },
+    "rotation": 59.34934488268508
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels Set Speed To 60"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Close"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score4-V.1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score4-V.2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score4-V.3"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score4-V.4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Off"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stow Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score4-V.5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score4-V.6"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AmpSide-Score4-V.7"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.5
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake Set Off"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Stow Intake"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "AmpSide Paths",
+  "choreoAuto": true
+}

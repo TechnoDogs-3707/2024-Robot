@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": 1.3437342176389622e-28
+    "rotation": -8.550679335047048e-27
   },
   "command": {
     "type": "sequential",
@@ -85,7 +85,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.1"
+                  "pathName": "Cheesecake.1"
                 }
               },
               {
@@ -134,13 +134,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.2"
+                  "pathName": "Cheesecake.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.3"
+                  "pathName": "Cheesecake.3"
                 }
               },
               {
@@ -189,13 +189,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.4"
+                  "pathName": "Cheesecake.4"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.5"
+                  "pathName": "Cheesecake.5"
                 }
               },
               {
@@ -281,6 +281,12 @@
                 "type": "wait",
                 "data": {
                   "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
                 }
               }
             ]
