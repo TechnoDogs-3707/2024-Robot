@@ -80,6 +80,7 @@ public class RobotState {
     /** Table to compensate for the shooter curving left
      * Key: distance (meters), Value: robot angle offset (degrees, WPI CCW+)
      */
+    
     private static final InterpolatingDoubleTreeMap robotAngleCompMap = new InterpolatingDoubleTreeMap();
 
     static {
