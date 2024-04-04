@@ -317,6 +317,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Indexer Set Score", indexer.setActionCommand(IndexerWantedAction.SCORE));
         NamedCommands.registerCommand("Indexer Set Off", indexer.setActionCommand(IndexerWantedAction.OFF));
         NamedCommands.registerCommand("Flywheels Set Speed To 60", flywheels.setSpeedCommand(() -> 60.0));
+        NamedCommands.registerCommand("Flywheels Set Speed To 40", flywheels.setSpeedCommand(() -> 40.0));
         NamedCommands.registerCommand("Flywheels Set Shoot", flywheels.setActionCommand(FlywheelsWantedAction.SHOOT));
         NamedCommands.registerCommand("Flywheels Set Off", flywheels.setActionCommand(FlywheelsWantedAction.OFF));
         NamedCommands.registerCommand("Tilt Set Close", tilt.setGoalCommand(TiltGoalState.CLOSE));

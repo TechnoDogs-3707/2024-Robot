@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": 1.1529013741933512e-26
+    "rotation": 1.344134630130793e-26
   },
   "command": {
     "type": "sequential",
@@ -36,7 +36,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Close"
+                  "name": "Tilt Set Auto"
                 }
               },
               {
@@ -97,18 +97,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -152,18 +140,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -202,18 +178,6 @@
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               },
               {
@@ -319,18 +283,6 @@
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               },
               {

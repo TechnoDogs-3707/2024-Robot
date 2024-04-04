@@ -5,7 +5,7 @@
       "x": 1.4305188655853271,
       "y": 3.0240256786346436
     },
-    "rotation": 3.537379578686914e-26
+    "rotation": -2.9582298652966733e-25
   },
   "command": {
     "type": "sequential",
@@ -36,7 +36,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Close"
+                  "name": "Tilt Set Auto"
                 }
               },
               {
@@ -85,18 +85,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -140,18 +128,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -190,18 +166,6 @@
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               },
               {
@@ -274,18 +238,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -350,18 +302,6 @@
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               },
               {

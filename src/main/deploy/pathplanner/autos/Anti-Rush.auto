@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3928816318511963,
-      "y": 5.578441619873047
+      "x": 1.4204717874526978,
+      "y": 7.312083721160889
     },
-    "rotation": -6.271101851603938e-27
+    "rotation": 1.908626812474548e-27
   },
   "command": {
     "type": "sequential",
@@ -30,13 +30,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Flywheels Set Speed To 60"
+                  "name": "Flywheels Set Speed To 40"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
+                  "name": "Tilt Set Close"
                 }
               },
               {
@@ -52,21 +52,28 @@
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 0.25
+                  "name": "Indexer Set Intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Anti-Rush.1"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
                 }
               },
               {
@@ -85,37 +92,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
+                  "pathName": "Anti-Rush.2"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
                 }
               },
               {
@@ -134,86 +117,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score4.2"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Close-Score4.3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Close-Score4.4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Close-Score4.5"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
+                  "pathName": "Anti-Rush.3"
                 }
               },
               {
@@ -240,6 +144,6 @@
       ]
     }
   },
-  "folder": "Close Paths",
+  "folder": "AmpSide Paths",
   "choreoAuto": true
 }

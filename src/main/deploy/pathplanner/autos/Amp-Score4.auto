@@ -36,7 +36,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Close"
+                  "name": "Tilt Set Auto"
                 }
               },
               {
@@ -103,18 +103,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -158,18 +146,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -208,18 +184,6 @@
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               },
               {
