@@ -73,8 +73,8 @@ public class RobotState {
 
     static {
         offAxisCompMap.put(0.0, 0.0);
-        offAxisCompMap.put(45.0, 0.005);
-        offAxisCompMap.put(90.0, 0.008);
+        offAxisCompMap.put(45.0, 0.003);
+        offAxisCompMap.put(90.0, 0.005);
     }
 
     /** Table to compensate for the shooter curving left
@@ -84,11 +84,11 @@ public class RobotState {
 
     static {
         robotAngleCompMap.put(1.5, 0.0);
-        robotAngleCompMap.put(2.5, -7.0);
-        robotAngleCompMap.put(5.0, -5.0);
+        robotAngleCompMap.put(2.0, -12.0);
+        robotAngleCompMap.put(5.0, -12.0);
     }
     
-    @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = 0.001;
+    @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = 0.000;
     
     public void adjustShotCompensationRotations(double deltaRotations) {
         shotCompensationRotations += deltaRotations;
