@@ -197,7 +197,7 @@
                       }
                     },
                     {
-                      "type": "parallel",
+                      "type": "sequential",
                       "data": {
                         "commands": [
                           {
@@ -209,7 +209,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "Stow Intake"
+                              "name": "Intake Set Off"
                             }
                           },
                           {
