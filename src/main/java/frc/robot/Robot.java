@@ -189,7 +189,7 @@ public class Robot extends LoggedRobot {
         var test = FieldConstants.ampCenter;
         System.out.println("Initialized FieldConstants Class");
 
-        RobotController.setBrownoutVoltage(6.0);
+        RobotController.setBrownoutVoltage(5.0);
         
         robotContainer = new RobotContainer(this);
         System.out.println("Created RobotContainer");

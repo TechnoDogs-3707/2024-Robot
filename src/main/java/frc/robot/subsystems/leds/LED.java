@@ -97,6 +97,7 @@ public class LED extends SubsystemBase {
             mStateStartTime = timestamp;
         }
 
+        Logger.recordOutput("LEDs/WantedAction", mWantedAction.name());
         Logger.recordOutput("LEDs/SystemState", mSystemState.name());
 
         double timeInState = timestamp - mStateStartTime;
@@ -170,13 +171,26 @@ public class LED extends SubsystemBase {
     }
 
     private SystemState getStateTransition() {
+        double timestamp = Timer.getFPGATimestamp();
+        double timeInState = timestamp - mStateStartTime;
+
         if (configure_fault) return SystemState.DISPLAYING_CONFIGURE_FAULT;
         switch (mWantedAction) {
             case DISPLAY_ARM:
                 return SystemState.DISPLAYING_ARM;
             case DISPLAY_GOOD_BATTERY:
+                if (mSystemState == SystemState.DISPLAYING_BATTERY_LOW) {
+                    if (timeInState <= 0.5) {
+                        return SystemState.DISPLAYING_BATTERY_LOW;
+                    }
+                }
                 return SystemState.DISPLAYING_GOOD_BATTERY;
             case DISPLAY_BATTERY_LOW:
+                if (mSystemState == SystemState.DISPLAYING_GOOD_BATTERY) {
+                    if (timeInState <= 0.5) {
+                        return SystemState.DISPLAYING_GOOD_BATTERY;
+                    }
+                }
                 return SystemState.DISPLAYING_BATTERY_LOW; 
             case DISPLAY_NOT_HOMED:
                 return SystemState.DISPLAYING_NOT_HOMED;

@@ -20,26 +20,27 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.IntakeStow;
-import frc.robot.commands.ReverseFeedNote;
-import frc.robot.commands.ScoreAmpWithArm;
-import frc.robot.commands.ShooterAutoAimCommand;
-import frc.robot.commands.AutoScoreShooterAmp;
-import frc.robot.commands.AutoScoreShooterPodium;
-import frc.robot.commands.AutoScoreShooterSubwoofer;
-import frc.robot.commands.AutonDriveAimCommand;
-import frc.robot.commands.AutonXModeCommand;
-import frc.robot.commands.DriveUtilityCommandFactory;
-import frc.robot.commands.DriveWithController;
-import frc.robot.commands.IndexerJamClearing;
-import frc.robot.commands.IndexerReset;
-import frc.robot.commands.IntakeNoteGroundToIndexer;
-import frc.robot.commands.ShooterPrepare;
-import frc.robot.commands.XModeDriveCommand;
+import frc.robot.commands.arm.ScoreAmpWithArm;
 import frc.robot.commands.climb.ClimbAutoRaise;
 import frc.robot.commands.climb.ClimbManualOverride;
 import frc.robot.commands.climb.ClimbPoweredRetract;
 import frc.robot.commands.climb.ClimbReset;
+import frc.robot.commands.drive.AutonDriveAimCommand;
+import frc.robot.commands.drive.AutonXModeCommand;
+import frc.robot.commands.drive.DriveUtilityCommandFactory;
+import frc.robot.commands.drive.DriveWithController;
+import frc.robot.commands.drive.XModeDriveCommand;
+import frc.robot.commands.intake.IndexerJamClearing;
+import frc.robot.commands.intake.IndexerReset;
+import frc.robot.commands.intake.IntakeNoteGroundToIndexer;
+import frc.robot.commands.intake.IntakeStow;
+import frc.robot.commands.intake.ReverseFeedNote;
+import frc.robot.commands.shooter.AutoScoreShooterAmp;
+import frc.robot.commands.shooter.AutoScoreShooterMoonshot;
+import frc.robot.commands.shooter.AutoScoreShooterPodium;
+import frc.robot.commands.shooter.AutoScoreShooterSubwoofer;
+import frc.robot.commands.shooter.ShooterAutoAimCommand;
+import frc.robot.commands.shooter.ShooterPrepare;
 import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
@@ -158,22 +159,8 @@ public class RobotContainer {
 
     private final Supplier<Double> operatorClimbThrottle = () -> -PoofsUtil.handleDeadband(operator.getLeftY(), 0.05);
 
-    // OVERRIDE SWITCHES
-    private final OverrideSwitches overrides = new OverrideSwitches(5);
-
-    // private final Trigger driverResetAngle = overrides.driverSwitch(0).debounce(1, DebounceType.kRising); // Reset gyro angle to forwards
-    private final Trigger driverGyroFail = overrides.driverSwitch(0); // Ingore sensor readings from gyro
-    private final Trigger driverReseedPosition = overrides.driverSwitch(1).debounce(1, DebounceType.kRising); // Gather average position from vision and update
-    private final Trigger driverAssistFail = overrides.driverSwitch(2); // disable all drive assists
-
-    // private final Trigger armForceEnable = overrides.operatorSwitch(0); // bypass arm sanity checks and force manual control
-    // private final Trigger armHomingSequence = overrides.operatorSwitch(1).debounce(1, DebounceType.kRising); // run the arm calibration sequence
-    // private final Trigger overrideArmSafety = overrides.operatorSwitch(2); // run arm at full speed even off FMS
-    // private final Trigger overrideLedBrightness = overrides.operatorSwitch(3); // full led brightness when off FMS
-    // private final Trigger ledsIndicateFailed = overrides.operatorSwitch(4); // indicate arm failed on LEDS
-
     // Virtual Triggers
-    private final Trigger driverNoFieldOriented = driverTempDisableFieldOriented.or(driverGyroFail);
+    private final Trigger driverNoFieldOriented = driverTempDisableFieldOriented;
     
     public final LoggedDashboardNumber endgameAlert1 = new LoggedDashboardNumber("Endgame Alert #1", 30.0);
     public final LoggedDashboardNumber endgameAlert2 = new LoggedDashboardNumber("Endgame Alert #2", 15.0);
@@ -197,12 +184,14 @@ public class RobotContainer {
                     );
                     armTilt = new ArmTilt(new ArmTiltIOTalonFX());
                     intakeDeploy = new IntakeDeploy(new IntakeDeployIOTalonFX());
+                    // intakeDeploy = new IntakeDeploy(new IntakeDeployIOSim());
                     intake = new Intake(new IntakeIOTalonFX());
+                    // intake = new Intake(new IntakeIOSim());
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
                     tilt = new Tilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
                     climb = new Climb(new ClimbIOTalonFX());
-                    leds = new LED(new LEDIOCANdle(8, "canivore"));
+                    leds = new LED(new LEDIOCANdle(8, "rio"));
                     vision = new Localizer(new LocalizerIOLL3(), RobotState.getInstance()::addVisionObservation);
                     break;
                 case ROBOT_2023_FLAPJACK:
@@ -383,13 +372,6 @@ public class RobotContainer {
         // driverAutoAlignClosest.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> true));
         // driverAlignAmp.whileTrue(new DriveAutoAlignCommand(drive, objective, () -> false));
 
-        // Driver override switches
-        driverReseedPosition.onTrue(DriveUtilityCommandFactory.reseedPosition(drive));
-        driverGyroFail.onTrue(DriveUtilityCommandFactory.failGyro(drive));
-        driverGyroFail.onFalse(DriveUtilityCommandFactory.unFailGyro(drive));
-        driverAssistFail.onTrue(DriveUtilityCommandFactory.failDriveAssist(drive));
-        driverAssistFail.onFalse(DriveUtilityCommandFactory.unFailDriveAssist(drive));
-
         driverCancelAction.or(operatorCancelAction).onTrue(new IntakeStow(intakeDeploy, intake, armTilt).alongWith(new IndexerReset(indexer, tilt, flywheels)));
         driverDeployIntake.onTrue(new IntakeNoteGroundToIndexer(intakeDeploy, intake, indexer, flywheels, objective));
 
@@ -398,11 +380,13 @@ public class RobotContainer {
         //Operator button bindings
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
-        operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        // operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        operatorPodium.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(intakeDeploy, intake, indexer));
         // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
-        operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        // operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        operatorAmp.onTrue(new AutoScoreShooterMoonshot(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
 
         operatorClimbRaise.onTrue(new ClimbAutoRaise(climb, objective));
         operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
@@ -414,13 +398,6 @@ public class RobotContainer {
 
         operatorOffsetUp.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShotCompensationRotations(0.001)));
         operatorOffsetDown.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShotCompensationRotations(-0.001)));
-
-        // operatorOverrideScore.and(robotTeleopEnabled).whileTrue(ArmCommandFactory.alignStateOverrideButton(drive));
-
-        // Operator override switches
-        // armForceEnable
-        // armHomingSequence
-        // overrideArmSafety
     }
 
     public Command getAutonomousCommand() {

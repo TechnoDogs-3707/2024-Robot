@@ -42,6 +42,10 @@ public class IntakeIOTalonFX implements IntakeIO {
 
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
+        intakeMasterVelocity.refresh();
+        intakeMasterSuppliedCurrent.refresh();
+        intakeMasterTempCelsius.refresh();
+
         inputs.intakeVelocityRotPerSec = intakeMasterVelocity.getValue();
         inputs.intakeSuppliedCurrentAmps = intakeMasterSuppliedCurrent.getValue();
         inputs.intakeHottestTempCelsius = intakeMasterTempCelsius.getValue();

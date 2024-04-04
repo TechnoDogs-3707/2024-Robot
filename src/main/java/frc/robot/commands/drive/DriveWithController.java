@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -116,7 +116,12 @@ public class DriveWithController extends Command {
         boolean autoMaintain = mShouldMaintainHeading.update(!drive_turning && drive_translating && !shouldSnapPodium && !shouldSnapAmp, 0.2);
 
         if (shouldSnapPodium) {
-            mHeadingGoal = Optional.of(RobotState.getInstance().getAimingParameters().driveHeading().getDegrees());
+            var aimParams = RobotState.getInstance().getAimingParameters();
+            if (aimParams.effectiveDistance() >= 5.5) {
+                mHeadingGoal = Optional.of(RobotState.getInstance().getTargetAngleForMoonshot().getDegrees());
+            } else {
+                mHeadingGoal = Optional.of(aimParams.driveHeading().getDegrees());
+            }
         } else if (shouldSnapAmp) {
             mHeadingGoal = Optional.of(kAmpAlignAngle.getDegrees());
         } else if (!autoMaintain) {
@@ -134,11 +139,15 @@ public class DriveWithController extends Command {
             mSwerveHeadingController.setHeadingControllerState(HeadingControllerState.OFF);
         }
 
-        Rotation2d angleWithTempDisable = disableFieldOrient.getAsBoolean() ? new Rotation2d() : currentPose.getRotation();
+        Rotation2d angleWithFlip = flipAngles ? currentPose.getRotation().plus(Rotation2d.fromDegrees(180)) : currentPose.getRotation();
+
+        // Rotation2d angleWithTempDisable = disableFieldOrient.getAsBoolean() ? (flipAngles ? Rotation2d.fromDegrees(180) : new Rotation2d()) : currentPose.getRotation();
 
         // Rotation2d angleWithFlipOnly = flipAngles ? currentPose.getRotation().plus(Rotation2d.fromDegrees(180)) : currentPose.getRotation();
 
-        Rotation2d angleWithFlipAndDisable = flipAngles ? angleWithTempDisable.plus(Rotation2d.fromDegrees(180)) : angleWithTempDisable;
+        // Rotation2d angleWithFlipAndDisable = flipAngles ? angleWithTempDisable.plus(Rotation2d.fromDegrees(180)) : angleWithTempDisable;
+
+        Rotation2d angleWithFlipAndDisable = disableFieldOrient.getAsBoolean() ? new Rotation2d() : angleWithFlip;
 
         if (mSwerveHeadingController.getHeadingControllerState() != HeadingControllerState.OFF) {
             controllerInputs.setRotation(mSwerveHeadingController.update(currentPose.getRotation().getDegrees()));

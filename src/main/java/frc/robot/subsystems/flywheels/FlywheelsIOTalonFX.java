@@ -127,8 +127,8 @@ public class FlywheelsIOTalonFX implements FlywheelsIO {
     @Override
     public void updateOutputs() {
         if (mBrakeMode != mWasBrakeMode) {
-            mLeftConfigHelper.setNeutralMode(mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-            mRightConfigHelper.setNeutralMode(mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+            mLeftConfigHelper.setNeutralModeUnchecked(mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+            mRightConfigHelper.setNeutralModeUnchecked(mBrakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
             mWasBrakeMode = mBrakeMode;
         }
 
