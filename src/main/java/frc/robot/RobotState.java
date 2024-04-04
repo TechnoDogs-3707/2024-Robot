@@ -80,7 +80,7 @@ public class RobotState {
     /** Table to compensate for the shooter curving left
      * Key: distance (meters), Value: robot angle offset (degrees, WPI CCW+)
      */
-    
+
     private static final InterpolatingDoubleTreeMap robotAngleCompMap = new InterpolatingDoubleTreeMap();
 
     static {
@@ -89,7 +89,7 @@ public class RobotState {
         robotAngleCompMap.put(5.0, -7.5);
     }
     
-    @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = 0.000;
+    @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = -0.003;
     
     public void adjustShotCompensationRotations(double deltaRotations) {
         shotCompensationRotations += deltaRotations;
