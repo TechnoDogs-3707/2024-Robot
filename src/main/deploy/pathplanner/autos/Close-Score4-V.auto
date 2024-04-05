@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": -1.7040388902926663e-26
+    "rotation": 9.94439515884255e-29
   },
   "command": {
     "type": "sequential",
@@ -190,6 +190,12 @@
                 "type": "named",
                 "data": {
                   "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.1
                 }
               },
               {
