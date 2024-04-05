@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4204717874526978,
-      "y": 7.312083721160889
+      "x": 1.4013022184371948,
+      "y": 7.312084197998047
     },
-    "rotation": 1.908626812474548e-27
+    "rotation": 9.351917531412491e-27
   },
   "command": {
     "type": "sequential",
@@ -30,13 +30,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Flywheels Set Speed To 40"
+                  "name": "Flywheels Set Speed To 60"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Close"
+                  "name": "Tilt Set Auto"
                 }
               },
               {
@@ -67,13 +67,31 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Anti-Rush.1"
+                  "pathName": "AmpSide-Score5-RushSpecial.1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score5-RushSpecial.2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
                 }
               },
               {
@@ -92,13 +110,31 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Anti-Rush.2"
+                  "pathName": "AmpSide-Score5-RushSpecial.3"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score5-RushSpecial.4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
                 }
               },
               {
@@ -117,7 +153,19 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Anti-Rush.3"
+                  "pathName": "AmpSide-Score5-RushSpecial.5"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score5-RushSpecial.6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
                 }
               },
               {
