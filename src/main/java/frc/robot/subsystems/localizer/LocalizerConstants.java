@@ -22,5 +22,5 @@ public final class LocalizerConstants {
     // The standard deviations of our vision estimated poses, which affect correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(2, 2, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.25, 0.25, 1);
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.005, 0.005, 1);
 }

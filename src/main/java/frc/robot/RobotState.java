@@ -49,13 +49,13 @@ public class RobotState {
     private static final InterpolatingDoubleTreeMap tiltAngleMap = new InterpolatingDoubleTreeMap();
         
     static {
-        tiltAngleMap.put(4.74, 0.004);
-        tiltAngleMap.put(4.51, 0.01);
-        tiltAngleMap.put(4.25, 0.012);
-        tiltAngleMap.put(4.02, 0.013);
-        tiltAngleMap.put(3.75, 0.016);
-        tiltAngleMap.put(3.5, 0.02);
-        tiltAngleMap.put(3.25, 0.022);
+        tiltAngleMap.put(4.74, 0.001);
+        tiltAngleMap.put(4.51, 0.015);
+        tiltAngleMap.put(4.25, 0.017);
+        tiltAngleMap.put(4.02, 0.019);
+        tiltAngleMap.put(3.75, 0.021);
+        tiltAngleMap.put(3.5, 0.023);
+        tiltAngleMap.put(3.25, 0.024);
         tiltAngleMap.put(3.0, 0.0266);
         tiltAngleMap.put(2.75, 0.0307);
         tiltAngleMap.put(2.49, 0.036);
@@ -85,8 +85,8 @@ public class RobotState {
 
     static {
         robotAngleCompMap.put(1.5, 0.0);
-        robotAngleCompMap.put(2.0, -11.0);
-        robotAngleCompMap.put(5.0, -11.0);
+        robotAngleCompMap.put(2.0, -6.0);
+        robotAngleCompMap.put(5.0, -6.0);
     }
     
     @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = -0.003; 
