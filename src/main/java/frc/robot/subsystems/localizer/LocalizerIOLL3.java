@@ -41,8 +41,8 @@ public class LocalizerIOLL3 implements LocalizerIO {
             var tgtResults = results.get().targetingResults;
 
             inputs.position = convertPoseArrayToRadians(tgtResults.botpose_wpiblue);
-            // inputs.stddevs = getStdDevs(results).getData();
-            inputs.stddevs = getStdDevsTrusting(tgtResults).getData();
+            
+            inputs.stddevs = getStdDevs(tgtResults).getData();
 
             inputs.targetsVisible = tgtResults.targets_Fiducials.length;
 
@@ -55,31 +55,54 @@ public class LocalizerIOLL3 implements LocalizerIO {
     }
 
     private Matrix<N3, N1> getStdDevs(Results results) {
-        // rewritten for LL3 based on code used by photonvision
-        var estStdDevs = kSingleTagStdDevs;
-        var targets = results.targets_Fiducials;
         int numTags = 0;
-        double avgDist = 0;
-        for (var tgt : targets) {
-            double tagDist = tgt.getTargetPose_CameraSpace().getTranslation().getNorm();
+        double avgDist = 0.0;
+
+        for (var target : results.targets_Fiducials) {
+            double tagDist = target.getTargetPose_CameraSpace().getTranslation().getNorm();
             numTags++;
             avgDist += tagDist;
         }
-        if (numTags == 0) return estStdDevs;
+
         avgDist /= numTags;
-        // Decrease std devs if multiple targets are visible
-        if (numTags > 1) estStdDevs = kMultiTagStdDevs;
-        // Increase std devs based on (average) distance
-        if (numTags == 1 && avgDist > 4)
-            estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-        else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
 
-        return estStdDevs;
+        double xyStdDev =
+            xyStdDevCoefficient
+                * Math.pow(avgDist, 2.0)
+                / numTags;
+
+        double thetaStdDev =
+            useThetaEstimate
+                ? thetaStdDevCoefficient
+                    * Math.pow(avgDist, 2.0)
+                    / numTags
+                : Double.POSITIVE_INFINITY;
+
+        return VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev);
     }
 
-    private Matrix<N3, N1> getStdDevsTrusting(Results results) {
-        return kMultiTagStdDevs;
-    }
+    // private Matrix<N3, N1> getStdDevs(Results results) {
+    //     // rewritten for LL3 based on code used by photonvision
+    //     var estStdDevs = kSingleTagStdDevs;
+    //     var targets = results.targets_Fiducials;
+    //     int numTags = 0;
+    //     double avgDist = 0;
+    //     for (var tgt : targets) {
+    //         double tagDist = tgt.getTargetPose_CameraSpace().getTranslation().getNorm();
+    //         numTags++;
+    //         avgDist += tagDist;
+    //     }
+    //     if (numTags == 0) return estStdDevs;
+    //     avgDist /= numTags;
+    //     // Decrease std devs if multiple targets are visible
+    //     if (numTags > 1) estStdDevs = kMultiTagStdDevs;
+    //     // Increase std devs based on (average) distance
+    //     if (numTags == 1 && avgDist > 4)
+    //         estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+    //     else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+
+    //     return estStdDevs;
+    // }
 
     private double[] convertPoseArrayToRadians(double[] poseArray) {
         for (int i = 3; i < 6; i++) {

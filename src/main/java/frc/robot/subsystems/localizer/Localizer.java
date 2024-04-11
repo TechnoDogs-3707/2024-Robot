@@ -6,7 +6,6 @@ package frc.robot.subsystems.localizer;
 
 import java.util.function.Consumer;
 
-import org.checkerframework.checker.units.qual.min;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.Matrix;
