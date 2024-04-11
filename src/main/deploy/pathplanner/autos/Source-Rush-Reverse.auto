@@ -5,7 +5,7 @@
       "x": 1.4305188655853271,
       "y": 3.0240256786346436
     },
-    "rotation": 2.6507701729515106e-26
+    "rotation": 9.770699879887617e-27
   },
   "command": {
     "type": "sequential",
@@ -40,18 +40,6 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 0.25
@@ -73,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-V.1"
+                  "pathName": "SourceSide-Score3-V-Reverse.1"
                 }
               },
               {
@@ -110,62 +98,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-V.2"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score3-V.3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Off"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stow Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score3-V.4"
+                  "pathName": "SourceSide-Score3-V-Reverse.2"
                 }
               },
               {
@@ -181,9 +114,15 @@
                 }
               },
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.1
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score3-V.5"
+                  "pathName": "SourceSide-Score3-V-Reverse.3"
                 }
               },
               {
@@ -193,7 +132,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "SourceSide-Score3-V.6"
+                        "pathName": "SourceSide-Score3-V-Reverse.4"
                       }
                     },
                     {
@@ -222,6 +161,61 @@
                       }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Point to Speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Score"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.4
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Deploy Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Run"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score3-V-Reverse.5"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSide-Score3-V-Reverse.6"
                 }
               },
               {

@@ -40,18 +40,6 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 0.25
@@ -110,56 +98,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.2"
+                  "pathName": "SourceSide-Score3-V.2"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score4-V.4"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score4-V.5"
+                  "pathName": "SourceSide-Score3-V.3"
                 }
               },
               {
@@ -208,7 +153,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.6"
+                  "pathName": "SourceSide-Score3-V.4"
                 }
               },
               {
@@ -224,42 +169,17 @@
                 }
               },
               {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score4-V.7"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.1
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Indexer Set Intake"
+                  "pathName": "SourceSide-Score3-V.5"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
+              },
               {
                 "type": "parallel",
                 "data": {
@@ -267,7 +187,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "SourceSide-Score4-V.8"
+                        "pathName": "SourceSide-Score3-V.6"
                       }
                     },
                     {
