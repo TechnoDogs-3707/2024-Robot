@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4305188655853271,
-      "y": 3.0240256786346436
+      "x": 1.4013022184371948,
+      "y": 7.312084197998047
     },
-    "rotation": -3.6789095433513624e-25
+    "rotation": 2.0525249949465845e-25
   },
   "command": {
     "type": "sequential",
@@ -52,12 +52,6 @@
                 }
               },
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.25
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Intake"
@@ -73,25 +67,19 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-BottomEnd.1"
+                  "pathName": "AmpSide-Score5-RushSpecial-Reverse.1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSide-Score5-RushSpecial-Reverse.2"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
                 }
               },
               {
@@ -122,31 +110,19 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-BottomEnd.2"
+                  "pathName": "AmpSide-Score5-RushSpecial-Reverse.3"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-BottomEnd.3"
+                  "pathName": "AmpSide-Score5-RushSpecial-Reverse.4"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
                 }
               },
               {
@@ -177,86 +153,19 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-BottomEnd.4"
+                  "pathName": "AmpSide-Score5-RushSpecial-Reverse.5"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-BottomEnd.5"
+                  "pathName": "AmpSide-Score5-RushSpecial-Reverse.6"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Score"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer Set Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score4-BottomEnd.6"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSide-Score4-BottomEnd.7"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
                 }
               },
               {
@@ -283,6 +192,6 @@
       ]
     }
   },
-  "folder": "SourceSide Paths",
+  "folder": "AmpSide Paths",
   "choreoAuto": true
 }
