@@ -32,6 +32,6 @@ public final class ArmTiltConstants {
     public static final double kHomingVelocityThreshold = 0.01;
     public static final double kHomingMinTime = 0.25;
 
-    public static final double kAbsoluteMaxPosition = 0.25;
+    public static final double kAbsoluteMaxPosition = 0.30;
     public static final double kAbsoluteMinPosition = 0.0;
 }

@@ -19,7 +19,7 @@ public class ScoreAmpWithArm extends SequentialCommandGroup {
         addCommands(
             Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.ARM_SCORE_AMP)),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.PREPARING)),
-            armTilt.setPositionBlockingCommand(ArmPositionPreset.AMP_SCORE),
+            armTilt.setPositionBlockingCommand(ArmPositionPreset.AMP_TWO),
             Commands.runOnce(() -> objective.setArmScoreAmpState(ArmScoreAmpState.WAITING)),
             intakeDeploy.setPositionCommand(IntakePositionPreset.AMP_SCORE),
             Commands.waitUntil(overrideScore),

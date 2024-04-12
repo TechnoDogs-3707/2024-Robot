@@ -36,6 +36,7 @@ import frc.robot.commands.intake.IntakeNoteGroundToIndexer;
 import frc.robot.commands.intake.IntakeStow;
 import frc.robot.commands.intake.ReverseFeedNote;
 import frc.robot.commands.shooter.AutoScoreShooterAmp;
+import frc.robot.commands.shooter.AutoScoreShooterAmpWithHood;
 import frc.robot.commands.shooter.AutoScoreShooterMoonshot;
 import frc.robot.commands.shooter.AutoScoreShooterPodium;
 import frc.robot.commands.shooter.AutoScoreShooterSubwoofer;
@@ -142,8 +143,8 @@ public class RobotContainer {
     private final Trigger operatorCompensateShift = operator.R2();
 
     private final Trigger operatorSubwoofer = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povRight()));
-    private final Trigger operatorPodium = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povLeft()));
-    private final Trigger operatorAmp = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povUp()));
+    private final Trigger operatorAmp = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povLeft()));
+    private final Trigger operatorMoonshot = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povUp()));
     private final Trigger operatorJamClear = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povDown()));
 
     private final Trigger operatorClimbRaise = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povUp()));
@@ -382,12 +383,13 @@ public class RobotContainer {
         // operatorIntakeSourceToHold.onTrue(new IntakeNoteSource(drive, arm, intake, objective));
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         // operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
-        operatorPodium.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        // operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        operatorAmp.onTrue(new AutoScoreShooterAmpWithHood(drive, armTilt, intakeDeploy, indexer, intake, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(intakeDeploy, intake, indexer));
         // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
         // operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
-        operatorAmp.onTrue(new AutoScoreShooterMoonshot(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        operatorMoonshot.onTrue(new AutoScoreShooterMoonshot(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
 
         operatorClimbRaise.onTrue(new ClimbAutoRaise(climb, objective));
         operatorClimbPull.onTrue(new ClimbPoweredRetract(climb, objective));
