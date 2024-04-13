@@ -99,11 +99,7 @@ public class IndexerStateMachine {
                 }
                 break;
             case SCORE:
-                if (firstBannerTriggered || secondBannerTriggered) {
-                    mSystemState = IndexerSystemState.SCORING;
-                } else {
-                    mSystemState = IndexerSystemState.OFF_EMPTY;
-                }
+                mSystemState = IndexerSystemState.SCORING;
                 break;
             case REVERSE:
                 mSystemState = IndexerSystemState.REVERSING;

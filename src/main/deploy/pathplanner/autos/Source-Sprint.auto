@@ -5,7 +5,7 @@
       "x": 1.418764352798462,
       "y": 1.5519760847091677
     },
-    "rotation": -4.0150998597574936e-27
+    "rotation": -5.262429619579152e-26
   },
   "command": {
     "type": "sequential",
@@ -79,14 +79,14 @@
                       "data": {
                         "name": "Intake Set Run"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Indexer Set Intake"
-                      }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Indexer Set Intake"
                 }
               },
               {

@@ -258,8 +258,8 @@ public final class Constants {
 
     //Auton Driving
     public static final HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(
-        new PIDConstants(2.5, 0.001, 0.16, 0.15),
-        new PIDConstants(5, 0, 0.02, 0),
+        new PIDConstants(2.5, 0.001, 0.16, 0.15), // Auton Translation PID Constants
+        new PIDConstants(5, 0, 0.02, 0), // Auton Rotation PID Constants
         kMaxVelocityMetersPerSecond,
         kWheelPositions[0].getNorm(),
         new ReplanningConfig()

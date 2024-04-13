@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 1.4305188655853271,
-      "y": 3.0240256786346436
+      "y": 3.024025678634651
     },
-    "rotation": -2.9582298652966733e-25
+    "rotation": 3.173652700374397e-23
   },
   "command": {
     "type": "sequential",
@@ -61,13 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceSide-Score4-V.1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
+                  "pathName": "SourceSide-Score3-V.1"
                 }
               },
               {
@@ -105,12 +99,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "SourceSide-Score3-V.3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
                 }
               },
               {
@@ -216,12 +204,6 @@
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Point to Speaker"
                 }
               },
               {

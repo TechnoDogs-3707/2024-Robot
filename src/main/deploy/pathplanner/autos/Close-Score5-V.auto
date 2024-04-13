@@ -5,7 +5,7 @@
       "x": 1.3928816318511963,
       "y": 5.578441619873047
     },
-    "rotation": -6.83296302525861e-29
+    "rotation": 3.346021944138697e-28
   },
   "command": {
     "type": "sequential",
@@ -54,7 +54,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.25
+                  "waitTime": 0.1
                 }
               },
               {
@@ -66,7 +66,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.5
                 }
               },
               {
@@ -103,13 +103,25 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.35
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Indexer Set Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Set Off"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stow Intake"
                 }
               }
             ]
@@ -120,65 +132,9 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Close-Score5-V.2"
-                      }
-                    },
-                    {
-                      "type": "sequential",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 0.5
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Intake Set Off"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "Stow Intake"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Deploy Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Set Run"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.1
-                }
-              },
-              {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5-V.3"
+                  "pathName": "Close-Score5-V.2"
                 }
               },
               {
@@ -188,7 +144,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Close-Score5-V.4"
+                        "pathName": "Close-Score5-V.3"
                       }
                     },
                     {
@@ -198,7 +154,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 0.5
+                              "waitTime": 1.0
                             }
                           },
                           {
@@ -234,7 +190,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.35
                 }
               },
               {
@@ -260,6 +216,12 @@
                 "type": "named",
                 "data": {
                   "name": "Intake Set Run"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Close-Score5-V.4"
                 }
               },
               {
@@ -269,12 +231,6 @@
                 }
               },
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Close-Score5-V.6"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Point to Speaker"
@@ -289,7 +245,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.4
+                  "waitTime": 0.35
                 }
               },
               {
@@ -308,13 +264,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5-V.7"
+                  "pathName": "Close-Score5-V.6"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Close-Score5-V.8"
+                  "pathName": "Close-Score5-V.7"
                 }
               },
               {
@@ -332,7 +288,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.4
                 }
               },
               {
