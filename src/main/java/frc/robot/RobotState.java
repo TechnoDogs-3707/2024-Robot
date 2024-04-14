@@ -85,8 +85,8 @@ public class RobotState {
 
     static {
         robotAngleCompMap.put(1.5, 0.0);
-        robotAngleCompMap.put(2.0, -6.0);
-        robotAngleCompMap.put(5.0, -6.0);
+        robotAngleCompMap.put(2.0, -3.0);
+        robotAngleCompMap.put(5.0, -3.0);
     }
     
     @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = -0.003; 
