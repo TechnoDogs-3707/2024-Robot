@@ -33,6 +33,8 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.intake.IndexerReset;
+import frc.robot.commands.intake.IntakeStow;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.SupplierWidget;
 import frc.robot.lib.dashboard.Alert.AlertType;
@@ -326,6 +328,7 @@ public class Robot extends LoggedRobot {
             autoCommand.cancel();
         }
         LED.setWantedAction(WantedAction.DISPLAY_ARM);
+        robotContainer.stopAllSubsystems();
     }
     
     @Override
