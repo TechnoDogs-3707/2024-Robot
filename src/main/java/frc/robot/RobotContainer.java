@@ -140,20 +140,22 @@ public class RobotContainer {
     private final Trigger operatorScoreOverride = operator.circle();
     private final Trigger operatorAutoAim = operator.cross();
 
-    private final Trigger operatorCompensateShift = operator.R2();
+    private final Trigger operatorTweakShift = operator.R2();
 
-    private final Trigger operatorSubwoofer = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povRight()));
-    private final Trigger operatorAmp = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povLeft()));
-    private final Trigger operatorMoonshot = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povUp()));
-    private final Trigger operatorJamClear = operatorCompensateShift.negate().and(operatorClimbShift.negate().and(operator.povDown()));
+    private final Trigger operatorSubwoofer = operatorTweakShift.negate().and(operatorClimbShift.negate().and(operator.povRight()));
+    private final Trigger operatorAmp = operatorTweakShift.negate().and(operatorClimbShift.negate().and(operator.povLeft()));
+    private final Trigger operatorMoonshot = operatorTweakShift.negate().and(operatorClimbShift.negate().and(operator.povUp()));
+    private final Trigger operatorJamClear = operatorTweakShift.negate().and(operatorClimbShift.negate().and(operator.povDown()));
 
-    private final Trigger operatorClimbRaise = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povUp()));
-    private final Trigger operatorClimbPull = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povDown()));
-    private final Trigger operatorClimbReset = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povLeft()));
-    private final Trigger operatorClimbManual = operatorCompensateShift.negate().and(operatorClimbShift.and(operator.povRight()));
+    private final Trigger operatorClimbRaise = operatorTweakShift.negate().and(operatorClimbShift.and(operator.povUp()));
+    private final Trigger operatorClimbPull = operatorTweakShift.negate().and(operatorClimbShift.and(operator.povDown()));
+    private final Trigger operatorClimbReset = operatorTweakShift.negate().and(operatorClimbShift.and(operator.povLeft()));
+    private final Trigger operatorClimbManual = operatorTweakShift.negate().and(operatorClimbShift.and(operator.povRight()));
 
-    private final Trigger operatorOffsetUp = operatorClimbShift.negate().and(operatorCompensateShift.and(operator.povUp()));
-    private final Trigger operatorOffsetDown = operatorClimbShift.negate().and(operatorCompensateShift.and(operator.povDown()));
+    private final Trigger operatorTweakUp = operatorClimbShift.negate().and(operatorTweakShift.and(operator.povUp()));
+    private final Trigger operatorTweakDown = operatorClimbShift.negate().and(operatorTweakShift.and(operator.povDown()));
+    private final Trigger operatorTweakLeft = operatorClimbShift.negate().and(operatorTweakShift.and(operator.povLeft()));
+    private final Trigger operatorTweakRight = operatorClimbShift.negate().and(operatorTweakShift.and(operator.povRight()));
 
     private final Trigger operatorReverseFeed = operator.triangle();
     private final Trigger operatorScoreAmpWithArm = operator.square();
@@ -399,8 +401,10 @@ public class RobotContainer {
         operatorReverseFeed.onTrue(new ReverseFeedNote(armTilt, indexer, objective, intakeDeploy, intake, flywheels, tilt));
         operatorScoreAmpWithArm.onTrue(new ScoreAmpWithArm(objective, armTilt, intakeDeploy, intake, driverAutoShoot.or(operatorScoreOverride)));
 
-        operatorOffsetUp.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShotCompensationRotations(0.001)));
-        operatorOffsetDown.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShotCompensationRotations(-0.001)));
+        operatorTweakUp.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShooterTweakRotations(0.001)));
+        operatorTweakDown.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShooterTweakRotations(-0.001)));
+        operatorTweakLeft.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(1)));
+        operatorTweakRight.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(-1)));
     }
 
     public Command getAutonomousCommand() {
@@ -417,5 +421,9 @@ public class RobotContainer {
 
     protected void stopDrive() {
         drive.stop();
+    }
+
+    protected void stopAllSubsystems() {
+        new IntakeStow(intakeDeploy, intake, armTilt).alongWith(new IndexerReset(indexer, tilt, flywheels)).schedule();
     }
 }

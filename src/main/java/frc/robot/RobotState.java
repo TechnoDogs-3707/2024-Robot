@@ -18,6 +18,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.NoSuchElementException;
 import lombok.Getter;
 import lombok.Setter;
@@ -89,10 +91,16 @@ public class RobotState {
         robotAngleCompMap.put(5.0, -3.0);
     }
     
-    @AutoLogOutput @Setter @Getter protected double shotCompensationRotations = -0.003; 
+    @AutoLogOutput @Setter @Getter protected double shooterTweakRotations = -0.003; 
     
-    public void adjustShotCompensationRotations(double deltaRotations) {
-        shotCompensationRotations += deltaRotations;
+    public void adjustShooterTweakRotations(double deltaRotations) {
+        shooterTweakRotations += deltaRotations;
+    }
+
+    @AutoLogOutput @Setter @Getter protected double robotAngleTweakDegrees = 0;
+
+    public void adjustRobotAngleTweakDegrees(double deltaDegrees) {
+        robotAngleTweakDegrees += deltaDegrees;
     }
     
     private static RobotState instance;
@@ -297,9 +305,9 @@ public class RobotState {
 
         latestParameters =
         new AimingParameters(
-        targetVehicleDirection,
+        targetVehicleDirection.plus(Rotation2d.fromDegrees(robotAngleTweakDegrees)),
         Rotation2d.fromRotations(
-        baseTiltAngle + offAxisComp + shotCompensationRotations),
+        baseTiltAngle + offAxisComp + shooterTweakRotations),
         targetDistance,
         feedVelocity,
         degreesOffAxis);
@@ -312,6 +320,9 @@ public class RobotState {
         Logger.recordOutput("RobotState/AimingParameters/EffectiveDistance", latestParameters.effectiveDistance());
         Logger.recordOutput("RobotState/AimingParameters/DriveFeedVelocity", latestParameters.driveFeedVelocity());
         Logger.recordOutput("RobotState/AimingParameters/DegreesOffAxis", latestParameters.degreesOffAxis());
+
+        SmartDashboard.putNumber("ShooterTweakUpDown", shooterTweakRotations);
+        SmartDashboard.putNumber("AimTweakLeftRight", robotAngleTweakDegrees);
 
         return latestParameters;
     }
