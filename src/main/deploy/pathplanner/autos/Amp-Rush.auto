@@ -5,7 +5,7 @@
       "x": 1.4013022184371948,
       "y": 7.312084197998047
     },
-    "rotation": 9.351917531412491e-27
+    "rotation": -2.5131268196065263e-27
   },
   "command": {
     "type": "sequential",
@@ -36,12 +36,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Deploy Intake"
                 }
               },
@@ -65,15 +59,53 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "AmpSide-Score5-RushSpecial.1"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AmpSide-Score5-RushSpecial.1"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Indexer Set Score"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.4
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Indexer Set Intake"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               },
               {
                 "type": "path",
                 "data": {
                   "pathName": "AmpSide-Score5-RushSpecial.2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
                 }
               },
               {

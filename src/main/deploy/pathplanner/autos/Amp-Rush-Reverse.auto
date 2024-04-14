@@ -5,7 +5,7 @@
       "x": 1.4013022184371948,
       "y": 7.312084197998047
     },
-    "rotation": 2.0525249949465845e-25
+    "rotation": 5.7066817386186295e-21
   },
   "command": {
     "type": "sequential",
@@ -36,12 +36,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Deploy Intake"
                 }
               },
@@ -65,9 +59,47 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "AmpSide-Score5-RushSpecial-Reverse.1"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AmpSide-Score5-RushSpecial-Reverse.1"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Indexer Set Score"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.4
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Indexer Set Intake"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
                 }
               },
               {
