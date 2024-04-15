@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 public class Tilt extends SubsystemBase {
     public enum TiltGoalState {
         STOW(new TiltState(0.002, false, false)),
-        CLOSE(new TiltState(0.078, false, true)),
+        CLOSE(new TiltState(0.07, false, true)),
         PODIUM(new TiltState(0.01, false, true)),
         MOONSHOT(new TiltState(0.055, false, true)),
         AMP(new TiltState(0.065, false, true)),
@@ -105,7 +105,7 @@ public class Tilt extends SubsystemBase {
     }
 
     public double getTiltFeedforward(Rotation2d angle) {
-        return angle.plus(Rotation2d.fromDegrees(20.8)).getCos() * feedforward; //TODO: set feedforward
+        return angle.plus(Rotation2d.fromDegrees(45)).getCos() * feedforward; //TODO: set feedforward
     }
 
     public void setGoalState(TiltGoalState goalState) {

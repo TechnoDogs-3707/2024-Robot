@@ -55,9 +55,9 @@ public class RobotState {
         tiltAngleMap.put(4.51, 0.015);
         tiltAngleMap.put(4.25, 0.017);
         tiltAngleMap.put(4.02, 0.019);
-        tiltAngleMap.put(3.75, 0.021);
-        tiltAngleMap.put(3.5, 0.023);
-        tiltAngleMap.put(3.25, 0.024);
+        tiltAngleMap.put(3.75, 0.022);
+        tiltAngleMap.put(3.5, 0.024);
+        tiltAngleMap.put(3.25, 0.025);
         tiltAngleMap.put(3.0, 0.0266);
         tiltAngleMap.put(2.75, 0.0307);
         tiltAngleMap.put(2.49, 0.036);
@@ -87,8 +87,8 @@ public class RobotState {
 
     static {
         robotAngleCompMap.put(1.5, 0.0);
-        robotAngleCompMap.put(2.0, -3.0);
-        robotAngleCompMap.put(5.0, -3.0);
+        robotAngleCompMap.put(2.0, -8.0);
+        robotAngleCompMap.put(5.0, -8.0);
     }
     
     @AutoLogOutput @Setter @Getter protected double shooterTweakRotations = -0.003; 
@@ -237,7 +237,7 @@ public class RobotState {
         GeomUtil.toTransform2d(
             AllianceFlipUtil.apply(
                 FieldConstants.ampCenter.plus(
-                    new Translation2d(-0.5, -0.5)
+                    new Translation2d(-0.5, 0)
                 )
             )
         );
