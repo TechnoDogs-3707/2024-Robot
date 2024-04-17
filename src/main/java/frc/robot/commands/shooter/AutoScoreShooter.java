@@ -32,10 +32,11 @@ public class AutoScoreShooter extends SequentialCommandGroup {
                 Commands.runOnce(() -> objective.setAutoAlignState(AutoAlignScoreState.SCORE_RUNNING)),
                 indexer.setActionCommand(IndexerWantedAction.SCORE),
                 indexer.waitUntilNoteGoneCommand(),
-                Commands.waitSeconds(0.25)
+                Commands.waitSeconds(0.25),
+                indexer.setActionCommand(IndexerWantedAction.OFF)
             ).finallyDo(() -> {
                 objective.setMasterObjective(MasterObjective.NONE);
-                indexer.setActionCommand(IndexerWantedAction.OFF);
+                indexer.setWantedAction(IndexerWantedAction.OFF);
                 tilt.setGoalState(TiltGoalState.STOW);
                 flywheels.setWantedAction(FlywheelsWantedAction.OFF);
             })

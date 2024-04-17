@@ -8,7 +8,7 @@ public final class TiltConstants {
 
     public static final double kSensorToMechanismRatio = 50.67;
         
-    public static final double kG = 0.35;
+    public static final double kG = 0.30;
     public static final double kS = 2.5;
     public static final double kV = 40.0;
     public static final double kA = 20.0;

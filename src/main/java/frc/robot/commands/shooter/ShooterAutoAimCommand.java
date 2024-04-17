@@ -46,12 +46,11 @@ public class ShooterAutoAimCommand extends SequentialCommandGroup {
                 Commands.runOnce(() -> objective.setAutoAimState(SpeakerAutoAimState.SCORE_RUNNING)),
                 indexer.setActionCommand(IndexerWantedAction.SCORE),
                 indexer.waitUntilNoteGoneCommand(),
-                Commands.waitSeconds(0.25),
-                Commands.runOnce(() -> objective.setAutoAimState(SpeakerAutoAimState.SCORE_FINISHED)),
-                Commands.idle()
+                Commands.waitSeconds(0.5),
+                Commands.runOnce(() -> objective.setAutoAimState(SpeakerAutoAimState.SCORE_FINISHED))
             ).finallyDo(() -> {
                 objective.setMasterObjective(MasterObjective.NONE);
-                indexer.setActionCommand(IndexerWantedAction.OFF);
+                indexer.setWantedAction(IndexerWantedAction.OFF);
                 tilt.setGoalState(TiltGoalState.STOW);
                 flywheels.setWantedAction(FlywheelsWantedAction.OFF);
             })
