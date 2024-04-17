@@ -41,6 +41,7 @@ import frc.robot.commands.shooter.AutoScoreShooterMoonshot;
 import frc.robot.commands.shooter.AutoScoreShooterPodium;
 import frc.robot.commands.shooter.AutoScoreShooterSubwoofer;
 import frc.robot.commands.shooter.ShooterAutoAimCommand;
+import frc.robot.commands.shooter.ShooterFeedFromSource;
 import frc.robot.commands.shooter.ShooterPrepare;
 import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
@@ -159,6 +160,8 @@ public class RobotContainer {
 
     private final Trigger operatorReverseFeed = operator.triangle();
     private final Trigger operatorScoreAmpWithArm = operator.square();
+
+    private final Trigger operatorBabyBird = operator.touchpad();
 
     private final Supplier<Double> operatorClimbThrottle = () -> -PoofsUtil.handleDeadband(operator.getLeftY(), 0.05);
 
@@ -405,6 +408,8 @@ public class RobotContainer {
         operatorTweakDown.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShooterTweakRotations(-0.001)));
         operatorTweakLeft.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(1)));
         operatorTweakRight.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(-1)));
+
+        operatorBabyBird.onTrue(new ShooterFeedFromSource(drive, indexer, tilt, flywheels, objective, operatorScoreOverride));
     }
 
     public Command getAutonomousCommand() {
