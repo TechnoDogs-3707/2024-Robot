@@ -17,7 +17,7 @@ import frc.robot.util.poofsUtils.PoofsUtil;
 public class ArmTilt extends SubsystemBase {
     public enum ArmPositionPreset {
         STOWED(0.0),
-        AMP_TWO(0.231),
+        AMP_TWO(0.206),
         AMP_ONE(0.187);
 
         public double position;
