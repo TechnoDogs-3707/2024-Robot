@@ -389,7 +389,8 @@ public class RobotContainer {
         operatorSubwoofer.onTrue(new AutoScoreShooterSubwoofer(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         // operatorPodium.onTrue(new AutoScoreShooterPodium(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         // operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
-        operatorAmp.onTrue(new AutoScoreShooterAmpWithHood(drive, armTilt, intakeDeploy, indexer, intake, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        // operatorAmp.onTrue(new AutoScoreShooterAmpWithHood(drive, armTilt, intakeDeploy, indexer, intake, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
+        operatorAmp.onTrue(new AutoScoreShooterAmp(drive, indexer, tilt, flywheels, objective, driverAutoShoot.or(operatorScoreOverride)));
         operatorJamClear.or(driverJamClear).whileTrue(new IndexerJamClearing(intakeDeploy, intake, indexer));
         // operatorIntakeGroundToHold.onTrue(new IntakeNoteGroundHold(arm, intake, objective));
         // operatorAmp.onTrue(new AutoScoreAmp(drive, arm, intake, objective, operatorOverrideScore.or(driverAutoShoot)));
@@ -409,7 +410,7 @@ public class RobotContainer {
         operatorTweakLeft.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(1)));
         operatorTweakRight.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(-1)));
 
-        operatorBabyBird.onTrue(new ShooterFeedFromSource(drive, indexer, tilt, flywheels, objective, operatorScoreOverride));
+        operatorBabyBird.onTrue(new ShooterFeedFromSource(drive, indexer, tilt, flywheels, objective, () -> false));
     }
 
     public Command getAutonomousCommand() {
