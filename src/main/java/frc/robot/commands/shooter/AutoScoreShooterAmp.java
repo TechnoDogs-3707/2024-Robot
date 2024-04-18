@@ -13,7 +13,7 @@ import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
 public class AutoScoreShooterAmp extends SequentialCommandGroup{
     public AutoScoreShooterAmp(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
-            new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 26.0, () -> 26.0, () -> TiltGoalState.AMP, scoreOverride)
+            new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 20.0, () -> 20.0, () -> TiltGoalState.AMP, scoreOverride)
         );
     }
 }

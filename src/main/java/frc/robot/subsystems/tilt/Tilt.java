@@ -24,8 +24,8 @@ public class Tilt extends SubsystemBase {
         CLOSE(new TiltState(0.07, false, true)),
         PODIUM(new TiltState(0.01, false, true)),
         MOONSHOT(new TiltState(0.055, false, true)),
-        FEED(new TiltState(0.078, false, true)),
-        AMP(new TiltState(0.065, false, true)),
+        FEED(new TiltState(0.060, false, true)),
+        AMP(new TiltState(0.078, false, true)),
         AUTO_AIM(new TiltState(0.017, true, true));
 
         public TiltState state;
