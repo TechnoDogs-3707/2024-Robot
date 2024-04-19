@@ -8,7 +8,7 @@ public final class ClimbConstants {
     public static final String kMotorBus = "canivore";
 
     public static final InvertedValue leftMotorPolarity = InvertedValue.Clockwise_Positive;
-    public static final InvertedValue rightMotorPolarity = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue rightMotorPolarity = InvertedValue.Clockwise_Positive;
 
     public static final double kG = 0.04;
     public static final double kS = 0.0;
