@@ -255,7 +255,7 @@ public class RobotState {
         
         Rotation2d targetVehicleDirection = predictedVehicleFixedToTargetTranslation.getAngle();
         if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)) {
-            targetVehicleDirection = targetVehicleDirection.rotateBy(Rotation2d.fromDegrees(-11));
+            targetVehicleDirection = targetVehicleDirection.rotateBy(Rotation2d.fromDegrees(-13));
         }
 
         latestMoonshotAngle = targetVehicleDirection;
