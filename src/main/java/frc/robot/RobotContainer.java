@@ -406,10 +406,10 @@ public class RobotContainer {
         operatorReverseFeed.onTrue(new ReverseFeedNote(armTilt, indexer, objective, intakeDeploy, intake, flywheels, tilt));
         operatorScoreAmpWithArm.onTrue(new ScoreAmpWithArm(objective, armTilt, intakeDeploy, intake, driverAutoShoot.or(operatorScoreOverride)));
 
-        operatorTweakUp.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShooterTweakRotations(0.001)));
-        operatorTweakDown.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShooterTweakRotations(-0.001)));
-        operatorTweakLeft.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(1)));
-        operatorTweakRight.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(-1)));
+        operatorTweakUp.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShooterTweakRotations(0.001)).ignoringDisable(true));
+        operatorTweakDown.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustShooterTweakRotations(-0.001)).ignoringDisable(true));
+        operatorTweakLeft.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(1)).ignoringDisable(true));
+        operatorTweakRight.onTrue(Commands.runOnce(() -> RobotState.getInstance().adjustRobotAngleTweakDegrees(-1)).ignoringDisable(true));
 
         operatorBabyBird.onTrue(new ShooterFeedFromSource(drive, indexer, tilt, flywheels, objective, () -> false));
     }
