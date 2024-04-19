@@ -93,7 +93,7 @@ public class RobotState {
         robotAngleCompMap.put(5.0, -9.0);
     }
     
-    @AutoLogOutput @Setter @Getter protected double shooterTweakRotations = -0.001; 
+    @AutoLogOutput @Setter @Getter protected double shooterTweakRotations = 0.003; 
     
     public void adjustShooterTweakRotations(double deltaRotations) {
         shooterTweakRotations += deltaRotations;
@@ -326,9 +326,6 @@ public class RobotState {
         Logger.recordOutput("RobotState/AimingParameters/DriveFeedVelocity", latestParameters.driveFeedVelocity());
         Logger.recordOutput("RobotState/AimingParameters/DegreesOffAxis", latestParameters.degreesOffAxis());
 
-        SmartDashboard.putNumber("ShooterTweakUpDown", shooterTweakRotations);
-        SmartDashboard.putNumber("AimTweakLeftRight", robotAngleTweakDegrees);
-
         return latestParameters;
     }
     
@@ -379,5 +376,10 @@ public class RobotState {
     @AutoLogOutput(key = "RobotState/OdometryPose")
     public Pose2d getOdometryPose() {
         return odometryPose;
+    }
+
+    public void publishOffsetsToDashboard() {
+        SmartDashboard.putNumber("ShooterTweakUpDown", shooterTweakRotations);
+        SmartDashboard.putNumber("AimTweakLeftRight", robotAngleTweakDegrees);
     }
 }

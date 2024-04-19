@@ -281,6 +281,8 @@ public class Robot extends LoggedRobot {
             }
         }
 
+        RobotState.getInstance().publishOffsetsToDashboard();
+
         SupplierWidget.updateAll();
         Threads.setCurrentThreadPriority(true, 10);
     }
