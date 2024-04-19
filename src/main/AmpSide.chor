@@ -1407,7 +1407,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "AmpSide-Score4-V": {
             "waypoints": [
@@ -6624,7 +6624,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         },
         "AmpSide-Score4-Reverse": {
             "waypoints": [

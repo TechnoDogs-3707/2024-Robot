@@ -329,6 +329,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Tilt Set Close", tilt.setGoalCommand(TiltGoalState.CLOSE));
         NamedCommands.registerCommand("Tilt Set Auto", tilt.setGoalCommand(TiltGoalState.AUTO_AIM));
         NamedCommands.registerCommand("Tilt Set Stow", tilt.setGoalCommand(TiltGoalState.STOW));
+        NamedCommands.registerCommand("Tilt Set Mary", tilt.setGoalCommand(TiltGoalState.HAIL_MARY));
         NamedCommands.registerCommand("Intake Set Run", intake.setActionCommand(IntakeWantedAction.INTAKE_CONSTANT));
         NamedCommands.registerCommand("Intake Set Off", intake.setActionCommand(IntakeWantedAction.OFF));
         NamedCommands.registerCommand("Deploy Intake", intakeDeploy.setPositionCommand(IntakePositionPreset.DEPLOYED));

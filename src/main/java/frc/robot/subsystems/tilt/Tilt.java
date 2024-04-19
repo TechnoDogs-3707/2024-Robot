@@ -26,7 +26,8 @@ public class Tilt extends SubsystemBase {
         MOONSHOT(new TiltState(0.055, false, true)),
         FEED(new TiltState(0.060, false, true)),
         AMP(new TiltState(0.078, false, true)),
-        AUTO_AIM(new TiltState(0.017, true, true));
+        AUTO_AIM(new TiltState(0.017, true, true)),
+        HAIL_MARY(new TiltState(0.005, false, true));
 
         public TiltState state;
 
