@@ -18,6 +18,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.NoSuchElementException;
@@ -252,6 +254,9 @@ public class RobotState {
         GeomUtil.inverse(fieldToPredictedVehicleFixed).transformBy(fieldToTarget).getTranslation();
         
         Rotation2d targetVehicleDirection = predictedVehicleFixedToTargetTranslation.getAngle();
+        if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)) {
+            targetVehicleDirection = targetVehicleDirection.rotateBy(Rotation2d.fromDegrees(-11));
+        }
 
         latestMoonshotAngle = targetVehicleDirection;
 

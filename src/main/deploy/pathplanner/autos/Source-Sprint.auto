@@ -5,7 +5,7 @@
       "x": 1.418764352798462,
       "y": 1.5519760847091677
     },
-    "rotation": -5.262429619579152e-26
+    "rotation": -1.3860522557739813e-26
   },
   "command": {
     "type": "sequential",
@@ -98,12 +98,6 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Tilt Set Auto"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Indexer Set Score"
                 }
               },
@@ -168,6 +162,12 @@
                       }
                     }
                   ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Tilt Set Auto"
                 }
               },
               {
