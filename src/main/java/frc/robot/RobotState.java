@@ -239,7 +239,7 @@ public class RobotState {
         GeomUtil.toTransform2d(
             AllianceFlipUtil.apply(
                 FieldConstants.ampCenter.plus(
-                    new Translation2d(-0.5, 0)
+                    new Translation2d(-0.5, 0.10)
                 )
             )
         );
@@ -255,7 +255,7 @@ public class RobotState {
         
         Rotation2d targetVehicleDirection = predictedVehicleFixedToTargetTranslation.getAngle();
         if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)) {
-            targetVehicleDirection = targetVehicleDirection.rotateBy(Rotation2d.fromDegrees(-13));
+            targetVehicleDirection = targetVehicleDirection.minus(Rotation2d.fromDegrees(30));
         }
 
         latestMoonshotAngle = targetVehicleDirection;
