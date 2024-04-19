@@ -111,7 +111,7 @@ public final class Constants {
     public static final double kSDS_L3_BOOSTED = 1 / ((16.0 / 50.0) * (26.0 / 16.0) * (15.0 / 45.0));
     public static final double kDriveReduction = kSDS_L3;//(14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 45.0);
     public static final double kSteerReduction = (14.0 / 50.0) * (10.0 / 60.0);
-    public static final double kDriveWheelDiameter = Units.inchesToMeters(4.0); // meters
+    public static final double kDriveWheelDiameter = Units.inchesToMeters(3.85); // meters
     public static final double kDriveTrackwidthMeters = Units.inchesToMeters(23.25);
     public static final double kDriveWheelbaseMeters = Units.inchesToMeters(23.25);
     
