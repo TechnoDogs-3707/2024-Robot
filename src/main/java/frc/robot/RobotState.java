@@ -93,7 +93,7 @@ public class RobotState {
         robotAngleCompMap.put(5.0, -9.0);
     }
     
-    @AutoLogOutput @Setter @Getter protected double shooterTweakRotations = 0.003; 
+    @AutoLogOutput @Setter @Getter protected double shooterTweakRotations = -0.001;
     
     public void adjustShooterTweakRotations(double deltaRotations) {
         shooterTweakRotations += deltaRotations;
