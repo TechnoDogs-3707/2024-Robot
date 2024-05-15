@@ -433,9 +433,9 @@ public class Drive extends SubsystemBase {
         }
 
         if (
-            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vxMetersPerSecond, 0, 0.25) &&
-            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vyMetersPerSecond, 0, 0.25) &&
-            PoofsUtil.epsilonEquals(mMeasuredSpeeds.omegaRadiansPerSecond, 0, 0.5)
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vxMetersPerSecond, 0, 0.375) &&
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.vyMetersPerSecond, 0, 0.375) &&
+            PoofsUtil.epsilonEquals(mMeasuredSpeeds.omegaRadiansPerSecond, 0, 0.75)
         ) {
             autoShootDelayTimer.start();
             if (autoShootDelayTimer.get() > 0.125) {
