@@ -1,6 +1,6 @@
-package frc.robot.subsystems.ShooterTilt;
+package frc.robot.subsystems.shooterTilt;
 
-import static frc.robot.subsystems.ShooterTilt.TiltConstants.*;
+import static frc.robot.subsystems.shooterTilt.ShooterTiltConstants.*;
 
 import frc.robot.util.poofsUtils.PoofsUtil;
 

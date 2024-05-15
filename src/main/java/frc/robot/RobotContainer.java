@@ -47,11 +47,6 @@ import frc.robot.lib.OverrideSwitches;
 import frc.robot.lib.dashboard.Alert;
 import frc.robot.lib.dashboard.Alert.AlertType;
 import frc.robot.lib.drive.ControllerDriveInputs;
-import frc.robot.subsystems.ShooterTilt.ShooterTilt;
-import frc.robot.subsystems.ShooterTilt.TiltIO;
-import frc.robot.subsystems.ShooterTilt.TiltIOSim;
-import frc.robot.subsystems.ShooterTilt.TiltIOTalonFX;
-import frc.robot.subsystems.ShooterTilt.ShooterTilt.TiltGoalState;
 import frc.robot.subsystems.armTilt.ArmTilt;
 import frc.robot.subsystems.armTilt.ArmTiltIO;
 import frc.robot.subsystems.armTilt.ArmTiltIOTalonFX;
@@ -94,6 +89,11 @@ import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
 import frc.robot.subsystems.localizer.LocalizerIOLL3;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
+import frc.robot.subsystems.shooterTilt.ShooterTilt;
+import frc.robot.subsystems.shooterTilt.ShooterTiltIO;
+import frc.robot.subsystems.shooterTilt.TiltIOSim;
+import frc.robot.subsystems.shooterTilt.TiltIOTalonFX;
+import frc.robot.subsystems.shooterTilt.ShooterTilt.TiltGoalState;
 import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class RobotContainer {
@@ -275,7 +275,7 @@ public class RobotContainer {
 
         if (tilt == null) {
             System.out.println("[Subsystem Manager]: Tilt will be replaced with a placeholder.");
-            tilt = new ShooterTilt(new TiltIO() {
+            tilt = new ShooterTilt(new ShooterTiltIO() {
                 
             });
         }

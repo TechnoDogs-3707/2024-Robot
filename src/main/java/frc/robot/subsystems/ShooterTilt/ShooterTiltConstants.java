@@ -1,6 +1,6 @@
-package frc.robot.subsystems.ShooterTilt;
+package frc.robot.subsystems.shooterTilt;
 
-public final class TiltConstants {
+public final class ShooterTiltConstants {
     public static final int kMotorID = 48;
     public static final String kMotorBus = "canivore";
 

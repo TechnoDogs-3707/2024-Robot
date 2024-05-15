@@ -1,4 +1,4 @@
-package frc.robot.subsystems.ShooterTilt;
+package frc.robot.subsystems.shooterTilt;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -10,12 +10,11 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.Constants.Mode;
-import frc.robot.subsystems.tilt.TiltIOInputsAutoLogged;
 import frc.robot.util.LoggedTunableBoolean;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.poofsUtils.PoofsUtil;
 
-import static frc.robot.subsystems.ShooterTilt.TiltConstants.*;
+import static frc.robot.subsystems.shooterTilt.ShooterTiltConstants.*;
 
 import java.util.function.Supplier;
 
@@ -37,8 +36,8 @@ public class ShooterTilt extends SubsystemBase {
         }
     } 
 
-    private TiltIO mIO;
-    private TiltIOInputsAutoLogged mInputs;
+    private ShooterTiltIO mIO;
+    private ShooterTiltIOInputsAutoLogged mInputs;
 
     private TiltGoalState mGoalState = TiltGoalState.STOW;
     private boolean mWithinTolerance = false;
@@ -51,9 +50,9 @@ public class ShooterTilt extends SubsystemBase {
     private boolean mEnableOverrideCache = false;
     private double mTargetOverrideCache = TiltGoalState.STOW.state.defaultPosition;
 
-    public ShooterTilt(TiltIO io) {
+    public ShooterTilt(ShooterTiltIO io) {
         mIO = io;
-        mInputs = new TiltIOInputsAutoLogged();
+        mInputs = new ShooterTiltIOInputsAutoLogged();
     }
 
     @Override

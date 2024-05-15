@@ -6,8 +6,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotState;
 import frc.robot.lib.drive.SwerveHeadingController;
-import frc.robot.subsystems.ShooterTilt.ShooterTilt;
-import frc.robot.subsystems.ShooterTilt.ShooterTilt.TiltGoalState;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.flywheels.Flywheels;
 import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsSystemState;
@@ -17,6 +15,8 @@ import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.SpeakerAutoAimState;
+import frc.robot.subsystems.shooterTilt.ShooterTilt;
+import frc.robot.subsystems.shooterTilt.ShooterTilt.TiltGoalState;
 
 public class ShooterAutoAimCommand extends SequentialCommandGroup {
     private static double kMaxShootingDistance = 4.85;

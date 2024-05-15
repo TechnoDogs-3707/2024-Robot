@@ -1,10 +1,10 @@
-package frc.robot.subsystems.ShooterTilt;
+package frc.robot.subsystems.shooterTilt;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface TiltIO {
+public interface ShooterTiltIO {
     @AutoLog
-    public static class TiltIOInputs {
+    public static class ShooterTiltIOInputs {
         public double tiltRotations = 0.0;
         public double tiltVelocityRotPerSec = 0.0;
         public double tiltSuppliedCurrentAmps = 0.0;
@@ -13,7 +13,7 @@ public interface TiltIO {
         public boolean tiltForwardSoftLimit = false;
     }
 
-    public default void updateInputs(TiltIOInputs inputs) {}
+    public default void updateInputs(ShooterTiltIOInputs inputs) {}
 
     public default void updateOutputs() {}
 

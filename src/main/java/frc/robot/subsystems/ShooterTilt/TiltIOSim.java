@@ -1,11 +1,11 @@
-package frc.robot.subsystems.ShooterTilt;
+package frc.robot.subsystems.shooterTilt;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import frc.robot.Constants;
 
-public class TiltIOSim implements TiltIO {
+public class TiltIOSim implements ShooterTiltIO {
     private final TrapezoidProfile.Constraints kConstraints;
 
     private TrapezoidProfile.State mLastState;
@@ -14,7 +14,7 @@ public class TiltIOSim implements TiltIO {
     private TrapezoidProfile mEstimator;
 
     public TiltIOSim() {
-        kConstraints = new Constraints(TiltConstants.kMagicVel, TiltConstants.kMagicAccel);
+        kConstraints = new Constraints(ShooterTiltConstants.kMagicVel, ShooterTiltConstants.kMagicAccel);
         mLastState = new State();
         mGoalState = new State();
 
@@ -22,7 +22,7 @@ public class TiltIOSim implements TiltIO {
     }
 
     @Override
-    public void updateInputs(TiltIOInputs inputs) {
+    public void updateInputs(ShooterTiltIOInputs inputs) {
         inputs.tiltRotations = mLastState.position;
         inputs.tiltVelocityRotPerSec = mLastState.velocity;
     }

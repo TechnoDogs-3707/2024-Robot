@@ -5,8 +5,6 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.ShooterTilt.ShooterTilt;
-import frc.robot.subsystems.ShooterTilt.ShooterTilt.TiltGoalState;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.flywheels.Flywheels;
 import frc.robot.subsystems.flywheels.FlywheelsStateMachine.FlywheelsWantedAction;
@@ -15,6 +13,8 @@ import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.AutoAlignScoreState;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
+import frc.robot.subsystems.shooterTilt.ShooterTilt;
+import frc.robot.subsystems.shooterTilt.ShooterTilt.TiltGoalState;
 
 public class AutoScoreShooter extends SequentialCommandGroup {
     public AutoScoreShooter(Drive drive, Indexer indexer, ShooterTilt tilt, Flywheels flywheels, ObjectiveTracker objective, Supplier<Double> topFlywheelSpeed, Supplier<Double> bottomFlywheelSpeed, Supplier<TiltGoalState> tiltGoal, BooleanSupplier scoreOverride) {
