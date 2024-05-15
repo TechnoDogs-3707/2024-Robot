@@ -1,6 +1,6 @@
-package frc.robot.subsystems.tilt;
+package frc.robot.subsystems.ShooterTilt;
 
-import static frc.robot.subsystems.tilt.TiltConstants.*;
+import static frc.robot.subsystems.ShooterTilt.TiltConstants.*;
 
 import java.util.ArrayList;
 

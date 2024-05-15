@@ -1,4 +1,4 @@
-package frc.robot.subsystems.tilt;
+package frc.robot.subsystems.ShooterTilt;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -10,11 +10,12 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.tilt.TiltIOInputsAutoLogged;
 import frc.robot.util.LoggedTunableBoolean;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.poofsUtils.PoofsUtil;
 
-import static frc.robot.subsystems.tilt.TiltConstants.*;
+import static frc.robot.subsystems.ShooterTilt.TiltConstants.*;
 
 import java.util.function.Supplier;
 

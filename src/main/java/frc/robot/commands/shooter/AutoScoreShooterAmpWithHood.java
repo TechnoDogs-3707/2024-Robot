@@ -4,6 +4,8 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.ShooterTilt.ShooterTilt;
+import frc.robot.subsystems.ShooterTilt.ShooterTilt.TiltGoalState;
 import frc.robot.subsystems.armTilt.ArmTilt;
 import frc.robot.subsystems.armTilt.ArmTilt.ArmPositionPreset;
 import frc.robot.subsystems.drive.Drive;
@@ -18,8 +20,6 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.AutoAlignScoreState;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
-import frc.robot.subsystems.tilt.ShooterTilt;
-import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class AutoScoreShooterAmpWithHood extends SequentialCommandGroup {
     public AutoScoreShooterAmpWithHood(Drive drive, ArmTilt arm, IntakeDeploy intakeDeploy, Indexer indexer, Intake intake, ShooterTilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {

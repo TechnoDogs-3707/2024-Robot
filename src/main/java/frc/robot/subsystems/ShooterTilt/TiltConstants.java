@@ -1,4 +1,4 @@
-package frc.robot.subsystems.tilt;
+package frc.robot.subsystems.ShooterTilt;
 
 public final class TiltConstants {
     public static final int kMotorID = 48;

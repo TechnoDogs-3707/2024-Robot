@@ -2,6 +2,8 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.ShooterTilt.ShooterTilt;
+import frc.robot.subsystems.ShooterTilt.ShooterTilt.TiltGoalState;
 import frc.robot.subsystems.armTilt.ArmTilt;
 import frc.robot.subsystems.armTilt.ArmTilt.ArmPositionPreset;
 import frc.robot.subsystems.flywheels.Flywheels;
@@ -14,8 +16,6 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
-import frc.robot.subsystems.tilt.ShooterTilt;
-import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class ReverseFeedNote extends SequentialCommandGroup {
     public ReverseFeedNote(ArmTilt armTilt, Indexer indexer, ObjectiveTracker objective, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, ShooterTilt tilt) {

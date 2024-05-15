@@ -13,6 +13,7 @@ import frc.robot.lib.dashboard.SupplierWidget;
 import frc.robot.lib.dashboard.WidgetConfig;
 import frc.robot.lib.dashboard.SendableWidget;
 import frc.robot.lib.dashboard.Alert.SendableAlerts;
+import frc.robot.subsystems.ShooterTilt.ShooterTilt;
 import frc.robot.subsystems.controllerFeedback.ControllerFeedback;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -24,7 +25,6 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.tilt.ShooterTilt;
 
 public class Dashboard {
     // Drive Tab

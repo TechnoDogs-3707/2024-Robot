@@ -1,4 +1,4 @@
-package frc.robot.subsystems.tilt;
+package frc.robot.subsystems.ShooterTilt;
 
 import org.littletonrobotics.junction.AutoLog;
 

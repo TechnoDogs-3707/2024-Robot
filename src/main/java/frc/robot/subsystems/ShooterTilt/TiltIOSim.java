@@ -1,4 +1,4 @@
-package frc.robot.subsystems.tilt;
+package frc.robot.subsystems.ShooterTilt;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
