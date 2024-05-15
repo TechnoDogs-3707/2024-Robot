@@ -18,11 +18,11 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.AutoAlignScoreState;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
-import frc.robot.subsystems.tilt.Tilt;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class AutoScoreShooterAmpWithHood extends SequentialCommandGroup {
-    public AutoScoreShooterAmpWithHood(Drive drive, ArmTilt arm, IntakeDeploy intakeDeploy, Indexer indexer, Intake intake, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
+    public AutoScoreShooterAmpWithHood(Drive drive, ArmTilt arm, IntakeDeploy intakeDeploy, Indexer indexer, Intake intake, ShooterTilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
             Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.SCORE_SPEAKER_AUTOALIGN))
             .andThen(Commands.runOnce(() -> objective.setAutoAlignState(AutoAlignScoreState.DRIVING_TO_TARGET)))

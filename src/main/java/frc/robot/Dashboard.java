@@ -24,7 +24,7 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.tilt.Tilt;
+import frc.robot.subsystems.tilt.ShooterTilt;
 
 public class Dashboard {
     // Drive Tab
@@ -84,7 +84,7 @@ public class Dashboard {
 
     // public final SendableWidget<SendableChooser<String>> testing_preloadSimGripper;
     
-    public Dashboard(Robot robot, RobotContainer container, Drive drive, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, Tilt tilt, Indexer indexer,  LED led, Localizer vision, ObjectiveTracker objective, ControllerFeedback controllerFeedback) {
+    public Dashboard(Robot robot, RobotContainer container, Drive drive, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, ShooterTilt tilt, Indexer indexer,  LED led, Localizer vision, ObjectiveTracker objective, ControllerFeedback controllerFeedback) {
         // Drive Tab
         drive_linearSpeedChooser = new SendableWidget<SendableChooser<Double>>(driveTabName, "Linear Speed Limit",
         DriveWithController.linearSpeedLimitChooser,

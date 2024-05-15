@@ -15,12 +15,12 @@ import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.SpeakerAutoAimState;
-import frc.robot.subsystems.tilt.Tilt;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class ShooterAutoAimCommand extends SequentialCommandGroup {
     private static double kMaxShootingDistance = 4.85;
-    public ShooterAutoAimCommand(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier dontShoot) {
+    public ShooterAutoAimCommand(Drive drive, Indexer indexer, ShooterTilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier dontShoot) {
         addCommands(
             Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.SCORE_SPEAKER_AUTOAIM))
             .andThen(Commands.runOnce(() -> objective.setAutoAimState(SpeakerAutoAimState.PREPARING_ROBOT)))

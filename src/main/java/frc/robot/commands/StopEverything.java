@@ -9,11 +9,11 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeStateMachine.IntakeWantedAction;
 import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
-import frc.robot.subsystems.tilt.Tilt;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class StopEverything extends SequentialCommandGroup {
-    public StopEverything(IntakeDeploy intakeDeploy, Intake intake, Indexer indexer, Tilt tilt, Flywheels flywheels) {
+    public StopEverything(IntakeDeploy intakeDeploy, Intake intake, Indexer indexer, ShooterTilt tilt, Flywheels flywheels) {
         addCommands(
             intakeDeploy.setPositionBlockingCommand(IntakePositionPreset.STOWED).alongWith(
                 intake.setActionCommand(IntakeWantedAction.OFF),

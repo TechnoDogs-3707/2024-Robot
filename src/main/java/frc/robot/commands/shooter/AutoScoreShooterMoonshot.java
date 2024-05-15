@@ -6,11 +6,11 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.flywheels.Flywheels;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.tilt.Tilt;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class AutoScoreShooterMoonshot extends SequentialCommandGroup {
-    public AutoScoreShooterMoonshot(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
+    public AutoScoreShooterMoonshot(Drive drive, Indexer indexer, ShooterTilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
             new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> 60.0, () -> 60.0, () -> TiltGoalState.MOONSHOT, scoreOverride)
         );

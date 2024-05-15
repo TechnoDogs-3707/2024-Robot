@@ -7,11 +7,11 @@ import frc.robot.subsystems.flywheels.Flywheels;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerStateMachine.IndexerWantedAction;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.tilt.Tilt;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class ShooterFeedFromSource extends SequentialCommandGroup {
-    public ShooterFeedFromSource(Drive drive, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
+    public ShooterFeedFromSource(Drive drive, Indexer indexer, ShooterTilt tilt, Flywheels flywheels, ObjectiveTracker objective, BooleanSupplier scoreOverride) {
         addCommands(
             new AutoScoreShooter(drive, indexer, tilt, flywheels, objective, () -> -30.0, () -> -30.0, () -> TiltGoalState.FEED, scoreOverride),
             indexer.setActionCommand(IndexerWantedAction.INTAKE)

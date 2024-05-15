@@ -89,11 +89,11 @@ import frc.robot.subsystems.localizer.Localizer;
 import frc.robot.subsystems.localizer.LocalizerIO;
 import frc.robot.subsystems.localizer.LocalizerIOLL3;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.tilt.Tilt;
+import frc.robot.subsystems.tilt.ShooterTilt;
 import frc.robot.subsystems.tilt.TiltIO;
 import frc.robot.subsystems.tilt.TiltIOSim;
 import frc.robot.subsystems.tilt.TiltIOTalonFX;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 import frc.robot.util.poofsUtils.PoofsUtil;
 
 public class RobotContainer {
@@ -102,7 +102,7 @@ public class RobotContainer {
     private IntakeDeploy intakeDeploy;
     private Intake intake;
     private Flywheels flywheels;
-    private Tilt tilt;
+    private ShooterTilt tilt;
     private Indexer indexer;
     private Climb climb;
     private LED leds;
@@ -194,7 +194,7 @@ public class RobotContainer {
                     intake = new Intake(new IntakeIOTalonFX());
                     // intake = new Intake(new IntakeIOSim());
                     flywheels = new Flywheels(new FlywheelsIOTalonFX());
-                    tilt = new Tilt(new TiltIOTalonFX());
+                    tilt = new ShooterTilt(new TiltIOTalonFX());
                     indexer = new Indexer(new IndexerIOTalonFX());
                     climb = new Climb(new ClimbIOTalonFX());
                     leds = new LED(new LEDIOCANdle(8, "rio"));
@@ -222,7 +222,7 @@ public class RobotContainer {
                     intake = new Intake(new IntakeIOSim());
                     indexer = new Indexer(new IndexerIOSim());
                     flywheels = new Flywheels(new FlywheelsIOSim());
-                    tilt = new Tilt(new TiltIOSim());
+                    tilt = new ShooterTilt(new TiltIOSim());
                     leds = new LED(new LEDIOSim(127));
                     break;
                 default:
@@ -275,7 +275,7 @@ public class RobotContainer {
 
         if (tilt == null) {
             System.out.println("[Subsystem Manager]: Tilt will be replaced with a placeholder.");
-            tilt = new Tilt(new TiltIO() {
+            tilt = new ShooterTilt(new TiltIO() {
                 
             });
         }

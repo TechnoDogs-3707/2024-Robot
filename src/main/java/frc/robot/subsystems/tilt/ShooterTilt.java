@@ -18,7 +18,7 @@ import static frc.robot.subsystems.tilt.TiltConstants.*;
 
 import java.util.function.Supplier;
 
-public class Tilt extends SubsystemBase {
+public class ShooterTilt extends SubsystemBase {
     public enum TiltGoalState {
         STOW(new TiltState(0.002, false, false)),
         CLOSE(new TiltState(0.07, false, true)),
@@ -50,7 +50,7 @@ public class Tilt extends SubsystemBase {
     private boolean mEnableOverrideCache = false;
     private double mTargetOverrideCache = TiltGoalState.STOW.state.defaultPosition;
 
-    public Tilt(TiltIO io) {
+    public ShooterTilt(TiltIO io) {
         mIO = io;
         mInputs = new TiltIOInputsAutoLogged();
     }

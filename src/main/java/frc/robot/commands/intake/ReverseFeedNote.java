@@ -14,11 +14,11 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy;
 import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
-import frc.robot.subsystems.tilt.Tilt;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class ReverseFeedNote extends SequentialCommandGroup {
-    public ReverseFeedNote(ArmTilt armTilt, Indexer indexer, ObjectiveTracker objective, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, Tilt tilt) {
+    public ReverseFeedNote(ArmTilt armTilt, Indexer indexer, ObjectiveTracker objective, IntakeDeploy intakeDeploy, Intake intake, Flywheels flywheels, ShooterTilt tilt) {
         addCommands(
             Commands.runOnce(() -> objective.setMasterObjective(MasterObjective.INTAKE_HANDOFF)),
             flywheels.setActionCommand(FlywheelsWantedAction.OFF),

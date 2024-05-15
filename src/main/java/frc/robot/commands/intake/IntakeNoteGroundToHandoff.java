@@ -15,11 +15,11 @@ import frc.robot.subsystems.intakeDeploy.IntakeDeploy.IntakePositionPreset;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.IntakeGroundState;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker.MasterObjective;
-import frc.robot.subsystems.tilt.Tilt;
-import frc.robot.subsystems.tilt.Tilt.TiltGoalState;
+import frc.robot.subsystems.tilt.ShooterTilt;
+import frc.robot.subsystems.tilt.ShooterTilt.TiltGoalState;
 
 public class IntakeNoteGroundToHandoff extends SequentialCommandGroup {
-    public IntakeNoteGroundToHandoff(ArmTilt armTilt, IntakeDeploy intakeDeploy, Intake intake, Indexer indexer, Tilt tilt, Flywheels flywheels, ObjectiveTracker objective) {
+    public IntakeNoteGroundToHandoff(ArmTilt armTilt, IntakeDeploy intakeDeploy, Intake intake, Indexer indexer, ShooterTilt tilt, Flywheels flywheels, ObjectiveTracker objective) {
         addCommands(
             flywheels.setActionCommand(FlywheelsWantedAction.OFF),
             tilt.setGoalCommand(TiltGoalState.STOW),
